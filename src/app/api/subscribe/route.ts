@@ -1,64 +1,42 @@
-import { createHash } from 'crypto'
 import { NextRequest, NextResponse } from 'next/server'
+import { addSubscriberToList } from '@/lib/utils/ravmeser'
 
-function buildAuthHeader() {
-  const nonce = createHash('md5')
-    .update(Math.random().toString() + Date.now().toString())
-    .digest('hex')
-  const timestamp = Math.floor(Date.now() / 1000).toString()
-
-  const cKey = process.env.RAVMESSER_C_KEY!
-  const cSecret = process.env.RAVMESSER_C_SECRET!
-  const uKey = process.env.RAVMESSER_U_KEY!
-  const uSecret = process.env.RAVMESSER_U_SECRET!
-
-  const cSecretHash = createHash('md5').update(cSecret + nonce).digest('hex')
-  const uSecretHash = createHash('md5').update(uSecret + nonce).digest('hex')
-
-  return `c_key=${cKey},c_secret=${cSecretHash},u_key=${uKey},u_secret=${uSecretHash},nonce=${nonce},timestamp=${timestamp}`
-}
+const LEADS_LIST_ID = process.env.RAVMESER_LEADS_LIST_ID || ''
 
 export async function POST(request: NextRequest) {
   try {
-    const { name, phone, email } = await request.json()
+    const { name, phone, email, utm_source, utm_medium, utm_campaign, utm_content } = await request.json()
 
-    const listId = process.env.RAVMESSER_LIST_ID
-    if (!listId) {
-      return NextResponse.json({ error: 'Missing list ID' }, { status: 500 })
-    }
+    const source = utm_content || utm_campaign || utm_source || 'ישיר'
 
-    const subscriberData = [
-      {
-        NAME: name || '',
-        EMAIL: email || '',
-        PHONE: phone || '',
-        NOTIFY: 0,
-      },
-    ]
-
-    const body = new URLSearchParams()
-    body.append('subscribers', JSON.stringify(subscriberData))
-
-    const response = await fetch(
-      `https://api.responder.co.il/main/lists/${listId}/subscribers`,
-      {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/x-www-form-urlencoded',
-          Authorization: buildAuthHeader(),
-        },
-        body: body.toString(),
+    // Add to RavMeser leads list directly
+    if (process.env.RAVMESER_C_KEY && LEADS_LIST_ID) {
+      try {
+        const result = await addSubscriberToList(LEADS_LIST_ID, {
+          email,
+          first_name: name,
+          phone,
+          custom_fields: { source },
+        })
+        if (!result.ok) {
+          console.error('RavMeser subscribe error:', result.status, result.body)
+        }
+      } catch (err) {
+        console.error('RavMeser subscribe failed:', err)
       }
-    )
-
-    const result = await response.json()
-
-    if (!response.ok) {
-      console.error('RavMeser error:', result)
-      return NextResponse.json({ error: result }, { status: response.status })
     }
 
-    return NextResponse.json({ success: true, data: result })
+    // Also send to Make.com if configured (fallback / additional automation)
+    const webhookUrl = process.env.MAKE_WEBHOOK_URL
+    if (webhookUrl) {
+      await fetch(webhookUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, phone, email, source, utm_source, utm_medium, utm_campaign, utm_content }),
+      }).catch(err => console.error('Make.com webhook error:', err))
+    }
+
+    return NextResponse.json({ success: true })
   } catch (err) {
     console.error('Subscribe error:', err)
     return NextResponse.json({ error: 'Server error' }, { status: 500 })
