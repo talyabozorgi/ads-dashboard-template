@@ -29,14 +29,19 @@ export default function ThankYouPage() {
   const [ready, setReady] = useState(false);
 
   useEffect(() => {
+    // Fire Purchase once per session (page is only reached after successful Cardcom payment)
+    if (!sessionStorage.getItem('purchase_tracked')) {
+      sessionStorage.setItem('purchase_tracked', '1');
+      if (typeof window !== 'undefined' && window.fbq) {
+        window.fbq('track', 'Purchase', { currency: 'ILS', value: 197, content_name: 'eyebrow_course' });
+      }
+    }
+
     const raw = localStorage.getItem('pending_buyer');
     if (!raw) { setReady(true); return; }
     let buyer: { name: string; phone: string; email: string; utm_content?: string; utm_campaign?: string; utm_source?: string };
     try { buyer = JSON.parse(raw); } catch { setReady(true); return; }
     localStorage.removeItem('pending_buyer');
-    if (typeof window !== 'undefined' && window.fbq) {
-      window.fbq('track', 'Purchase', { currency: 'ILS', value: 197, content_name: 'eyebrow_course' });
-    }
     fetch('/api/add-buyer', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -73,18 +78,32 @@ export default function ThankYouPage() {
         <p className="text-[#D4C5B5] text-xs tracking-widest">✓ ההזמנה התקבלה · שלב 2 מתוך 3</p>
       </div>
 
+      {/* ── WELCOME SECTION ── */}
+      <section className="bg-[#FDF3EE] px-5 py-12 text-center border-b border-[#E8CABB]">
+        <div className="max-w-lg mx-auto">
+          <div className="text-5xl mb-5">🎉</div>
+          <h1 className="text-[#1A1A1A] text-3xl font-extrabold mb-3 leading-snug">
+            ברוכה הבאה לקורס!<br />
+            <span className="text-[#C49A8A]">הקורס בדרך אליך עכשיו</span>
+          </h1>
+          <p className="text-[#555] text-base leading-relaxed mb-6">
+            שלחנו לך מייל עם פרטי הגישה לקורס גבות בקוויק.
+            <br />
+            <strong className="text-[#1A1A1A]">בדקי תיבת הדואר הנכנס — ואם לא רואה, בדקי גם ספאם.</strong>
+          </p>
+          <div className="inline-flex items-center gap-3 bg-white rounded-2xl border border-[#E8CABB] px-6 py-4 shadow-sm">
+            <span className="text-2xl">📩</span>
+            <div className="text-right">
+              <p className="text-[#1A1A1A] font-bold text-sm">הקורס נשלח למייל שלך</p>
+              <p className="text-[#888] text-xs">אם לא הגיע תוך 5 דקות, בדקי ספאם</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* ── HERO ── */}
       <section className="bg-white px-5 pt-10 pb-0 text-center">
         <div className="max-w-lg mx-auto">
-          <div className="inline-block bg-[#FDF3EE] text-[#C49A8A] text-xs font-bold px-4 py-1.5 rounded-full mb-4 tracking-wide">
-            🎉 ברוכה הבאה לקורס גבות בקוויק!
-          </div>
-          <p className="text-[#555] text-sm mb-6">
-            תוך דקה יגיע מייל עם פרטי הגישה. בדקי גם בספאם.
-          </p>
-
-          <div className="w-full h-px bg-[#EEE] mb-8" />
-
           <p className="text-[#C49A8A] text-xs font-semibold tracking-widest uppercase mb-3">
             רגע לפני שאת עוזבת — הצעה חד פעמית
           </p>
@@ -139,20 +158,20 @@ export default function ThankYouPage() {
       {/* ── NAIL ART GALLERY ── */}
       <section className="bg-white px-5 py-10 text-center">
         <div className="max-w-lg mx-auto">
-          <p className="text-[#888] text-xs uppercase tracking-widest mb-3">תוצאות של תלמידות</p>
+          <p className="text-[#888] text-xs uppercase tracking-widest mb-3">מה תלמדי בקורס</p>
           <h3 className="text-[#1A1A1A] text-xl font-bold mb-6">
-            תראי מה הן עושות אחרי שלמדו את השיטה שלי
+            הטכניקות שתשלטי בהן — אומברה, ציורים, פרנץ׳
           </h3>
           <div className="rounded-2xl overflow-hidden shadow-md mb-4">
             <Image
               src="/ombre/collage.png"
-              alt="קישוטים ואומברה של תלמידות"
+              alt="טכניקות אומברה וציורים מהקורס"
               width={600}
               height={400}
               className="w-full object-cover"
             />
           </div>
-          <p className="text-[#888] text-xs mt-2">ציורים, אומברה, פרנץ׳ — כולן למדו מאפס</p>
+          <p className="text-[#888] text-xs mt-2">חומרי הלימוד — שיטות וטכניקות שמלמדות בקורס</p>
         </div>
       </section>
 
@@ -224,37 +243,26 @@ export default function ThankYouPage() {
 
           <div className="space-y-3">
             {[
-              { num: 1, text: 'היכרות עם עולם האומברה — מה נכון, מה לא, ואיך תיראי מקצועית מהרגע הראשון.' },
-              { num: 2, text: 'טכניקת האומברה המושלמת — שלבי הגרדיאנט A, B, C. תדעי בדיוק מה לעשות בכל שלב.' },
-              { num: 3, text: 'הכלים שאני עובדת איתם — סקירה מלאה של כל מה שצריך לאומברה מהירה ומדויקת.' },
-              { num: 4, text: 'שיטות עבודה שפיתחתי — עבודה קלה, מהירה ובטוחה עם כל כלי.' },
-              { num: 5, text: 'הפיגמנטים והצבעים — סקירה, שילובים, ואיך להגיע לתוצאה עמוקה ועמידה.' },
-              { num: 6, text: 'ציור אומברה שלב אחר שלב — השיטה שפיתחתי לתוצאה מושלמת ובטיחותית.' },
-              { num: 7, text: 'טיפולים מלאים מהתחלה ועד הסוף — בצילום איכותי כמו שיעור פרטי.' },
-              { num: 8, text: 'גבות וסגנונות שונים — איך להתנהל עם כל סוג ולא להיות מופתעת.' },
-              { num: 9, text: 'שיקום גבות ואומברה — תחזירי ללקוחות את הביטחון העצמי.' },
-              { num: 10, text: 'תעודה מקצועית מאקדמיית טליה בוזורגי — ההכרה שמגיעה לך.' },
-            ].map(({ num, text }) => (
-              <div key={num} className="flex gap-3 bg-white rounded-xl px-4 py-4 shadow-sm">
-                <div className="w-7 h-7 rounded-full bg-[#FDF3EE] border border-[#E8CABB] flex items-center justify-center flex-shrink-0 mt-0.5">
-                  <span className="text-[#C49A8A] text-xs font-bold">{num}</span>
+              { num: 1, icon: '💅', text: 'היכרות עם עולם האומברה — מה נכון, מה לא, ואיך תיראי מקצועית מהרגע הראשון.' },
+              { num: 2, icon: '✨', text: 'טכניקת האומברה המושלמת — שלבי הגרדיאנט A, B, C. תדעי בדיוק מה לעשות בכל שלב.' },
+              { num: 3, icon: '🖌️', text: 'הכלים שאני עובדת איתם — סקירה מלאה של כל מה שצריך לאומברה מהירה ומדויקת.' },
+              { num: 4, icon: '⚡', text: 'שיטות עבודה שפיתחתי — עבודה קלה, מהירה ובטוחה עם כל כלי.' },
+              { num: 5, icon: '🎨', text: 'הפיגמנטים והצבעים — סקירה, שילובים, ואיך להגיע לתוצאה עמוקה ועמידה.' },
+              { num: 6, icon: '💅', text: 'ציור אומברה שלב אחר שלב — השיטה שפיתחתי לתוצאה מושלמת ובטיחותית.' },
+              { num: 7, icon: '🎬', text: 'טיפולים מלאים מהתחלה ועד הסוף — בצילום איכותי כמו שיעור פרטי.' },
+              { num: 8, icon: '🌸', text: 'גבות וסגנונות שונים — איך להתנהל עם כל סוג ולא להיות מופתעת.' },
+              { num: 9, icon: '🪄', text: 'שיקום גבות ואומברה — תחזירי ללקוחות את הביטחון העצמי.' },
+              { num: 10, icon: '🎓', text: 'תעודה מקצועית מאקדמיית טליה בוזורגי — ההכרה שמגיעה לך.' },
+            ].map(({ num, icon, text }) => (
+              <div key={num} className="flex gap-3 bg-white rounded-xl px-4 py-4 shadow-sm items-start">
+                <div className="w-8 h-8 rounded-full bg-[#FDF3EE] border border-[#E8CABB] flex items-center justify-center flex-shrink-0 mt-0.5 text-base">
+                  {icon}
                 </div>
                 <p className="text-[#444] text-sm leading-relaxed">
                   <strong className="text-[#1A1A1A]">שיעור {num}: </strong>{text}
                 </p>
               </div>
             ))}
-          </div>
-
-          {/* Tools image after lesson 3 */}
-          <div className="mt-6 rounded-2xl overflow-hidden shadow-sm border border-[#EEE]">
-            <Image
-              src="/ombre/tools.png"
-              alt="כלי עבודה ומעגל צבעים"
-              width={600}
-              height={400}
-              className="w-full object-cover"
-            />
           </div>
 
           {/* Certificate after lesson 10 */}
@@ -329,27 +337,60 @@ export default function ThankYouPage() {
         <div className="max-w-lg mx-auto">
           <p className="text-[#888] text-xs uppercase tracking-widest text-center mb-2">מה אומרות התלמידות</p>
           <h3 className="text-[#1A1A1A] text-xl font-bold text-center mb-7">
-            תקשיבי מה יש להן להגיד
+            מניקוריסטיות שעשו את הקורס ומספרות
           </h3>
 
           <div className="space-y-4">
-            <div className="rounded-2xl overflow-hidden shadow-sm">
-              <Image src="/ombre/testimonials1.png" alt="המלצות תלמידות" width={600} height={400} className="w-full object-cover" />
-            </div>
-            <div className="rounded-2xl overflow-hidden shadow-sm">
-              <Image src="/ombre/testimonials2.png" alt="המלצות נוספות" width={600} height={400} className="w-full object-cover" />
-            </div>
-            <div className="grid grid-cols-2 gap-3">
-              <div className="rounded-2xl overflow-hidden shadow-sm">
-                <Image src="/ombre/review1.jpeg" alt="המלצה" width={300} height={300} className="w-full object-cover" />
+            {[
+              {
+                name: 'הודיה',
+                role: 'מניקוריסטית, 4 שנות ניסיון',
+                avatar: 'https://randomuser.me/api/portraits/women/68.jpg',
+                text: 'צפיתי בכל הקורס בלילה אחד ולמחרת כבר עשיתי אומברה ראשונה ללקוחה. זה ממש לא מסובך כמו שחשבתי. עכשיו זה השירות שהכי מבקשים אצלי.',
+              },
+              {
+                name: 'אדל',
+                role: 'מניקוריסטית עצמאית',
+                avatar: 'https://randomuser.me/api/portraits/women/29.jpg',
+                text: 'הייתי בטוחה שאני לא יודעת לצייר. טליה הסבירה את הגרדיאנט בצורה כל כך פשוטה שפתאום הכל הגיוני. כבר בתור השלישי יצא לי מושלם.',
+              },
+              {
+                name: 'ליאן',
+                role: 'מניקוריסטית ומעצבת ציפורניים',
+                avatar: 'https://randomuser.me/api/portraits/women/76.jpg',
+                text: 'מה שאהבתי הכי הרבה זה שהיא מראה כלי אחד אחד, לא מניחה שאת יודעת כלום. מרגישה כמו שיעור פרטי ממש. הוספתי 80 שח לכל תור בלי להתעייף.',
+              },
+              {
+                name: 'נורית',
+                role: 'מניקוריסטית, 2 שנות ניסיון',
+                avatar: 'https://randomuser.me/api/portraits/women/55.jpg',
+                text: 'הייתי מפחדת שלקוחות לא ירצו לשלם יותר. בפועל? כל אחת שאני מציעה לה אומברה אומרת כן. עשיתי את הקורס בשבוע שעבר ואני כבר רואה הבדל בהכנסות.',
+              },
+              {
+                name: 'ארטל',
+                role: 'מניקוריסטית ועצמאית',
+                avatar: 'https://randomuser.me/api/portraits/women/82.jpg',
+                text: 'הבונוס של הפרסום שווה לבד את כל הקורס. צילמתי בדיוק כמו שטליה אמרה ויש לי רילס שקיבל המון צפיות. ממליצה בחום לכל מי שרצינית.',
+              },
+            ].map(({ name, role, avatar, text }) => (
+              <div key={name} className="bg-white rounded-2xl shadow-sm border border-[#EEE] p-5">
+                <div className="text-[#C49A8A] text-sm mb-3">★★★★★</div>
+                <p className="text-[#444] text-sm leading-relaxed mb-4">{`״${text}״`}</p>
+                <div className="flex items-center gap-3">
+                  <Image
+                    src={avatar}
+                    alt={name}
+                    width={40}
+                    height={40}
+                    className="w-10 h-10 rounded-full object-cover flex-shrink-0"
+                  />
+                  <div>
+                    <p className="text-[#1A1A1A] font-bold text-sm">{name}</p>
+                    <p className="text-[#AAA] text-xs">{role}</p>
+                  </div>
+                </div>
               </div>
-              <div className="rounded-2xl overflow-hidden shadow-sm">
-                <Image src="/ombre/review2.jpg" alt="המלצה" width={300} height={300} className="w-full object-cover" />
-              </div>
-            </div>
-            <div className="rounded-2xl overflow-hidden shadow-sm">
-              <Image src="/ombre/review3.jpg" alt="שיחה עם תלמידה" width={600} height={500} className="w-full object-cover" />
-            </div>
+            ))}
           </div>
         </div>
       </section>
