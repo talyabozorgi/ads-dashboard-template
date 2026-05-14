@@ -1,11 +1,12 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import Image from 'next/image';
 import Script from 'next/script';
 
 const PIXEL_ID = '1901161570375773';
 const OMBRE_URL = 'https://secure.cardcom.solutions/EA/EA5/5MLJB6WUi0ivCY9FVGYWQ/PaymentSP';
+const TIMER_MINUTES = 15;
 
 declare global {
   interface Window {
@@ -14,22 +15,60 @@ declare global {
   }
 }
 
-function CtaButton({ label = 'כן! אני רוצה מאסטרית באומברה ב-97₪' }: { label?: string }) {
+function useCountdown() {
+  const [seconds, setSeconds] = useState<number | null>(null);
+  const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+
+  useEffect(() => {
+    const key = 'oto_deadline';
+    let deadline = Number(sessionStorage.getItem(key));
+    if (!deadline || deadline < Date.now()) {
+      deadline = Date.now() + TIMER_MINUTES * 60 * 1000;
+      sessionStorage.setItem(key, String(deadline));
+    }
+    const tick = () => setSeconds(Math.max(0, Math.floor((deadline - Date.now()) / 1000)));
+    tick();
+    intervalRef.current = setInterval(tick, 1000);
+    return () => { if (intervalRef.current) clearInterval(intervalRef.current); };
+  }, []);
+
+  if (seconds === null) return { mm: '15', ss: '00', expired: false };
+  const mm = String(Math.floor(seconds / 60)).padStart(2, '0');
+  const ss = String(seconds % 60).padStart(2, '0');
+  return { mm, ss, expired: seconds === 0 };
+}
+
+function CtaButton({ label = 'כן! אני רוצה מאסטרית באומברה ב-97₪', small = false }: { label?: string; small?: boolean }) {
   return (
     <a
       href={OMBRE_URL}
-      className="block w-full max-w-sm mx-auto bg-[#C49A8A] hover:bg-[#B5897A] text-white text-center font-extrabold text-lg py-5 rounded-2xl shadow-lg transition-colors"
+      className={`block w-full max-w-sm mx-auto bg-[#C49A8A] hover:bg-[#B5897A] active:scale-95 text-white text-center font-extrabold rounded-2xl shadow-lg transition-all duration-150 ${small ? 'text-base py-4' : 'text-lg py-5'}`}
     >
       {label}
     </a>
   );
 }
 
+function CountdownBar({ mm, ss, expired }: { mm: string; ss: string; expired: boolean }) {
+  return (
+    <div className={`text-center py-3 px-4 transition-colors ${expired ? 'bg-[#888]' : 'bg-[#C49A8A]'}`}>
+      {expired ? (
+        <p className="text-white text-sm font-bold">ההצעה פגה — צרי קשר לקבלת ההטבה</p>
+      ) : (
+        <p className="text-white text-sm font-semibold">
+          ההצעה הזו תיעלם בעוד{' '}
+          <span className="font-extrabold text-lg tabular-nums">{mm}:{ss}</span>
+        </p>
+      )}
+    </div>
+  );
+}
+
 export default function ThankYouPage() {
   const [ready, setReady] = useState(false);
+  const { mm, ss, expired } = useCountdown();
 
   useEffect(() => {
-    // Fire Purchase once per session (page is only reached after successful Cardcom payment)
     if (!sessionStorage.getItem('purchase_tracked')) {
       sessionStorage.setItem('purchase_tracked', '1');
       if (typeof window !== 'undefined' && window.fbq) {
@@ -73,52 +112,39 @@ export default function ThankYouPage() {
         fbq('track', 'PageView');
       `}</Script>
 
-      {/* ── THANK YOU BAR ── */}
+      {/* ── COUNTDOWN BAR ── */}
+      <CountdownBar mm={mm} ss={ss} expired={expired} />
+
+      {/* ── THANK YOU CONFIRM ── */}
       <div className="bg-[#1A1A1A] text-center py-3 px-4">
-        <p className="text-[#D4C5B5] text-xs tracking-widest">✓ ההזמנה התקבלה · שלב 2 מתוך 3</p>
+        <p className="text-[#D4C5B5] text-xs tracking-widest">✓ ההזמנה התקבלה · הקורס בדרך למייל שלך</p>
       </div>
 
-      {/* ── WELCOME SECTION ── */}
-      <section className="bg-[#FDF3EE] px-5 py-12 text-center border-b border-[#E8CABB]">
+      {/* ── OTO HERO ── */}
+      <section className="bg-[#FDF3EE] px-5 py-10 text-center border-b border-[#E8CABB]">
         <div className="max-w-lg mx-auto">
-          <div className="text-5xl mb-5">🎉</div>
-          <h1 className="text-[#1A1A1A] text-3xl font-extrabold mb-3 leading-snug">
-            ברוכה הבאה לקורס!<br />
-            <span className="text-[#C49A8A]">הקורס בדרך אליך עכשיו</span>
-          </h1>
-          <p className="text-[#555] text-base leading-relaxed mb-6">
-            שלחנו לך מייל עם פרטי הגישה לקורס גבות בקוויק.
-            <br />
-            <strong className="text-[#1A1A1A]">בדקי תיבת הדואר הנכנס — ואם לא רואה, בדקי גם ספאם.</strong>
+          <p className="text-[#C49A8A] text-xs font-semibold tracking-widest uppercase mb-3">
+            הצעה חד פעמית לתלמידות חדשות בלבד
           </p>
-          <div className="inline-flex items-center gap-3 bg-white rounded-2xl border border-[#E8CABB] px-6 py-4 shadow-sm">
-            <span className="text-2xl">📩</span>
-            <div className="text-right">
-              <p className="text-[#1A1A1A] font-bold text-sm">הקורס נשלח למייל שלך</p>
-              <p className="text-[#888] text-xs">אם לא הגיע תוך 5 דקות, בדקי ספאם</p>
-            </div>
-          </div>
+          <h1 className="text-[#1A1A1A] text-3xl font-extrabold mb-3 leading-snug">
+            רגע לפני שאת עוזבת:<br />
+            <span className="text-[#C49A8A]">איך להוסיף 70-100 ש״ח לכל תור שכבר יש לך</span>
+          </h1>
+          <p className="text-[#555] text-base leading-relaxed mb-2">
+            אומברה. 15 דקות. מאותן לקוחות שממילא יושבות אצלך.
+          </p>
+          <p className="text-[#1A1A1A] font-bold text-sm mb-6">
+            קורס דיגיטלי מלא. רק עכשיו: <span className="text-[#C49A8A]">97 ש״ח</span> (במקום 2,197 ש״ח)
+          </p>
+
+          <CtaButton />
+          <p className="text-[#AAA] text-xs mt-3">ההצעה תיעלם כשהטיימר יגיע לאפס</p>
         </div>
       </section>
 
-      {/* ── HERO ── */}
-      <section className="bg-white px-5 pt-10 pb-0 text-center">
-        <div className="max-w-lg mx-auto">
-          <p className="text-[#C49A8A] text-xs font-semibold tracking-widest uppercase mb-3">
-            רגע לפני שאת עוזבת — הצעה חד פעמית
-          </p>
-          <h1 className="text-[#1A1A1A] text-3xl font-extrabold leading-tight mb-3">
-            רוצה לדעת איך לעשות<br />
-            <span className="text-[#C49A8A]">אומברה שלקוחות משתגעות עליה?</span>
-          </h1>
-          <p className="text-[#666] text-base leading-relaxed mb-6">
-            טיפול של 15 דקות שמכניס לך עוד 70-100 ש״ח לתור.
-            <br />מאותן לקוחות שכבר יושבות אצלך.
-          </p>
-        </div>
-
-        {/* Hero image */}
-        <div className="max-w-lg mx-auto rounded-2xl overflow-hidden shadow-md mb-0">
+      {/* ── HERO IMAGE ── */}
+      <section className="bg-white px-5 pt-8 pb-0 text-center">
+        <div className="max-w-lg mx-auto rounded-2xl overflow-hidden shadow-md">
           <Image
             src="/ombre/hero.png"
             alt="אומברה וקישוטים מושלמים"
@@ -130,149 +156,50 @@ export default function ThankYouPage() {
       </section>
 
       {/* ── THE MATH ── */}
-      <section className="bg-[#FAF7F4] px-5 py-12 text-center">
+      <section className="bg-white px-5 py-12 text-center">
         <div className="max-w-lg mx-auto">
-          <p className="text-[#888] text-sm mb-6">הסוד שאף אחת לא תגלה לך...</p>
-          <div className="bg-white rounded-2xl shadow-sm border border-[#EEE] p-7 mb-6">
+          <div className="bg-[#FAF7F4] rounded-2xl border border-[#EEE] p-7 mb-6">
             <h2 className="text-[#1A1A1A] text-xl font-extrabold leading-tight mb-4">
-              איך להפוך לקוחה שמשלמת 130 ש״ח
-              <br />
-              <span className="text-[#C49A8A]">ללקוחה שמשלמת 200-300 לתור?</span>
+              יש לך 20 לקוחות בשבוע?<br />
+              <span className="text-[#C49A8A]">זה עוד 3,000+ ש״ח בחודש — בלי לקוחה חדשה אחת.</span>
             </h2>
             <p className="text-[#555] text-sm leading-relaxed">
-              מספיק שהוספת לחצי מהלקוחות שלך עוד 15 דק׳ של אומברה...
-              <br /><br />
-              <strong className="text-[#1A1A1A] text-base">את מרוויחה עוד 3,000 ש״ח בשקט.</strong>
-              <br />
-              <span className="text-[#888] text-xs">מאותה הלקוחה. בלי לקוחות חדשות.</span>
+              מחצית מהלקוחות שלך יאמרו כן לאומברה כשתציעי.
+              <br />70 ש״ח × 10 לקוחות × 4 שבועות = <strong className="text-[#1A1A1A]">2,800 ש״ח נוספים.</strong>
+              <br /><span className="text-[#888] text-xs">ואת לא צריכה לחפש אף אחת מהן.</span>
             </p>
           </div>
-          <p className="text-[#555] text-sm leading-relaxed">
-            ולהפוך יומן של 20 לקוחות בשבוע
-            <br />
-            <strong className="text-[#1A1A1A]">להכנסה של מעל 15,000 ש״ח בחודש.</strong>
-          </p>
         </div>
       </section>
 
-      {/* ── NAIL ART GALLERY ── */}
-      <section className="bg-white px-5 py-10 text-center">
+      {/* ── WHAT YOU GET (CONDENSED) ── */}
+      <section className="bg-[#FAF7F4] px-5 py-12">
         <div className="max-w-lg mx-auto">
-          <p className="text-[#888] text-xs uppercase tracking-widest mb-3">מה תלמדי בקורס</p>
-          <h3 className="text-[#1A1A1A] text-xl font-bold mb-6">
-            הטכניקות שתשלטי בהן — אומברה, ציורים, פרנץ׳
-          </h3>
-          <div className="rounded-2xl overflow-hidden shadow-md mb-4">
+          <p className="text-[#888] text-xs uppercase tracking-widest text-center mb-2">מה מחכה לך בפנים</p>
+          <h3 className="text-[#1A1A1A] text-xl font-bold text-center mb-6">קורס מאסטרית באומברה — 10 שיעורים מלאים</h3>
+
+          <div className="space-y-3 mb-8">
+            {[
+              { icon: '✨', text: 'טכניקת הגרדיאנט המושלמת — שלבי A, B, C שאת יכולה ליישם מחר בבוקר.' },
+              { icon: '🎬', text: 'טיפולים מלאים מהתחלה ועד הסוף בצילום איכותי — כמו שיעור פרטי.' },
+              { icon: '🎨', text: 'פיגמנטים, שילובי צבעים, שיקום גבות — הכל בפנים.' },
+              { icon: '🎓', text: 'תעודה מקצועית מאקדמיית טליה בוזורגי.' },
+            ].map(({ icon, text }) => (
+              <div key={text} className="flex items-start gap-3 bg-white rounded-xl px-4 py-4 shadow-sm">
+                <span className="text-xl flex-shrink-0 mt-0.5">{icon}</span>
+                <p className="text-[#444] text-sm leading-relaxed">{text}</p>
+              </div>
+            ))}
+          </div>
+
+          {/* Gallery */}
+          <div className="rounded-2xl overflow-hidden shadow-md">
             <Image
               src="/ombre/collage.png"
-              alt="טכניקות אומברה וציורים מהקורס"
+              alt="טכניקות אומברה מהקורס"
               width={600}
               height={400}
               className="w-full object-cover"
-            />
-          </div>
-          <p className="text-[#888] text-xs mt-2">חומרי הלימוד — שיטות וטכניקות שמלמדות בקורס</p>
-        </div>
-      </section>
-
-      {/* ── PAIN ── */}
-      <section className="bg-[#FAF7F4] px-5 py-12">
-        <div className="max-w-lg mx-auto">
-          <p className="text-[#1A1A1A] text-lg font-bold text-center mb-6">
-            אני רוצה שתפסיקי להתיש את עצמך ב...
-          </p>
-          <div className="space-y-3 mb-8">
-            {[
-              'בזבוז שעות על יצירת תוכן ורילסים שלא מוכרים',
-              'מריצה ליומן מלא ומוצאת את עצמך בסוף היום ריקה',
-              'מלחמה לשמור את העסק מעל המים',
-            ].map(item => (
-              <div key={item} className="flex items-start gap-3 bg-white rounded-xl px-4 py-3 shadow-sm">
-                <span className="text-red-300 mt-0.5">✗</span>
-                <p className="text-[#666] text-sm leading-relaxed">{item}</p>
-              </div>
-            ))}
-          </div>
-
-          <div className="bg-[#FDF3EE] border border-[#E8CABB] rounded-2xl p-6 text-center">
-            <p className="text-[#1A1A1A] text-base font-bold leading-relaxed">
-              ״איך אפשר להרוויח יותר
-              <br />
-              <span className="text-[#C49A8A]">בלי לעבוד כל כך קשה?״</span>
-            </p>
-            <p className="text-[#888] text-sm mt-3">שאלתי את עצמי את זה אחרי שהגעתי ליומן מלא ונשברתי.</p>
-          </div>
-        </div>
-      </section>
-
-      {/* ── COURSE INTRO ── */}
-      <section className="bg-white px-5 py-12 text-center">
-        <div className="max-w-lg mx-auto">
-          <p className="text-[#888] text-xs uppercase tracking-widest mb-3">תכירי את</p>
-          <h2 className="text-[#1A1A1A] text-3xl font-extrabold mb-2">מאסטרית באומברה</h2>
-          <p className="text-[#C49A8A] font-semibold text-base mb-6">
-            ״15 דק׳ לאומברה שלקוחות ישלמו עליה פרימיום״
-          </p>
-
-          {/* Device mockup */}
-          <div className="mb-6">
-            <Image
-              src="/ombre/mockup.png"
-              alt="קורס מאסטרית באומברה על כל המכשירים"
-              width={600}
-              height={420}
-              className="w-full object-contain"
-            />
-          </div>
-
-          <p className="text-[#555] text-sm leading-relaxed">
-            תוכנית דיגיטלית מצולמת עם 10 פרקים
-            <br />
-            שהולכת לקצר לך את הדרך להכנסה גבוהה יותר
-            <br />
-            <strong className="text-[#1A1A1A]">מבלי שתצטרכי להכניס עוד לקוחה אחת ליומן.</strong>
-          </p>
-        </div>
-      </section>
-
-      {/* ── LESSONS ── */}
-      <section className="bg-[#FAF7F4] px-5 py-12">
-        <div className="max-w-lg mx-auto">
-          <p className="text-[#888] text-xs uppercase tracking-widest text-center mb-2">תוכן הקורס</p>
-          <h3 className="text-[#1A1A1A] text-xl font-bold text-center mb-8">מה מחכה לך בפנים</h3>
-
-          <div className="space-y-3">
-            {[
-              { num: 1, icon: '💅', text: 'היכרות עם עולם האומברה — מה נכון, מה לא, ואיך תיראי מקצועית מהרגע הראשון.' },
-              { num: 2, icon: '✨', text: 'טכניקת האומברה המושלמת — שלבי הגרדיאנט A, B, C. תדעי בדיוק מה לעשות בכל שלב.' },
-              { num: 3, icon: '🖌️', text: 'הכלים שאני עובדת איתם — סקירה מלאה של כל מה שצריך לאומברה מהירה ומדויקת.' },
-              { num: 4, icon: '⚡', text: 'שיטות עבודה שפיתחתי — עבודה קלה, מהירה ובטוחה עם כל כלי.' },
-              { num: 5, icon: '🎨', text: 'הפיגמנטים והצבעים — סקירה, שילובים, ואיך להגיע לתוצאה עמוקה ועמידה.' },
-              { num: 6, icon: '💅', text: 'ציור אומברה שלב אחר שלב — השיטה שפיתחתי לתוצאה מושלמת ובטיחותית.' },
-              { num: 7, icon: '🎬', text: 'טיפולים מלאים מהתחלה ועד הסוף — בצילום איכותי כמו שיעור פרטי.' },
-              { num: 8, icon: '🌸', text: 'גבות וסגנונות שונים — איך להתנהל עם כל סוג ולא להיות מופתעת.' },
-              { num: 9, icon: '🪄', text: 'שיקום גבות ואומברה — תחזירי ללקוחות את הביטחון העצמי.' },
-              { num: 10, icon: '🎓', text: 'תעודה מקצועית מאקדמיית טליה בוזורגי — ההכרה שמגיעה לך.' },
-            ].map(({ num, icon, text }) => (
-              <div key={num} className="flex gap-3 bg-white rounded-xl px-4 py-4 shadow-sm items-start">
-                <div className="w-8 h-8 rounded-full bg-[#FDF3EE] border border-[#E8CABB] flex items-center justify-center flex-shrink-0 mt-0.5 text-base">
-                  {icon}
-                </div>
-                <p className="text-[#444] text-sm leading-relaxed">
-                  <strong className="text-[#1A1A1A]">שיעור {num}: </strong>{text}
-                </p>
-              </div>
-            ))}
-          </div>
-
-          {/* Certificate after lesson 10 */}
-          <div className="mt-4 rounded-2xl overflow-hidden shadow-md border border-[#EEE]">
-            <Image
-              src="/ombre/certificate.png"
-              alt="תעודת מאסטרית באומברה"
-              width={600}
-              height={420}
-              className="w-full object-contain bg-white"
             />
           </div>
         </div>
@@ -281,49 +208,20 @@ export default function ThankYouPage() {
       {/* ── BONUSES ── */}
       <section className="bg-white px-5 py-12">
         <div className="max-w-lg mx-auto text-center">
-          <Image
-            src="/ombre/bonus.png"
-            alt="בונוסים"
-            width={120}
-            height={120}
-            className="mx-auto mb-4 object-contain"
-          />
-          <h3 className="text-[#1A1A1A] text-xl font-bold mb-1">רק רגע, זה לא הכל!</h3>
-          <p className="text-[#888] text-sm mb-8">
-            בנוסף לכל התוכן המטורף, את מקבלת
-            <br />
-            <strong className="text-[#1A1A1A]">3 בונוסים בשווי 597 ש״ח — חינם</strong>
-          </p>
+          <h3 className="text-[#1A1A1A] text-xl font-bold mb-1">+ 3 בונוסים בשווי 597 ש״ח — חינם</h3>
+          <p className="text-[#888] text-sm mb-6">רק לתלמידות שמצטרפות היום</p>
 
           <div className="space-y-4 text-right">
             {[
-              {
-                num: '01',
-                title: 'הדרכת צביעת גבות',
-                desc: 'מדריך והדגמה מפורטת — איך לצבע ללקוחות את הגבות להשלמת המראה. טיפול נוסף של 5 דק׳ שיגדיל עוד יותר את ההכנסה שלך.',
-                value: '297',
-              },
-              {
-                num: '02',
-                title: 'הדרכת פרסום ושיווק ברשתות',
-                desc: 'מה חשוב באמת כשמפרסמים, וכיצד לצלם עבודות בסגנון אינסטגרמי שגורם ללקוחות לרצות לבוא.',
-                value: '150',
-              },
-              {
-                num: '03',
-                title: 'חוברת PDF מקצועית',
-                desc: 'חוברת מלאה שעבדתי עליה חודשים — כל הידע בצורה הכי ברורה שיש. מוכנה להדפסה ותלווה אותך לתמיד.',
-                value: '150',
-              },
-            ].map(({ num, title, desc, value }) => (
-              <div key={num} className="bg-[#FAF7F4] border border-[#EEE] rounded-2xl p-5 flex gap-4">
-                <span className="text-[#E8CABB] text-3xl font-extrabold flex-shrink-0 leading-none mt-0.5">{num}</span>
+              { num: '01', title: 'הדרכת צביעת גבות', desc: '5 דקות נוספות לתור שמוסיפות עוד הכנסה.' },
+              { num: '02', title: 'פרסום ושיווק ברשתות', desc: 'איך לצלם ולפרסם אומברה שמשכנעת לקוחות לבוא.' },
+              { num: '03', title: 'חוברת PDF מקצועית', desc: 'כל הידע מוכן להדפסה — לתמיד.' },
+            ].map(({ num, title, desc }) => (
+              <div key={num} className="bg-[#FAF7F4] border border-[#EEE] rounded-2xl p-4 flex gap-4">
+                <span className="text-[#E8CABB] text-2xl font-extrabold flex-shrink-0 leading-none mt-0.5">{num}</span>
                 <div>
-                  <div className="flex justify-between items-center mb-1">
-                    <h4 className="text-[#1A1A1A] font-bold text-sm">{title}</h4>
-                    <span className="text-[#CCC] text-xs line-through mr-2">₪{value}</span>
-                  </div>
-                  <p className="text-[#666] text-xs leading-relaxed mb-2">{desc}</p>
+                  <h4 className="text-[#1A1A1A] font-bold text-sm mb-1">{title}</h4>
+                  <p className="text-[#666] text-xs leading-relaxed">{desc}</p>
                   <span className="text-[#C49A8A] text-xs font-bold">✓ בשבילך: חינם</span>
                 </div>
               </div>
@@ -332,62 +230,29 @@ export default function ThankYouPage() {
         </div>
       </section>
 
-      {/* ── TESTIMONIALS ── */}
+      {/* ── TESTIMONIALS (2 only) ── */}
       <section className="bg-[#FAF7F4] px-5 py-12">
         <div className="max-w-lg mx-auto">
-          <p className="text-[#888] text-xs uppercase tracking-widest text-center mb-2">מה אומרות התלמידות</p>
-          <h3 className="text-[#1A1A1A] text-xl font-bold text-center mb-7">
-            מניקוריסטיות שעשו את הקורס ומספרות
-          </h3>
-
+          <h3 className="text-[#1A1A1A] text-xl font-bold text-center mb-6">מה אומרות מי שעשו את זה</h3>
           <div className="space-y-4">
             {[
               {
                 name: 'הודיה',
-                role: 'מניקוריסטית, 4 שנות ניסיון',
-                avatar: 'https://randomuser.me/api/portraits/women/68.jpg',
-                text: 'צפיתי בכל הקורס בלילה אחד ולמחרת כבר עשיתי אומברה ראשונה ללקוחה. זה ממש לא מסובך כמו שחשבתי. עכשיו זה השירות שהכי מבקשים אצלי.',
-              },
-              {
-                name: 'אדל',
-                role: 'מניקוריסטית עצמאית',
-                avatar: 'https://randomuser.me/api/portraits/women/29.jpg',
-                text: 'הייתי בטוחה שאני לא יודעת לצייר. טליה הסבירה את הגרדיאנט בצורה כל כך פשוטה שפתאום הכל הגיוני. כבר בתור השלישי יצא לי מושלם.',
+                role: 'מניקוריסטית',
+                text: 'צפיתי בכל הקורס בלילה אחד ולמחרת כבר עשיתי אומברה ראשונה ללקוחה. עכשיו זה השירות שהכי מבקשים אצלי.',
               },
               {
                 name: 'ליאן',
                 role: 'מניקוריסטית ומעצבת ציפורניים',
-                avatar: 'https://randomuser.me/api/portraits/women/76.jpg',
-                text: 'מה שאהבתי הכי הרבה זה שהיא מראה כלי אחד אחד, לא מניחה שאת יודעת כלום. מרגישה כמו שיעור פרטי ממש. הוספתי 80 שח לכל תור בלי להתעייף.',
+                text: 'הוספתי 80 ש״ח לכל תור בלי להתעייף. הקורס מראה הכל צעד צעד — מרגיש כמו שיעור פרטי.',
               },
-              {
-                name: 'נורית',
-                role: 'מניקוריסטית, 2 שנות ניסיון',
-                avatar: 'https://randomuser.me/api/portraits/women/55.jpg',
-                text: 'הייתי מפחדת שלקוחות לא ירצו לשלם יותר. בפועל? כל אחת שאני מציעה לה אומברה אומרת כן. עשיתי את הקורס בשבוע שעבר ואני כבר רואה הבדל בהכנסות.',
-              },
-              {
-                name: 'ארטל',
-                role: 'מניקוריסטית ועצמאית',
-                avatar: 'https://randomuser.me/api/portraits/women/82.jpg',
-                text: 'הבונוס של הפרסום שווה לבד את כל הקורס. צילמתי בדיוק כמו שטליה אמרה ויש לי רילס שקיבל המון צפיות. ממליצה בחום לכל מי שרצינית.',
-              },
-            ].map(({ name, role, avatar, text }) => (
+            ].map(({ name, role, text }) => (
               <div key={name} className="bg-white rounded-2xl shadow-sm border border-[#EEE] p-5">
-                <div className="text-[#C49A8A] text-sm mb-3">★★★★★</div>
-                <p className="text-[#444] text-sm leading-relaxed mb-4">{`״${text}״`}</p>
-                <div className="flex items-center gap-3">
-                  <Image
-                    src={avatar}
-                    alt={name}
-                    width={40}
-                    height={40}
-                    className="w-10 h-10 rounded-full object-cover flex-shrink-0"
-                  />
-                  <div>
-                    <p className="text-[#1A1A1A] font-bold text-sm">{name}</p>
-                    <p className="text-[#AAA] text-xs">{role}</p>
-                  </div>
+                <div className="text-[#C49A8A] text-sm mb-2">★★★★★</div>
+                <p className="text-[#444] text-sm leading-relaxed mb-3">{`״${text}״`}</p>
+                <div>
+                  <p className="text-[#1A1A1A] font-bold text-sm">{name}</p>
+                  <p className="text-[#AAA] text-xs">{role}</p>
                 </div>
               </div>
             ))}
@@ -395,103 +260,58 @@ export default function ThankYouPage() {
         </div>
       </section>
 
-      {/* ── PRICE ── */}
+      {/* ── PRICE + MAIN CTA ── */}
       <section className="bg-white px-5 py-14 text-center">
         <div className="max-w-sm mx-auto">
-          <p className="text-[#888] text-sm leading-relaxed mb-6">
-            התוכן שאת מקבלת כאן הוא חלק מהכשרה פרונטלית
-            שעולה כמה אלפי שקלים.
-            <br /><br />
-            המחיר המקורי:
-          </p>
-          <p className="text-[#CCC] text-2xl line-through mb-1">2,197 ש״ח</p>
-          <p className="text-[#888] text-sm mb-6">
-            אבל בגלל שכבר קנית ממני היום,
-            <br />
-            המחיר שלך הוא חד פעמי:
-          </p>
+          <CountdownBar mm={mm} ss={ss} expired={expired} />
 
-          <div className="bg-[#FDF3EE] border-2 border-[#E8CABB] rounded-2xl px-8 py-8 mb-6">
+          <div className="bg-[#FDF3EE] border-2 border-[#E8CABB] rounded-2xl px-8 py-8 my-6">
             <p className="text-[#C49A8A] text-sm font-semibold mb-1">מחיר מיוחד לדף זה בלבד</p>
+            <p className="text-[#888] text-sm line-through mb-1">2,197 ש״ח</p>
             <p className="text-[#1A1A1A] text-6xl font-extrabold mb-1">97<span className="text-3xl">₪</span></p>
             <p className="text-[#888] text-sm">או 2 תשלומים נוחים של 49 ש״ח</p>
-            <p className="text-[#CCC] text-xs mt-2">*המחיר זמני ועלול לעלות ללא התראה</p>
-          </div>
-
-          <CtaButton />
-
-          <p className="text-[#AAA] text-xs mt-3">
-            דף סליקה מאובטח · תוך 15 שניות הקורס במייל
-          </p>
-        </div>
-      </section>
-
-      {/* ── WHO IT'S FOR ── */}
-      <section className="bg-[#FAF7F4] px-5 py-12">
-        <div className="max-w-lg mx-auto">
-          <h3 className="text-[#1A1A1A] text-xl font-bold text-center mb-6">למי זה מתאים?</h3>
-          <div className="space-y-3">
-            {[
-              'למניקוריסטיות שרוצות להוסיף שירות שמשלמים עליו פרימיום.',
-              'למי שיש לה לקוחות קיימות ורוצה להרוויח יותר מכל אחת.',
-              'למי שחשבה שאומברה זה מסובך ורוצה לגלות שזה הכי קל שיש.',
-              'לכל מי שרוצה תעודה מקצועית שמוסיפה אמינות לעסק.',
-              'למי שמגיע לה יותר ויודעת את זה.',
-            ].map(item => (
-              <div key={item} className="flex items-start gap-3 bg-white rounded-xl px-4 py-3 shadow-sm">
-                <span className="text-[#C49A8A] mt-0.5 flex-shrink-0">✓</span>
-                <p className="text-[#555] text-sm leading-relaxed">{item}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ── GUARANTEE ── */}
-      <section className="bg-white px-5 py-12 text-center">
-        <div className="max-w-sm mx-auto">
-          <div className="text-5xl mb-4">🛡️</div>
-          <h3 className="text-[#1A1A1A] text-xl font-bold mb-4">האחריות שלי</h3>
-          <div className="bg-[#FAF7F4] border border-[#EEE] rounded-2xl p-6">
-            <p className="text-[#555] text-sm leading-relaxed">
-              צפית בכל התכנים ולא הצלחת ליישם כלום?
-              <br /><br />
-              <strong className="text-[#1A1A1A]">החזר כספי מלא עד 14 יום מיום הרכישה. ללא שאלות.</strong>
-            </p>
-          </div>
-        </div>
-      </section>
-
-      {/* ── FINAL CTA ── */}
-      <section className="bg-[#1A1A1A] px-5 py-14 text-center">
-        <div className="max-w-sm mx-auto">
-          <p className="text-[#D4C5B5] text-sm leading-relaxed mb-6">
-            אם הגעת עד לכאן, יש בך תשוקה אמיתית.
-            <br /><br />
-            את יכולה לצפות בכל התכנים בערב אחד
-            <br />
-            <strong className="text-white">וכבר למחרת להתחיל ליישם.</strong>
-          </p>
-
-          <div className="bg-white/5 border border-[#D4C5B5]/20 rounded-2xl px-6 py-6 mb-6">
-            <p className="text-[#D4C5B5]/50 text-lg line-through mb-1">2,197 ש״ח</p>
-            <p className="text-white text-5xl font-extrabold mb-1">97<span className="text-2xl">₪</span></p>
-            <p className="text-[#D4C5B5]/60 text-sm">או 2 × 49 ש״ח</p>
           </div>
 
           <CtaButton label="כן, אני רוצה מאסטרית באומברה" />
 
+          <p className="text-[#AAA] text-xs mt-3 mb-6">דף סליקה מאובטח · תוך 15 שניות הקורס במייל</p>
+
+          {/* Guarantee */}
+          <div className="bg-[#FAF7F4] border border-[#EEE] rounded-2xl p-5 mb-6">
+            <p className="text-2xl mb-2">🛡️</p>
+            <p className="text-[#1A1A1A] font-bold text-sm mb-1">החזר כספי מלא עד 14 יום</p>
+            <p className="text-[#666] text-xs leading-relaxed">צפית בכל התכנים ולא הצלחת ליישם? מחזירה לך הכל בלי שאלות.</p>
+          </div>
+
           <a
-            href="#"
-            onClick={(e) => e.preventDefault()}
-            className="block text-[#555] text-xs underline mt-4"
+            href="/"
+            className="block text-[#AAA] text-xs underline mt-2"
           >
             לא תודה, אני מוותרת על ההצעה
           </a>
 
-          <p className="text-white font-bold text-xl mt-10">מאמינה בך, טליה ✨</p>
+          <p className="text-[#1A1A1A] font-bold text-xl mt-10">מאמינה בך, טליה ✨</p>
         </div>
       </section>
+
+      {/* ── STICKY MOBILE BAR ── */}
+      <div className="fixed bottom-0 left-0 right-0 z-50 md:hidden bg-white border-t border-[#E8CABB] px-4 py-3 shadow-2xl">
+        <div className="flex items-center justify-between gap-3 max-w-sm mx-auto">
+          <div className="text-right">
+            <p className="text-[#1A1A1A] font-extrabold text-lg leading-none">97₪</p>
+            <p className="text-[#888] text-xs">במקום 2,197 ש״ח</p>
+          </div>
+          <a
+            href={OMBRE_URL}
+            className="flex-1 bg-[#C49A8A] hover:bg-[#B5897A] text-white text-center font-extrabold text-sm py-3 rounded-xl shadow transition-colors"
+          >
+            כן! אני רוצה את זה
+          </a>
+        </div>
+      </div>
+
+      {/* Bottom padding for sticky bar on mobile */}
+      <div className="h-20 md:hidden" />
 
     </main>
   );
