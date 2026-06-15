@@ -1,13 +1,21 @@
 'use client';
 
-import { motion } from 'framer-motion';
-import { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { useState, useEffect, useRef } from 'react';
+import Script from 'next/script';
+
+const PIXEL_ID = '1901161570375773';
+const BASE_PURCHASE_URL = 'https://secure.cardcom.solutions/EA/EA5/00YPdJyAU2CAAMHVtWd7A/PaymentSP';
+const WHATSAPP_NUMBER = '972XXXXXXXXX'; // החליפי במספר הטלפון שלך
+
+declare global {
+  interface Window { fbq?: (...args: unknown[]) => void; _fbq: unknown; }
+}
 
 const fadeUp = {
   hidden: { opacity: 0, y: 30 },
   visible: { opacity: 1, y: 0, transition: { duration: 0.6 } },
 };
-
 const stagger = {
   hidden: { opacity: 0 },
   visible: { opacity: 1, transition: { staggerChildren: 0.12, delayChildren: 0.1 } },
@@ -24,11 +32,7 @@ function useCountdown() {
     }
     const tick = () => {
       const diff = Math.max(0, end - Date.now());
-      setTime({
-        h: Math.floor(diff / 3600000),
-        m: Math.floor((diff % 3600000) / 60000),
-        s: Math.floor((diff % 60000) / 1000),
-      });
+      setTime({ h: Math.floor(diff / 3600000), m: Math.floor((diff % 3600000) / 60000), s: Math.floor((diff % 60000) / 1000) });
     };
     tick();
     const id = setInterval(tick, 1000);
@@ -37,282 +41,357 @@ function useCountdown() {
   return time;
 }
 
-const testimonials = [
-  {
-    quote: 'היי רכשתי את הקורס הדיגיטלי שלך לעיצוב גבות, רציתי לומר לך תודה רבה על קורס נגיש ויעיל!!',
-    time: '20:27',
-    avatar: 'https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?w=80&h=80&fit=crop&crop=faces&q=80',
-    name: 'נועה',
-  },
-  {
-    quote: 'תקשיבי חשבתי שאני כבר מרימה ידיים. כי לא הצלחתי להשיג לקוחות חדשות.. והקבועות שלי לא הספיקו.. רכשתי את הקורס שלך ואת הצלת לי את העסק!! ופשוט התאהבתי בעיצוב גבות אז תודה לך',
-    time: '22:16',
-    avatar: 'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=80&h=80&fit=crop&crop=faces&q=80',
-    name: 'מיכל',
-  },
-  {
-    quote: 'אני התחלתי לשלב גבות ושפם אני עושה לק גל בכללי אבל רציתי כאילו להשתפר והקורס זה בדיוק!! מדהים',
-    time: '22:20',
-    avatar: 'https://images.unsplash.com/photo-1488426862026-3ee34a7d66df?w=80&h=80&fit=crop&crop=faces&q=80',
-    name: 'שירה',
-  },
-  {
-    quote: 'היי טליה ערב טוב רציתי לומר תודה סיימתי עכשיו את הקורס עיצוב גבות הוא קל, ישר ולעניין את מסבירה ממש טוב, לא מחסירה פרטים אני מרגישה שאני יכולה להתחיל כבר ושיש לי את כל הידע שצריך',
-    time: '21:55',
-    avatar: 'https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?w=80&h=80&fit=crop&crop=faces&q=80',
-    name: 'רונית',
-  },
-  {
-    quote: 'ואי השתמשתי בפינצטה ובמספריים אימלה איזה איכותתתת כיף ממש לעבוד והקורס מושלם ומדויק את מסבירה ממש טוב ולא מחסירה פרטים ממש תודה רבה על הכל ועל השירותים המדהים שלך מעריכה מאוד ❤️',
-    time: '23:06',
-    avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=80&h=80&fit=crop&crop=faces&q=80',
-    name: 'לירון',
-  },
-  {
-    quote: 'היי טליה צפיתי בהשתלמות און-ליין עכשיו וזה ממש מושלם שהשם יברך אותך תודה רבה על כל העשייה שלך ועל הרצון הטוב שלך לעזור לבנות תבורכי 😊',
-    time: '17:15',
-    avatar: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=80&h=80&fit=crop&crop=faces&q=80',
-    name: 'תמר',
-  },
-];
-
-function CTAButton({ text = 'אני רוצה להתחיל ✋' }: { text?: string }) {
-  const scrollToForm = () => document.getElementById('cta-form')?.scrollIntoView({ behavior: 'smooth' });
-  return (
-    <motion.button
-      onClick={scrollToForm}
-      className="w-full sm:w-auto bg-[#1A1A1A] text-[#D4C5B5] py-4 px-10 rounded-2xl font-bold text-xl shadow-lg border-2 border-[#1A1A1A] hover:bg-[#D4C5B5] hover:text-[#1A1A1A] transition-all duration-300"
-      whileHover={{ scale: 1.03 }}
-      whileTap={{ scale: 0.97 }}
-    >
-      {text}
-    </motion.button>
-  );
+function track(event: string, params?: Record<string, unknown>) {
+  if (typeof window !== 'undefined' && window.fbq) {
+    window.fbq('track', event, params);
+  }
 }
 
-const PURCHASE_URL = 'https://secure.cardcom.solutions/EA/EA5/00YPdJyAU2CAAMHVtWd7A/PaymentSP';
-
 const modules = [
-  { n: 1, title: 'ברוכה הבאה לעולם עיצוב הגבות', desc: 'הבסיס שרוב הקורסים מדלגים עליו - מה נכון לעשות ומה לא', img: 'https://plus.unsplash.com/premium_photo-1671656333452-7369599f92ee?w=120&h=120&fit=crop&q=80' },
-  { n: 2, title: 'מבנה הגבה האידיאלי', desc: 'נקודות A, B, C ואיך לעצב גבה שמחמיאה לכל מבנה פנים', img: 'https://images.unsplash.com/photo-1519415387722-a1c3bbef716c?w=120&h=120&fit=crop&q=80' },
-  { n: 3, title: 'ארגז הכלים של הקוויק', desc: 'כל הכלים שאני עובדת איתם לתוצאה מהירה ומדויקת', img: 'https://images.unsplash.com/photo-1637851497145-0faa2e456081?w=120&h=120&fit=crop&q=80' },
-  { n: 4, title: 'עבודה עם כל כלי', desc: 'הסבר מפורט על השיטות שפיתחתי לעבודה קלה, מהירה ובטוחה', img: 'https://images.unsplash.com/photo-1547078902-2911dfaaa53a?w=120&h=120&fit=crop&q=80' },
-  { n: 5, title: 'עולם השעוות', desc: 'סקירת סוגים, הדגמות, וטכניקות שמקצרות את זמן הטיפול', img: 'https://plus.unsplash.com/premium_photo-1671717724080-b31452cad3fa?w=120&h=120&fit=crop&q=80' },
-  { n: 6, title: 'שיטת הקוויק המלאה', desc: 'הדרך המהירה והבטיחותית - עיצוב + סרטוט לפי מבנה הפנים', img: 'https://images.unsplash.com/photo-1567629307995-b9f33097bd30?w=120&h=120&fit=crop&q=80' },
-  { n: 7, title: 'טיפולים מלאים מהתחלה לסוף', desc: 'כאילו קיבלת שיעור פרטי - בצילום איכותי ובקצב שלך', img: 'https://images.unsplash.com/photo-1595550912256-b24059bb08e8?w=120&h=120&fit=crop&q=80' },
-  { n: 8, title: 'כל סוגי הגבות', desc: 'לא תהיי מופתעת. לומדים איך להתנהל עם כל גבה שתגיע', img: 'https://images.unsplash.com/photo-1611352110288-9e204ae300bb?w=120&h=120&fit=crop&q=80' },
-  { n: 9, title: 'הפכי למשקמת גבות', desc: 'את תהיי זו שמצילה לנשים את הגבות ומחזירה להן את הביטחון', img: 'https://plus.unsplash.com/premium_photo-1663050996462-4671145bf66f?w=120&h=120&fit=crop&q=80' },
-  { n: 10, title: 'תעודה מקצועית', desc: 'תעודת סיום מאקדמיית טליה בוזורגי שתציגי בגאווה ללקוחות', img: 'https://images.unsplash.com/photo-1637851496670-2bdc6c548d27?w=120&h=120&fit=crop&q=80' },
+  { n: '01', title: 'עולם עיצוב הגבות', desc: 'מה נכון ומה לא - תיאוריה שתשנה איך את רואה כל גבה' },
+  { n: '02', title: 'מבנה הגבה האידיאלי', desc: 'נקודות A, B, C - איך למדוד ולסמן גבה מושלמת לכל מבנה פנים' },
+  { n: '03', title: 'סקירת כלים לשיטת הקוויק', desc: 'כל הכלים, למה כל אחד, ואיך לעבוד נכון' },
+  { n: '04', title: 'עבודה עם כל כלי', desc: 'השיטות שטליה פיתחה - מהיר, נקי, ומדויק' },
+  { n: '05', title: 'סוגי שעוות וטכניקות', desc: 'קיצור זמן הטיפול בלי לפגוע באיכות' },
+  { n: '06', title: 'שיטת הקוויק', desc: 'עיצוב מהיר ובטיחותי + סרטוט לפי מבנה פנים' },
+  { n: '07', title: 'טיפולים מלאים', desc: 'מהתחלה לסוף - כמו שיעור פרטי בבית שלך' },
+  { n: '08', title: 'גבות שונות', desc: 'כיצד להתנהל עם כל סוג גבה ומבנה פנים' },
+  { n: '09', title: 'הפיכה למשקמת גבות', desc: 'איך להציע שיקום ולגבות על זה יותר' },
+  { n: '10', title: 'תעודה מקצועית', desc: 'תעודת סיום מאקדמיית טליה בוזורגי - תלי אותה בגאווה' },
 ];
 
 const bonuses = [
-  { icon: '🎨', name: 'הדרכת צביעת גבות', desc: 'מדריך והדגמה מפורטת - טיפול נוסף של 5 דקות שמגדיל את ההכנסה', val: '297₪' },
-  { icon: '📱', name: 'שיווק ואינסטגרם', desc: 'מה חשוב באמת כשמפרסמים ברשתות + איך לצלם תמונות שמביאות לקוחות', val: '150₪' },
-  { icon: '📖', name: 'חוברת PDF מקצועית מלאה', desc: 'כל הידע מסודר בחוברת מוכנה להדפסה - עבדתי עליה חודשים', val: '150₪' },
+  { img: '/brow3.jpg', name: 'הדרכת צביעת גבות', desc: 'שיטה פשוטה להוסיף 5 דקות ועוד 30-50 שקל לכל תור', val: '297₪' },
+  { img: '/brow4.jpg', name: 'פרסום ושיווק באינסטגרם', desc: 'איך לצלם ולפרסם גבות שמשכנעות לקוחות לבוא', val: '150₪' },
+  { img: '/brow5.jpg', name: 'חוברת PDF מלאה', desc: 'כל הידע מסודר להדפסה - לצד שולחן העבודה שלך', val: '150₪' },
+];
+
+const testimonials = [
+  { quote: 'את פשוט אלוהית!! הייתי מפחדת לגעת בגבות ועכשיו לקוחות באות אליי ספציפית בגלל זה', time: '21:14', name: 'מאיה' },
+  { quote: 'עשיתי את הקורס ביום שישי ובשבת כבר עשיתי גבות ל-3 לקוחות. לא מאמינה בעצמי', time: '19:42', name: 'שני' },
+  { quote: 'הכפלתי את המחיר של הטיפול ואף לקוחה לא התלוננת. הן פשוט אומרות יופי', time: '22:08', name: 'רחל' },
+  { quote: 'היומן שלי מלא שבועות קדימה. כל זה בגלל הגבות שלמדתי אצלך', time: '20:33', name: 'גלית' },
+  { quote: 'נמאס לי שקורסים לא נותנים ביטחון. אצל טליה יצאתי מוכנה לגמרי', time: '23:01', name: 'יעל' },
+  { quote: 'מה שחסר לי כל השנים זה בדיוק השיטה הזאת. פשוטה, מהירה, ומנצחת', time: '18:55', name: 'דנה' },
 ];
 
 const faqs = [
-  { q: 'אני לא יודעת כלום על גבות - זה מתאים לי?', a: 'בהחלט כן. הקורס מתחיל מאפס מוחלט. שיעור 1 מכסה את הבסיס שרוב הקורסים מדלגים עליו.' },
-  { q: 'מה אם אני מפחדת להרוס ללקוחות את הגבות?', a: 'זה הפחד הכי נפוץ - ולכן השיטה שלי בנויה בדיוק על זה. תסרטטי לפי מבנה הפנים, עם בטיחות מלאה. תמיד תהיי בצד המשקם.' },
-  { q: 'כמה זמן לוקח ללמוד את כל החומר?', a: 'ניתן לצפות בכל התכנים בערב אחד. למחרת - מתחילות ליישם על הלקוחות.' },
-  { q: 'הגישה לחומר פגה?', a: 'לא. גישה לצמיתות, ללא הגבלת זמן. חוזרים בכל עת.' },
-  { q: 'מה אם לא מתאים לי?', a: 'ערבות החזר מלא של 14 יום. אם צפית בכל החומר ולא הצלחת ליישם - מחזירה לך את הכסף בלי שאלות.' },
-  { q: 'מה כלול במחיר 197₪?', a: '10 שיעורי וידאו + חוברת PDF + תעודת סיום + 3 בונוסים בשווי 597₪ - הכל כלול, בלי תוספות.' },
+  { q: 'כמה זמן לוקח טיפול אחרי הקורס?', a: 'עם שיטת הקוויק - 15 דקות לעיצוב מושלם. תוך שבוע-שבועיים של תרגול תגיעי לזמן הזה.' },
+  { q: 'האם צריך ניסיון קודם?', a: 'לא. הקורס מתחיל מאפס ומלמד הכל מהבסיס. מתאים גם למי שלא נגעה בגבה בחיים.' },
+  { q: 'מתי יגיע הקורס?', a: 'תוך דקה אחת מהרכישה יגיע למייל שלך עם שם משתמש וסיסמה אישיים.' },
+  { q: 'האם הגישה פגה?', a: 'לא. הקורס זמין לצמיתות, בלי הגבלת זמן. חוזרים כמה פעמים שרוצים.' },
+  { q: 'האם יש החזר כספי?', a: 'כן! ערובה של 14 יום - אם צפית בכל החומר ולא הצלחת ליישם, מחזירים לך את הכסף ללא שאלות.' },
+  { q: 'כמה מהר הקורס מחזיר את עצמו?', a: 'טיפול עיצוב גבות מוסיף 80-120₪ ללקוחה. אחרי 2-3 טיפולים בלבד - הקורס כיסה את עצמו. כל השאר? רווח טהור.' },
 ];
 
+// ─── EXIT INTENT POPUP ───
+function ExitPopup({ onClose }: { onClose: () => void }) {
+  const scrollToForm = () => { onClose(); setTimeout(() => document.getElementById('cta-form')?.scrollIntoView({ behavior: 'smooth' }), 300); };
+  return (
+    <motion.div
+      className="fixed inset-0 z-[100] flex items-center justify-center px-4"
+      initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+    >
+      <div className="absolute inset-0 bg-black/60" onClick={onClose} />
+      <motion.div
+        className="relative bg-white rounded-3xl p-8 max-w-sm w-full text-right shadow-2xl z-10"
+        initial={{ scale: 0.8, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 0.8, opacity: 0 }}
+      >
+        <button onClick={onClose} className="absolute top-4 left-4 text-gray-400 hover:text-gray-600 text-2xl font-light">×</button>
+        <div className="text-4xl mb-3 text-center">⏸️</div>
+        <h3 className="text-2xl font-extrabold text-[#1A1A1A] mb-2 text-center">רגע לפני שעוזבת!</h3>
+        <p className="text-[#5C4A3A] text-base leading-relaxed mb-4 text-center">
+          הלקוחות שלך כבר הולכות למקום אחר לגבות.<br />
+          <strong className="text-[#C49A8A]">כל חודש שמחכה = 1,400₪ שנשארים בכיס של מישהי אחרת.</strong>
+        </p>
+        <button onClick={scrollToForm}
+          className="w-full bg-[#C49A8A] text-white py-4 rounded-2xl font-bold text-lg hover:bg-[#B5897A] transition-colors mb-3">
+          אני נשארת ורוכשת עכשיו
+        </button>
+        <button onClick={onClose} className="w-full text-gray-400 text-sm py-2 hover:text-gray-600">לא, אני אפספס את ההזדמנות</button>
+      </motion.div>
+    </motion.div>
+  );
+}
+
+// ─── SOCIAL PROOF NOTIFICATION ───
+const recentBuyers = ['שירה מתל אביב', 'מיכל מחיפה', 'רונית מירושלים', 'גלית מבאר שבע', 'נועה מרמת גן', 'דנה מנתניה', 'יעל מרחובות'];
+
+function SocialProofNotification() {
+  const [visible, setVisible] = useState(false);
+  const [name, setName] = useState('');
+  const [index, setIndex] = useState(0);
+  useEffect(() => {
+    const show = () => {
+      setName(recentBuyers[index % recentBuyers.length]);
+      setIndex(i => i + 1);
+      setVisible(true);
+      setTimeout(() => setVisible(false), 4000);
+    };
+    const t1 = setTimeout(show, 8000);
+    const interval = setInterval(show, 25000);
+    return () => { clearTimeout(t1); clearInterval(interval); };
+  }, [index]);
+
+  return (
+    <AnimatePresence>
+      {visible && (
+        <motion.div
+          className="fixed bottom-24 right-4 z-40 bg-white border border-[#E8DDD4] rounded-2xl px-4 py-3 shadow-xl flex items-center gap-3 max-w-xs"
+          initial={{ opacity: 0, x: 100 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 100 }}
+        >
+          <div className="w-10 h-10 rounded-full bg-[#C49A8A] flex items-center justify-center text-white font-bold flex-shrink-0">
+            {name[0]}
+          </div>
+          <div className="text-right">
+            <p className="text-[#1A1A1A] font-semibold text-sm">{name}</p>
+            <p className="text-[#8B7355] text-xs">הצטרפה לקורס לפני מספר דקות ✓</p>
+          </div>
+        </motion.div>
+      )}
+    </AnimatePresence>
+  );
+}
+
 export default function EyebrowCoursePage() {
-  const [form, setForm] = useState({ name: '', phone: '', email: '' });
-  const [pricingForm, setPricingForm] = useState({ name: '', phone: '', email: '' });
+  const [form, setForm] = useState({ name: '', email: '', phone: '' });
+  const [pricingForm, setPricingForm] = useState({ name: '', email: '', phone: '' });
   const [openFaq, setOpenFaq] = useState<number | null>(null);
-  const [submitting, setSubmitting] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [showExitPopup, setShowExitPopup] = useState(false);
+  const exitShown = useRef(false);
   const countdown = useCountdown();
+  const utmRef = useRef('');
 
-  async function subscribeToRavMeser(data: { name: string; phone: string; email: string }) {
-    try {
-      await fetch('/api/subscribe', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data),
-      });
-    } catch {
-      // don't block the user if this fails
-    }
-  }
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const keys = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term', 'fbclid'];
+    const parts: string[] = [];
+    keys.forEach(k => { const v = params.get(k); if (v) parts.push(`${k}=${encodeURIComponent(v)}`); });
+    utmRef.current = parts.join('&');
+  }, []);
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setSubmitting(true);
-    await subscribeToRavMeser(form);
-    window.location.href = PURCHASE_URL;
-  };
+  // Exit intent detection
+  useEffect(() => {
+    const handleMouseLeave = (e: MouseEvent) => {
+      if (e.clientY <= 0 && !exitShown.current) {
+        exitShown.current = true;
+        setTimeout(() => setShowExitPopup(true), 300);
+      }
+    };
+    document.addEventListener('mouseleave', handleMouseLeave);
+    return () => document.removeEventListener('mouseleave', handleMouseLeave);
+  }, []);
 
-  const handlePricingSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setSubmitting(true);
-    await subscribeToRavMeser(pricingForm);
-    window.location.href = PURCHASE_URL;
-  };
+  // Scroll tracking
+  useEffect(() => {
+    const fired = new Set<string>();
+    const onScroll = () => {
+      const pct = Math.round((window.scrollY / (document.body.scrollHeight - window.innerHeight)) * 100);
+      if (pct >= 25 && !fired.has('25')) { fired.add('25'); track('ScrollDepth25'); }
+      if (pct >= 50 && !fired.has('50')) { fired.add('50'); track('ScrollDepth50'); }
+      if (pct >= 75 && !fired.has('75')) { fired.add('75'); track('ScrollDepth75'); }
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
 
   const scrollToForm = () => document.getElementById('cta-form')?.scrollIntoView({ behavior: 'smooth' });
+
+  function getPurchaseUrl() {
+    return utmRef.current ? `${BASE_PURCHASE_URL}?${utmRef.current}` : BASE_PURCHASE_URL;
+  }
+
+  const handleSubmit = async (e: React.FormEvent, isHero = false) => {
+    e.preventDefault();
+    setLoading(true);
+    const data = isHero ? form : pricingForm;
+    track('Lead', { content_name: 'eyebrow_course', currency: 'ILS', value: 197 });
+    track('InitiateCheckout', { content_name: 'eyebrow_course', currency: 'ILS', value: 197 });
+    const params = new URLSearchParams(window.location.search);
+    localStorage.setItem('pending_buyer', JSON.stringify({
+      ...data,
+      utm_source: params.get('utm_source') || '',
+      utm_campaign: params.get('utm_campaign') || '',
+      utm_content: params.get('utm_content') || '',
+    }));
+    try {
+      await fetch('/api/subscribe', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ...data, utm_source: params.get('utm_source') || '', utm_campaign: params.get('utm_campaign') || '' }),
+      });
+    } catch {}
+    window.location.href = getPurchaseUrl();
+  };
+
+  const pad = (n: number) => String(n).padStart(2, '0');
 
   return (
     <main dir="rtl" className="font-[Assistant,sans-serif] bg-[#FDFAF7] text-[#1A1A1A] overflow-x-hidden pb-24">
 
-      {/* ─── STICKY CTA ─── */}
-      <motion.div
-        className="fixed bottom-0 left-0 right-0 z-50 px-4 pb-4 pt-3"
-        initial={{ y: 100, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ delay: 1.5, duration: 0.4 }}
+      {/* Microsoft Clarity */}
+      <Script id="clarity" strategy="afterInteractive">{`
+        (function(c,l,a,r,i,t,y){c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+        t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+        y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+        })(window,document,"clarity","script","wol6ha22ge");
+      `}</Script>
+
+      {/* Meta Pixel */}
+      <Script id="fb-pixel" strategy="afterInteractive">{`
+        !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+        n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
+        n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
+        t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,
+        document,'script','https://connect.facebook.net/en_US/fbevents.js');
+        fbq('init','${PIXEL_ID}');fbq('track','PageView');
+      `}</Script>
+
+      {/* Exit Intent Popup */}
+      <AnimatePresence>
+        {showExitPopup && <ExitPopup onClose={() => setShowExitPopup(false)} />}
+      </AnimatePresence>
+
+      {/* Social Proof Notification */}
+      <SocialProofNotification />
+
+      {/* WhatsApp Float */}
+      <a
+        href={`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent('היי טליה, ראיתי את הקורס עיצוב גבות ויש לי שאלה')}`}
+        target="_blank" rel="noopener noreferrer"
+        className="fixed bottom-20 left-4 z-40 w-14 h-14 bg-[#25D366] rounded-full flex items-center justify-center shadow-xl hover:scale-110 transition-transform"
+        onClick={() => track('WhatsAppClick')}
       >
-        <button
-          onClick={scrollToForm}
-          className="w-full max-w-lg mx-auto flex items-center justify-center gap-3 bg-[#C9A96E] text-[#1A1A1A] py-4 rounded-2xl font-black text-xl shadow-2xl"
-          style={{ display: 'flex' }}
-        >
-          <span>אני רוצה להצטרף לקורס</span>
-          <span className="text-2xl">✋</span>
+        <svg viewBox="0 0 24 24" className="w-8 h-8 fill-white">
+          <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/>
+          <path d="M12 0C5.373 0 0 5.373 0 12c0 2.096.543 4.063 1.494 5.776L0 24l6.389-1.676A11.946 11.946 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.818a9.818 9.818 0 01-5.006-1.375l-.36-.213-3.716.975.993-3.62-.235-.372A9.818 9.818 0 1112 21.818z"/>
+        </svg>
+      </a>
+
+      {/* ─── URGENT TOP BAR ─── */}
+      <div className="bg-[#FDF5F0] border-b border-[#E8DDD4] text-[#C49A8A] text-center py-2 px-4 text-sm font-bold">
+        ⏱️ מחיר השקה נגמר בעוד: {pad(countdown.m)}:{pad(countdown.s)} — אחרי זה המחיר עולה ל-397₪
+      </div>
+
+      {/* ─── STICKY CTA ─── */}
+      <motion.div className="fixed bottom-0 left-0 right-0 z-50 px-4 pb-4 pt-3 bg-white/95 backdrop-blur border-t border-[#E8DDD4]"
+        initial={{ y: 100, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 1.5, duration: 0.4 }}>
+        <button onClick={scrollToForm}
+          className="w-full max-w-lg mx-auto flex items-center justify-center gap-3 bg-[#C49A8A] text-white py-4 rounded-2xl font-black text-xl shadow-xl hover:bg-[#B5897A] transition-colors"
+          style={{ display: 'flex' }}>
+          <span>אני רוצה להרוויח יותר מכל לקוחה ✋</span>
         </button>
       </motion.div>
 
       {/* ─── HERO ─── */}
-      <section className="min-h-screen bg-[#1A1A1A] flex flex-col items-center justify-center px-5 py-14 text-center relative overflow-hidden">
-        {/* Background image overlay */}
-        <div className="absolute inset-0"
-          style={{
-            backgroundImage: 'url(https://images.unsplash.com/photo-1616394584738-fc6e612e71b9?w=1400&q=80)',
-            backgroundSize: 'cover',
-            backgroundPosition: 'center',
-            opacity: 0.08,
-          }} />
-        {/* Gradient overlay */}
-        <div className="absolute inset-0 bg-gradient-to-b from-[#1A1A1A] via-transparent to-[#1A1A1A] opacity-80" />
+      <section className="min-h-[85vh] bg-gradient-to-b from-[#EFE5DC] via-[#F5EDE5] to-[#FDFAF7] flex flex-col items-center justify-center px-5 pb-10 pt-0 text-center relative overflow-hidden">
+        <div className="absolute inset-0" style={{ backgroundImage: 'url(/talya-pro.jpg)', backgroundSize: 'cover', backgroundPosition: 'center top', opacity: 0.07 }} />
 
-        {/* Full-width white bar */}
-        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.5 }}
-          className="relative z-10 w-full bg-white py-3 px-6 text-center mb-0">
-          <p className="text-[#1A1A1A] font-bold text-sm sm:text-base tracking-wide">
-            הסוד שממלא יומן של קוסמטיקאיות שוב ושוב – בלי לרדוף אחרי לקוחות חדשים
-          </p>
-        </motion.div>
-
-        <motion.div className="relative z-10 max-w-3xl mt-10" initial="hidden" animate="visible" variants={stagger}>
-          <motion.h2 variants={fadeUp} className="text-[#D4C5B5] text-2xl font-semibold mb-4">
-            מגיע לך יותר.
-          </motion.h2>
-          <motion.h1 variants={fadeUp} className="text-white text-3xl sm:text-5xl font-extrabold leading-tight mb-6">
-            איך מאות קוסמטיקאיות הוסיפו טיפול אחד של
-            <span className="text-[#C9A96E]"> 15 דקות </span>
-            לקליניקה והגדילו הכנסה <span className="underline underline-offset-4 decoration-[#C9A96E] whitespace-nowrap">בלי למלא יומן</span>
-          </motion.h1>
-          <motion.p variants={fadeUp} className="text-gray-300 text-lg mb-6 leading-relaxed">
-            בלי ציוד יקר.<br />
-            בלי לפתוח עסק חדש.<br />
-            רק שירות אחד שהלקוחות שלך כבר מחפשות.
+        <motion.div className="relative z-10 max-w-3xl mt-6" initial="hidden" animate="visible" variants={stagger}>
+          <motion.p variants={fadeUp} className="text-[#8B7355] text-sm font-semibold uppercase tracking-widest mb-3">
+            427 מניקוריסטיות כבר למדו את השיטה
           </motion.p>
-          {/* Countdown */}
-          <motion.div variants={fadeUp} className="inline-flex flex-col items-center gap-2 bg-white/10 border border-[#D4C5B5]/30 rounded-2xl px-8 py-4 mb-5">
-            <p className="text-[#D4C5B5] text-xs tracking-widest uppercase">⏳ מחיר ההשקה נגמר בעוד</p>
+          <motion.h1 variants={fadeUp} className="text-[#1A1A1A] text-3xl sm:text-5xl font-extrabold leading-tight mb-5">
+            הוסיפי גבות לתפריט ותרוויחי
+            <span className="text-[#C49A8A]"> 70-90 שקל יותר </span>
+            מכל לקוחה
+            <span className="underline underline-offset-4 decoration-[#C49A8A] whitespace-nowrap"> שכבר יושבת אצלך</span>
+          </motion.h1>
+          <motion.p variants={fadeUp} className="text-[#5C4A3A] text-lg mb-6 leading-relaxed">
+            15 דקות לטיפול. בלי למלא יומן מחדש. בלי לקוחות חדשות.
+          </motion.p>
+
+          {/* Countdown hero */}
+          <motion.div variants={fadeUp} className="inline-flex flex-col items-center gap-2 bg-white border-2 border-[#C49A8A]/40 rounded-2xl px-8 py-4 mb-6 shadow-md">
+            <p className="text-[#8B7355] text-xs tracking-widest uppercase font-semibold">מחיר השקה — 197₪ במקום 397₪ — נגמר בעוד</p>
             <div className="flex gap-4 items-center">
               {[{ v: countdown.s, l: 'שניות' }, { v: countdown.m, l: 'דקות' }].map((u, i) => (
                 <div key={i} className="flex gap-4 items-center">
-                  {i > 0 && <span className="text-[#D4C5B5] text-2xl font-bold -mt-3">:</span>}
+                  {i > 0 && <span className="text-[#C49A8A] text-2xl font-bold -mt-3">:</span>}
                   <div className="text-center">
-                    <span className="block text-3xl font-black text-[#D4C5B5]">{String(u.v).padStart(2, '0')}</span>
-                    <span className="text-[10px] text-gray-400 tracking-wider">{u.l}</span>
+                    <span className="block text-4xl font-black text-[#C49A8A]">{pad(u.v)}</span>
+                    <span className="text-[10px] text-[#8B7355] tracking-wider">{u.l}</span>
                   </div>
                 </div>
               ))}
             </div>
           </motion.div>
 
+          {/* Hero mini form */}
+          <motion.form variants={fadeUp} onSubmit={e => handleSubmit(e, true)}
+            className="bg-white rounded-3xl p-6 shadow-xl border border-[#E8DDD4] max-w-md mx-auto space-y-3">
+            <p className="font-bold text-[#1A1A1A] text-lg mb-1">מלאי פרטים ותתחילי עכשיו</p>
+            <input type="text" required placeholder="שם מלא" value={form.name} onChange={e => setForm({ ...form, name: e.target.value })}
+              className="w-full border border-[#E8DDD4] rounded-xl px-4 py-3 text-right focus:border-[#C49A8A] focus:outline-none text-base" />
+            <input type="tel" required placeholder="מספר טלפון" value={form.phone} onChange={e => setForm({ ...form, phone: e.target.value })}
+              className="w-full border border-[#E8DDD4] rounded-xl px-4 py-3 text-right focus:border-[#C49A8A] focus:outline-none text-base" dir="ltr" />
+            <input type="email" required placeholder="כתובת מייל" value={form.email} onChange={e => setForm({ ...form, email: e.target.value })}
+              className="w-full border border-[#E8DDD4] rounded-xl px-4 py-3 focus:border-[#C49A8A] focus:outline-none text-base" dir="ltr" />
+            <button type="submit" disabled={loading}
+              className="w-full bg-[#C49A8A] text-white py-4 rounded-2xl font-bold text-xl hover:bg-[#B5897A] transition-colors disabled:opacity-60">
+              {loading ? 'מעבירה לתשלום...' : 'אני רוצה להצטרף לקורס →'}
+            </button>
+            <p className="text-xs text-gray-400 text-center">🔒 תשלום מאובטח | גישה מיידית | ערובה 14 יום</p>
+          </motion.form>
         </motion.div>
-
-        {/* Bottom fade */}
-        <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-[#FDFAF7] to-transparent" />
       </section>
 
       {/* ─── PROBLEM ─── */}
       <section className="bg-[#FDFAF7] py-12 px-5">
         <motion.div className="max-w-3xl mx-auto" initial="hidden" whileInView="visible" viewport={{ once: true }} variants={stagger}>
-          <motion.p variants={fadeUp} className="text-center text-[#8B7355] font-semibold mb-2 tracking-wide uppercase text-sm">קצר ולעניין</motion.p>
-          <motion.h2 variants={fadeUp} className="text-2xl sm:text-3xl font-bold text-center mb-2">
-            את עובדת קשה. שעות ארוכות.
-          </motion.h2>
-          <motion.p variants={fadeUp} className="text-center text-gray-500 text-lg mb-6">
-            ובסוף החודש המספרים לא מתגמלים כמו שחשבת.
-          </motion.p>
+          <motion.p variants={fadeUp} className="text-center text-[#8B7355] font-semibold mb-2 tracking-wide uppercase text-sm">את עובדת קשה</motion.p>
+          <motion.h2 variants={fadeUp} className="text-2xl sm:text-3xl font-bold text-center mb-6">שעות ארוכות. לקוחות שלא מעריכות. הכנסה שתקועה.</motion.h2>
+          <motion.div variants={fadeUp} className="text-right leading-loose space-y-4 text-[#5C4A3A] text-lg px-2">
+            <p>את עושה לק, ג'ל, ציפורניים — שעה וחצי לטיפול.</p>
+            <p>ומרוויחה 150-180 שקל. בקושי שווה את הזמן.</p>
+            <p className="font-bold text-[#1A1A1A]">אבל הלקוחה שיושבת אצלך — גם עושה גבות. רק לא אצלך.</p>
+            <p className="text-[#8B7355]">היא נוסעת לעוד מקום, משלמת עוד 80 שקל שיכלו להגיע אלייך.</p>
+          </motion.div>
         </motion.div>
       </section>
 
-      {/* ─── PAIN ─── */}
-      <section className="bg-[#1A1A1A] py-12 px-5 relative overflow-hidden">
-        <div className="absolute inset-0 opacity-5"
-          style={{ backgroundImage: 'url(https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?w=1400&q=80)', backgroundSize: 'cover' }} />
-        <motion.div className="relative z-10 max-w-3xl mx-auto" initial="hidden" whileInView="visible" viewport={{ once: true }} variants={stagger}>
-
-          <motion.h2 variants={fadeUp} className="text-2xl sm:text-4xl font-bold text-center mb-6 text-white">
-            חשוב שתדעי - את לא אשמה.
+      {/* ─── AGITATE ─── */}
+      <section className="bg-[#F5EDE5] py-12 px-5">
+        <motion.div className="max-w-3xl mx-auto" initial="hidden" whileInView="visible" viewport={{ once: true }} variants={stagger}>
+          <motion.h2 variants={fadeUp} className="text-2xl sm:text-4xl font-bold text-center mb-6 text-[#1A1A1A]">
+            זה לא שאין לך זמן. זה שאין לך את השירות הנכון.
           </motion.h2>
-          <motion.p variants={fadeUp} className="text-center text-gray-400 text-lg mb-6 leading-relaxed">
-            יש מצב שאת קוסמטיקאית מעולה.<br />
-            אבל תחום הציפורניים לבד פשוט לא מספיק כדי להגיע להכנסות שאת רוצה.
-          </motion.p>
-
-          <motion.div variants={fadeUp}
-            className="bg-white/5 border border-[#D4C5B5]/20 rounded-3xl p-8 text-right leading-loose space-y-4 text-gray-300 text-lg">
-            <p>אני יודעת איך נראה היום שלך.</p>
-            <p>
-              את קמה בבוקר, מכינה את הקליניקה, לקוחה אחרי לקוחה - ידיים עובדות בלי הפסקה.
-              כאבי גב שמלווים אותך כבר מזמן. כאבי ידיים שפשוט הפכו לחלק מהשגרה.
-            </p>
-            <p>
-              ובסוף יום ארוך, כשאת סוף סוף יושבת - את עושה חשבון.
-              ומשהו לא מסתדר.
-            </p>
-            <p>
-              עבדת קשה. היומן היה מלא.
-              <span className="text-white font-semibold"> אבל הסכום בסוף החודש לא מתאים למאמץ שהשקעת.</span>
-            </p>
-            <p className="text-[#D4C5B5]">
-              ואת לא אשמה בזה.<br />
-              תחום הציפורניים לבד פשוט לא מספיק כדי להגיע למקום שאת רוצה להיות בו.
-            </p>
+          <motion.div variants={fadeUp} className="bg-white border border-[#E8DDD4] rounded-3xl p-8 text-right leading-loose space-y-4 text-[#5C4A3A] text-lg shadow-sm">
+            <p>עיצוב גבות לוקח <strong className="text-[#1A1A1A]">15 דקות</strong> בשיטת הקוויק.</p>
+            <p>תוספת של <strong className="text-[#1A1A1A]">70-90 שקל</strong> לכל לקוחה שממילא יושבת אצלך.</p>
+            <p>20 לקוחות בחודש = <strong className="text-[#C49A8A] text-xl">1,400-1,800 שקל נוספים — בלי לקוחה חדשה אחת.</strong></p>
+            <p className="text-[#8B7355]">ו-90% מהלקוחות הקיימות שלך יגידו כן אם רק תציעי.</p>
           </motion.div>
         </motion.div>
       </section>
 
       {/* ─── STATS ─── */}
-      <section className="bg-[#FDFAF7] py-8 px-5">
+      <section className="bg-[#FDFAF7] py-12 px-5">
         <motion.div className="max-w-3xl mx-auto" initial="hidden" whileInView="visible" viewport={{ once: true }} variants={stagger}>
-          <motion.h3 variants={fadeUp} className="text-xl sm:text-2xl font-bold text-center mb-6">
-            למה דווקא עיצוב גבות?
-          </motion.h3>
+          <motion.h3 variants={fadeUp} className="text-xl sm:text-2xl font-bold text-center mb-6">למה דווקא עיצוב גבות?</motion.h3>
           <div className="space-y-3 mb-8">
             {[
-              { icon: '⏱️', text: 'טיפול עיצוב גבות לוקח 15 דקות בלבד.' },
-              { icon: '💰', text: 'תוסיפי 80 עד 120 שקל לטיפול - מעל מה שאת כבר מרוויחה היום.' },
-              { icon: '📅', text: '5 טיפולים ביום = עוד 400-600 שקל על גבי ההכנסה הקיימת שלך.' },
-              { icon: '🌟', text: 'מאות בנות כבר הוסיפו את זה לקליניקה. ההכנסה עלתה.' },
+              { icon: '📈', text: '2025 — ביקוש לגבות גדל כל שנה. מי שיודעת — מלאה בתורים.' },
+              { icon: '💰', text: 'ממוצע תוספת גבות: 70-90 שקל לטיפול. 15 דקות בלבד.' },
+              { icon: '📅', text: '90% מהלקוחות הקיימות יאמרו כן — אם רק תציעי.' },
+              { icon: '📱', text: 'לקוחות שמצלמות גבות — מביאות חברות. שיווק חינמי.' },
             ].map((stat, i) => (
-              <motion.div key={i} variants={fadeUp}
-                className="flex items-center gap-4 bg-white border border-[#E8DDD4] rounded-2xl p-4 shadow-sm">
+              <motion.div key={i} variants={fadeUp} className="flex items-center gap-4 bg-white border border-[#E8DDD4] rounded-2xl p-4 shadow-sm">
                 <span className="text-xl flex-shrink-0">{stat.icon}</span>
                 <p className="text-[#1A1A1A] font-medium text-base">{stat.text}</p>
               </motion.div>
             ))}
           </div>
-
           <motion.div variants={fadeUp} className="grid grid-cols-1 sm:grid-cols-3 gap-3">
             {[
-              { icon: '✦', label: 'טכניקה מדויקת', sub: 'שיטה ברורה שמביאה תוצאה בכל פעם' },
-              { icon: '✦', label: 'ביטחון אמיתי', sub: 'יוצאת מוכנה לגעת בלקוחות מהיום הראשון' },
-              { icon: '✦', label: 'שיטת סקיצה 3/3', sub: 'שלוש נקודות מדידה לגבה מדויקת ומהירה' },
+              { icon: '✦', label: 'בידול מיידי', sub: 'אוטומטית מעל כל מתחרה שלא מציעה גבות' },
+              { icon: '✦', label: 'הכנסה גבוהה יותר', sub: '+70-90 שקל לכל טיפול שממילא עושה' },
+              { icon: '✦', label: 'שיווק אורגני', sub: 'הלקוחות מצלמות ומפרסמות לך בחינם' },
             ].map((p, i) => (
-              <div key={i} className="bg-[#1A1A1A] text-[#D4C5B5] rounded-2xl p-5 text-center">
-                <span className="block text-[#D4C5B5] text-xl mb-2">{p.icon}</span>
+              <div key={i} className="bg-[#D4C5B5] text-[#1A1A1A] rounded-2xl p-5 text-center">
+                <span className="block text-[#8B7355] text-xl mb-2">{p.icon}</span>
                 <p className="font-bold text-base mb-1">{p.label}</p>
-                <p className="text-gray-400 text-xs leading-snug">{p.sub}</p>
+                <p className="text-[#5C4A3A] text-xs leading-snug">{p.sub}</p>
               </div>
             ))}
           </motion.div>
@@ -320,378 +399,194 @@ export default function EyebrowCoursePage() {
       </section>
 
       {/* ─── GALLERY ─── */}
-      <section className="bg-[#FDFAF7] py-8 px-5">
+      <section className="bg-[#F8F0EB] py-8 px-5">
         <motion.div className="max-w-4xl mx-auto" initial="hidden" whileInView="visible" viewport={{ once: true }} variants={stagger}>
           <motion.p variants={fadeUp} className="text-center text-[#8B7355] text-sm uppercase tracking-widest font-semibold mb-2">התוצאות מדברות בעד עצמן</motion.p>
-          <motion.h3 variants={fadeUp} className="text-center text-2xl font-bold mb-5">גבות שעיצבנו בשיטת הקוויק</motion.h3>
+          <motion.h3 variants={fadeUp} className="text-center text-2xl font-bold mb-5">עבודות של תלמידות הקורס</motion.h3>
           <motion.div variants={stagger} className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-            {[
-              { src: '/brow1.jpg', pos: 'center 20%' },
-              { src: '/brow2.jpg', pos: 'center 40%' },
-              { src: '/brow3.jpg', pos: 'center 30%' },
-              { src: '/brow4.jpg', pos: 'center 35%' },
-              { src: '/brow5.jpg', pos: 'center 25%' },
-              { src: '/brow6.jpg', pos: 'center 30%' },
-            ].map((img, i) => (
-              <motion.div key={i} variants={fadeUp}
-                className="relative rounded-2xl overflow-hidden shadow-md aspect-square"
+            {['/brow1.jpg', '/brow2.jpg', '/brow3.jpg', '/brow4.jpg', '/brow5.jpg', '/brow6.jpg'].map((src, i) => (
+              <motion.div key={i} variants={fadeUp} className="relative rounded-2xl overflow-hidden shadow-md aspect-square"
                 whileHover={{ scale: 1.03 }} transition={{ duration: 0.2 }}>
-                <img src={img.src} alt="גבות לאחר עיצוב"
-                  className="w-full h-full object-cover"
-                  style={{ objectPosition: img.pos }} />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
+                <img src={src} alt="עיצוב גבות" className="w-full h-full object-cover" />
               </motion.div>
             ))}
           </motion.div>
         </motion.div>
       </section>
 
-      {/* ─── CTA מיני ─── */}
-      <section className="bg-[#D4C5B5] py-8 px-5 text-center">
-        <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp}>
-          <p className="text-[#1A1A1A] text-xl font-semibold">מוכנה לשנות את זה?</p>
+      {/* ─── MINI CTA ─── */}
+      <section className="bg-[#C49A8A] py-8 px-5">
+        <motion.div className="max-w-xl mx-auto text-center" initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp}>
+          <p className="text-white text-xl font-bold mb-4">מוכנה להוסיף שירות שישנה את ההכנסה שלך?</p>
+          <button onClick={scrollToForm}
+            className="bg-white text-[#C49A8A] font-bold text-lg px-8 py-4 rounded-2xl hover:bg-[#F5EDE5] transition-all shadow-lg">
+            כן, אני רוצה להתחיל עכשיו
+          </button>
         </motion.div>
       </section>
 
-      {/* ─── MECHANISM (Calculator) ─── */}
-      <section className="bg-[#FAF7F4] py-12 px-5">
+      {/* ─── MECHANISM ─── */}
+      <section className="bg-white py-12 px-5">
         <motion.div className="max-w-3xl mx-auto" initial="hidden" whileInView="visible" viewport={{ once: true }} variants={stagger}>
           <motion.p variants={fadeUp} className="text-center text-[#8B7355] text-sm font-semibold uppercase tracking-wide mb-2">החשבון שמשנה הכל</motion.p>
-          <motion.h2 variants={fadeUp} className="text-2xl sm:text-4xl font-bold text-center mb-4">
-            הסוד של הקוסמטיקאיות שמרוויחות הכי הרבה
+          <motion.h2 variants={fadeUp} className="text-2xl sm:text-4xl font-bold text-center mb-8">
+            כמה שווה גבה אחת ללקוחה הממוצעת שלך?
           </motion.h2>
-          <motion.p variants={fadeUp} className="text-center text-gray-500 text-lg mb-6 leading-relaxed">
-            הן לא מחפשות לקוחות חדשות.<br />
-            הן מרוויחות <strong className="text-[#1A1A1A]">יותר</strong> מכל לקוחה שכבר יושבת אצלן.
-          </motion.p>
-
-          <motion.div variants={fadeUp}
-            className="bg-white border border-[#E8DDD4] rounded-3xl p-8 shadow-sm mb-8">
-            <p className="text-center text-[#8B7355] text-sm uppercase tracking-wide mb-6">החישוב הפשוט</p>
+          <motion.div variants={fadeUp} className="bg-[#FAF7F4] border border-[#E8DDD4] rounded-3xl p-8 shadow-sm mb-8">
             <div className="flex items-center justify-center gap-4 flex-wrap mb-6">
-              <div className="text-center">
-                <p className="text-4xl font-black text-[#1A1A1A]">150₪</p>
-                <p className="text-gray-400 text-sm mt-1">טיפול ציפורניים</p>
-              </div>
-              <span className="text-3xl text-[#D4C5B5] font-bold">+</span>
-              <div className="text-center">
-                <p className="text-4xl font-black text-[#8B7355]">80₪</p>
-                <p className="text-gray-400 text-sm mt-1">עיצוב גבות 15 דק'</p>
-              </div>
-              <span className="text-3xl text-[#D4C5B5] font-bold">=</span>
-              <div className="text-center bg-[#1A1A1A] rounded-2xl px-6 py-3">
-                <p className="text-4xl font-black text-[#D4C5B5]">230₪</p>
-                <p className="text-[#D4C5B5]/70 text-sm mt-1">לטיפול אחד</p>
-              </div>
+              {[{ val: '160₪', label: 'טיפול לק/ג\'ל', color: '#1A1A1A' },
+                { val: '+70₪', label: 'תוספת גבות', color: '#8B7355' },
+                { val: '=230₪', label: 'לטיפול אחד', color: '#C49A8A', bg: true }].map((item, i) => (
+                <div key={i} className={`text-center ${item.bg ? 'bg-[#C49A8A] rounded-2xl px-6 py-3' : ''}`}>
+                  <p className={`text-4xl font-black`} style={{ color: item.bg ? 'white' : item.color }}>{item.val}</p>
+                  <p className={`text-sm mt-1 ${item.bg ? 'text-white/80' : 'text-gray-400'}`}>{item.label}</p>
+                </div>
+              ))}
             </div>
             <div className="border-t border-[#E8DDD4] pt-5 text-center">
-              <p className="text-gray-600 text-lg">
-                20 לקוחות בחודש × 80₪ נוספים =
-                <strong className="text-[#1A1A1A] text-xl"> 1,600₪ נוספים בחודש</strong>
+              <p className="text-gray-600 text-lg">20 לקוחות בחודש x 70 שקל נוספים =
+                <strong className="text-[#1A1A1A] text-xl"> 1,400 שקל נוספים בחודש</strong>
               </p>
               <p className="text-gray-400 text-sm mt-2">בלי לקוחה חדשה אחת.</p>
             </div>
           </motion.div>
-
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-            {[
-              { n: '15', l: 'דקות לטיפול' },
-              { n: '300+', l: 'קוסמטיקאיות שינו הכנסה' },
-              { n: '90%', l: 'לקוחות קיימות יקנו שוב' },
-              { n: '×2', l: 'הכנסה שהוכפלה' },
-            ].map((s, i) => (
-              <motion.div key={i} variants={fadeUp}
-                className="bg-[#1A1A1A] rounded-2xl p-4 text-center">
-                <p className="text-3xl font-black text-[#D4C5B5]">{s.n}</p>
-                <p className="text-gray-400 text-xs mt-1 leading-tight">{s.l}</p>
+            {[{ n: '10', l: 'שיעורי וידאו' }, { n: '+70-90₪', l: 'לכל טיפול' }, { n: '15 דק\'', l: 'לגבה מושלמת' }, { n: '427', l: 'תלמידות' }].map((s, i) => (
+              <motion.div key={i} variants={fadeUp} className="bg-[#F5EDE5] border border-[#E8DDD4] rounded-2xl p-4 text-center">
+                <p className="text-3xl font-black text-[#C49A8A]">{s.n}</p>
+                <p className="text-[#5C4A3A] text-xs mt-1 leading-tight">{s.l}</p>
               </motion.div>
             ))}
           </div>
         </motion.div>
       </section>
 
-      {/* ─── TURNING POINT ─── */}
-      <section className="bg-[#FDFAF7] py-12 px-5">
-        <motion.div className="max-w-2xl mx-auto text-center" initial="hidden" whileInView="visible" viewport={{ once: true }} variants={stagger}>
-          <motion.h2 variants={fadeUp} className="text-2xl sm:text-4xl font-bold mb-6">
-            הבנתי את זה אחרי שנים בתחום.
-          </motion.h2>
-          <motion.div variants={fadeUp} className="bg-white border border-[#E8DDD4] rounded-3xl p-8 shadow-sm text-right leading-relaxed text-gray-700 text-lg space-y-4">
-            <p>הדבר שהכי חסר לקוסמטיקאיות הוא לא ידע.<br/>זה <strong className="text-[#1A1A1A]">שיטה מסודרת וקלילה</strong> שמאפשרת לעבוד בביטחון מהיום הראשון.</p>
-            <p>כשיש לך שיטה ברורה - כל לקוחה שנכנסת הופכת להזדמנות.<br/>את לא מנחשת. לא מפחדת. פשוט עובדת.</p>
-            <p className="font-bold text-[#1A1A1A]">וכשעובדים בביטחון, הלקוחות מרגישות את זה.<br/>הן חוזרות. הן ממליצות. היומן מתמלא מעצמו.</p>
-            <p>זה הרגע שהחלטתי לבנות משהו אחר.<br/>לא עוד קורס שמלמד טכניקה ושולח אותך הביתה לבד.</p>
+      {/* ─── STORY ─── */}
+      <section className="bg-[#F5EDE5] py-12 px-5">
+        <motion.div className="max-w-2xl mx-auto" initial="hidden" whileInView="visible" viewport={{ once: true }} variants={stagger}>
+          <motion.p variants={fadeUp} className="text-center text-[#8B7355] text-sm uppercase tracking-wide font-semibold mb-2">הסיפור שלי</motion.p>
+          <motion.h2 variants={fadeUp} className="text-2xl sm:text-4xl font-bold text-center mb-8">גם אני הייתי שם.</motion.h2>
+          <motion.div variants={fadeUp} className="text-right text-[#5C4A3A] text-lg leading-loose space-y-4 mb-6">
+            <p>התחלתי כמניקוריסטית. שעות ארוכות, הכנסה שתקועה.</p>
+            <p>הוספתי גבות — ולא ידעתי עד כמה זה ישנה הכל.</p>
+            <p>לקוחה ראשונה שאלה אם אני עושה גבות. אמרתי כן. לקחתי 80 שקל נוספים. 15 דקות.</p>
           </motion.div>
-
-          {/* Accompaniment box */}
-          <motion.div variants={fadeUp}
-            className="mt-5 bg-[#1A1A1A] rounded-3xl p-5 text-right space-y-3">
-            <p className="text-[#D4C5B5] font-semibold text-base">מה שמייחד את הקורס הזה:</p>
-            {[
-              { icon: '🎯', text: 'שיטה אחת ברורה - לא 10 גישות שונות שמבלבלות' },
-              { icon: '💪', text: 'יוצאת עם ביטחון לגעת בלקוחות כבר ביום שאחרי' },
-              { icon: '🤝', text: 'ליווי גם אחרי הקורס - יש שאלה? אני כאן. לא משאירה אותך לבד' },
-              { icon: '⚡', text: '15 דקות לטיפול - מהיר, מדויק, עם תוצאות שמדברות בעד עצמן' },
-            ].map((item, i) => (
-              <div key={i} className="flex items-start gap-3">
-                <span className="text-xl flex-shrink-0 mt-0.5">{item.icon}</span>
-                <p className="text-gray-300 text-base leading-snug">{item.text}</p>
-              </div>
-            ))}
+          <motion.div variants={fadeUp} className="bg-white border border-[#E8DDD4] rounded-3xl p-7 text-center shadow-sm">
+            <p className="text-[#5C4A3A] text-lg leading-relaxed">
+              "לעבוד פחות שעות. להרוויח יותר כסף.<br />
+              <strong className="text-[#1A1A1A]">עם אותן לקוחות שכבר יש לך."</strong>
+            </p>
+            <p className="text-[#C49A8A] font-bold mt-5 text-xl">מאמינה בך, טליה</p>
           </motion.div>
         </motion.div>
       </section>
 
       {/* ─── AUTHORITY ─── */}
-      <section className="bg-white py-12 px-5 relative overflow-hidden">
-        <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-[#D4C5B5] to-transparent" />
+      <section className="bg-white py-12 px-5">
         <motion.div className="max-w-4xl mx-auto" initial="hidden" whileInView="visible" viewport={{ once: true }} variants={stagger}>
-          <div className="flex flex-col sm:flex-row items-center gap-8">
+          <div className="flex flex-col sm:flex-row items-center gap-8 mb-10">
             <motion.div variants={fadeUp} className="flex-shrink-0 relative">
-              <div className="absolute inset-0 rounded-full bg-[#D4C5B5]/30 blur-2xl scale-110" />
-              <div className="relative w-52 h-52 rounded-full border-4 border-[#D4C5B5] shadow-2xl overflow-hidden">
-                <img
-                  src="/talya-pro.jpg"
-                  alt="טליה בוזורגי"
-                  style={{
-                    width: '100%',
-                    height: '100%',
-                    objectFit: 'cover',
-                    objectPosition: 'center 15%',
-                    transform: 'scale(1.6)',
-                    transformOrigin: 'center 20%',
-                  }}
-                />
+              <div className="absolute inset-0 rounded-full bg-[#C49A8A]/20 blur-2xl scale-110" />
+              <div className="relative w-52 h-52 rounded-full border-4 border-[#C49A8A] shadow-2xl overflow-hidden">
+                <img src="/talya-pro.jpg" alt="טליה בוזורגי"
+                  style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center 15%', transform: 'scale(1.6)', transformOrigin: 'center 20%' }} />
               </div>
             </motion.div>
             <motion.div variants={fadeUp} className="text-right flex-1">
               <p className="text-[#8B7355] font-semibold text-sm uppercase tracking-wide mb-1">מי אני?</p>
-              <h2 className="text-3xl font-extrabold mb-1">היי, אני טליה.</h2>
-              <p className="text-[#8B7355] font-semibold mb-4">מומחית עיצוב גבות | 8 שנות ניסיון</p>
-              <p className="text-gray-700 text-lg leading-relaxed">
-                מאות תלמידות עברו אצלי.<br />
-                קוסמטיקאיות שהוסיפו עיצוב גבות לקליניקה וגדלו.<br />
-                בנות שהתחילו מאפס ועובדות היום עם לקוחות ובביטחון.
-              </p>
+              <h2 className="text-3xl font-extrabold mb-1">היי, אני טליה בוזורגי.</h2>
+              <p className="text-[#8B7355] font-semibold mb-4">מומחית עיצוב גבות ומיקרובליידינג | 8 שנות ניסיון</p>
+              <div className="text-gray-700 text-lg leading-loose space-y-2">
+                <p>בעלת קליניקה ואקדמיה ללימודי מקצועות היופי.</p>
+                <p>פיתחתי את שיטת הקוויק — עיצוב מהיר, נקי, ובטיחותי.</p>
+                <p><strong className="text-[#C49A8A]">427 בנות</strong> למדו אצלי. הן עובדות היום בביטחון.</p>
+              </div>
             </motion.div>
           </div>
-
-          {/* Social proof - certificate photos */}
-          <motion.div variants={fadeUp} className="mt-8">
-            <p className="text-center text-[#8B7355] text-sm uppercase tracking-widest font-semibold mb-4">תלמידות שלמדו אצלי מעידות</p>
-            <div className="grid grid-cols-3 sm:grid-cols-3 gap-2">
-              {['/td1.jpg','/td2.jpg','/td3.jpg','/td4.jpg','/td5.jpg','/td6.jpg'].map((src, i) => (
-                <motion.div key={i} variants={fadeUp}
-                  className="relative rounded-xl overflow-hidden shadow-sm aspect-[3/4]"
-                  whileHover={{ scale: 1.02 }} transition={{ duration: 0.2 }}>
-                  <img src={src} alt="בוגרת קורס עיצוב גבות"
-                    className="w-full h-full object-cover object-top" />
-                </motion.div>
-              ))}
-            </div>
-          </motion.div>
-
-          <motion.div variants={fadeUp}
-            className="mt-8 bg-[#1A1A1A] rounded-3xl p-7 text-center relative overflow-hidden">
-            <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-[#D4C5B5] to-transparent" />
-            <p className="text-[#D4C5B5] text-lg leading-relaxed">
-              השליחות שלי היא אחת.<br />
-              לעזור לבנות לגדול, להתפתח, ולבנות עסק שהן גאות בו.<br /><br />
-              <strong className="text-white">כל תלמידה שמצליחה - היא ההצלחה שלי.</strong><br /><br />
-              אני מאמינה שכל אחת שרוצה באמת יכולה.<br />
-              שתשאפי גבוה. שלא תתפשרי על פחות ממה שמגיע לך.
+          <motion.div variants={fadeUp} className="bg-[#FAF7F4] border border-[#E8DDD4] rounded-3xl p-7 text-center mb-8 shadow-sm">
+            <p className="text-[#5C4A3A] text-lg leading-relaxed">
+              "השליחות שלי — לעזור לכל מניקוריסטית שאוהבת את המקצוע<br />
+              <strong className="text-[#1A1A1A]">להפוך לעסק רווחי שמכבד אותה."</strong>
             </p>
-            <p className="text-white font-bold mt-5 text-xl">מאמינה בך, טליה ✨</p>
           </motion.div>
-
+          <motion.div variants={stagger} className="grid grid-cols-2 gap-3">
+            {['/kurs1.jpg', '/kurs2.jpg', '/kurs3.jpg', '/kurs4.jpg'].map((src, i) => (
+              <motion.div key={i} variants={fadeUp} className="rounded-2xl overflow-hidden aspect-[3/4] shadow-md">
+                <img src={src} alt="מהקורס" className="w-full h-full object-cover" />
+              </motion.div>
+            ))}
+          </motion.div>
         </motion.div>
       </section>
 
       {/* ─── SOLUTION ─── */}
-      <section className="bg-[#FAF7F4] py-12 px-5">
+      <section className="bg-[#F5EDE5] py-12 px-5">
         <motion.div className="max-w-3xl mx-auto" initial="hidden" whileInView="visible" viewport={{ once: true }} variants={stagger}>
-          <motion.p variants={fadeUp} className="text-center text-[#8B7355] text-sm font-semibold uppercase tracking-wide mb-2">אז איך את עושה את זה, ובגדול?</motion.p>
-          <motion.h2 variants={fadeUp} className="text-3xl sm:text-5xl font-extrabold text-center mb-2">
-            עיצוב גבות בשיטת הקוויק
-          </motion.h2>
-          <motion.p variants={fadeUp} className="text-center text-[#8B7355] font-semibold mb-2">"15 דקות לגבות סימטריות ומושלמות"</motion.p>
-          <motion.div variants={fadeUp} className="w-16 h-1 bg-[#D4C5B5] mx-auto rounded-full my-4" />
-          <motion.p variants={fadeUp} className="text-center text-gray-500 mb-6 text-lg">
-            תוכנית דיגיטלית מצולמת עם 10 שיעורים שמקצרים לך את הדרך.
-          </motion.p>
-
+          <motion.p variants={fadeUp} className="text-center text-[#8B7355] text-sm font-semibold uppercase tracking-wide mb-2">התוכנית הדיגיטלית</motion.p>
+          <motion.h2 variants={fadeUp} className="text-3xl sm:text-5xl font-extrabold text-center mb-2">עיצוב גבות בשיטת הקוויק</motion.h2>
+          <motion.p variants={fadeUp} className="text-center text-[#8B7355] font-semibold mb-4">10 שיעורים שישנו את העסק שלך</motion.p>
+          <motion.div variants={fadeUp} className="w-16 h-1 bg-[#C49A8A] mx-auto rounded-full my-4" />
           <div className="space-y-3 mb-6">
             {modules.map((m) => (
               <motion.div key={m.n} variants={fadeUp}
                 className="flex items-center gap-4 bg-white border border-[#E8DDD4] rounded-2xl px-4 py-3 shadow-sm hover:shadow-md transition-shadow">
-                <span className="w-8 h-8 rounded-full bg-[#1A1A1A] text-[#D4C5B5] text-sm font-bold flex items-center justify-center flex-shrink-0">
-                  {m.n}
-                </span>
+                <span className="w-8 h-8 rounded-full bg-[#C49A8A] text-white text-xs font-bold flex items-center justify-center flex-shrink-0">{m.n}</span>
                 <div className="flex-1 min-w-0">
                   <p className="font-bold text-[#1A1A1A] text-base">{m.title}</p>
                   <p className="text-gray-500 text-sm mt-0.5">{m.desc}</p>
                 </div>
-                <div className="w-14 h-14 rounded-xl overflow-hidden flex-shrink-0 border border-[#E8DDD4]">
-                  <img src={m.img} alt={m.title} className="w-full h-full object-cover" />
-                </div>
               </motion.div>
             ))}
           </div>
-
-          {/* Summary chips */}
-          <motion.div variants={fadeUp} className="bg-[#1A1A1A] rounded-2xl p-5">
-            <p className="text-[#D4C5B5] font-semibold mb-3 text-center text-sm uppercase tracking-wide">מה כלול בקורס</p>
+          <motion.div variants={fadeUp} className="bg-[#C49A8A] rounded-2xl p-5">
+            <p className="text-white font-semibold mb-3 text-center text-sm uppercase tracking-wide">מה כלול בקורס</p>
             <div className="flex flex-wrap gap-2 justify-center">
-              {['✅ 10 שיעורי וידאו', '✅ גישה לצמיתות', '✅ חוברת PDF', '✅ תעודת סיום', '✅ 3 בונוסים'].map((t) => (
-                <span key={t} className="bg-white/10 text-[#D4C5B5] text-sm px-3 py-1 rounded-full border border-[#D4C5B5]/20">{t}</span>
+              {['10 שיעורי וידאו', 'גישה לצמיתות', '3 בונוסים', 'תעודת סיום', 'תמיכה', 'ערובה 14 יום'].map((t) => (
+                <span key={t} className="bg-white/20 text-white text-sm px-3 py-1 rounded-full border border-white/30">✅ {t}</span>
               ))}
             </div>
           </motion.div>
-
         </motion.div>
       </section>
 
       {/* ─── CERTIFICATE ─── */}
       <section className="bg-white py-10 px-5">
-        <motion.div className="max-w-2xl mx-auto text-center" initial="hidden" whileInView="visible" viewport={{ once: true }} variants={stagger}>
-          <motion.p variants={fadeUp} className="text-[#8B7355] text-sm font-semibold uppercase tracking-wide mb-2">בסוף הקורס</motion.p>
-          <motion.h2 variants={fadeUp} className="text-2xl sm:text-3xl font-bold mb-8">
-            את מקבלת תעודה מקצועית מהאקדמיה
-          </motion.h2>
-
-          <motion.div variants={fadeUp} className="relative shadow-2xl rounded-2xl overflow-hidden border border-[#C9A96E]/30">
+        <motion.div className="max-w-lg mx-auto text-center" initial="hidden" whileInView="visible" viewport={{ once: true }} variants={stagger}>
+          <motion.p variants={fadeUp} className="text-[#8B7355] text-sm font-semibold uppercase tracking-wide mb-2">בסיום הקורס</motion.p>
+          <motion.h2 variants={fadeUp} className="text-2xl font-extrabold mb-5">תעודת סיום קורס עיצוב גבות</motion.h2>
+          <motion.div variants={fadeUp} className="rounded-2xl overflow-hidden shadow-xl border border-[#E8DDD4]">
             <img src="/cert-eyebrow.png" alt="תעודת סיום קורס עיצוב גבות" className="w-full h-auto" />
           </motion.div>
-
-          <motion.p variants={fadeUp} className="text-gray-400 text-sm mt-6">
-            תעודה מקצועית שתציגי בגאווה ללקוחות שלך
-          </motion.p>
         </motion.div>
       </section>
 
       {/* ─── BONUSES ─── */}
-      <section className="bg-[#1A1A1A] py-12 px-5 relative overflow-hidden">
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_#2a2010_0%,_transparent_60%)]" />
+      <section className="bg-[#EFE5DC] py-12 px-5 relative overflow-hidden">
         <motion.div className="max-w-3xl mx-auto relative z-10" initial="hidden" whileInView="visible" viewport={{ once: true }} variants={stagger}>
-          <motion.p variants={fadeUp} className="text-center text-[#C9A96E] text-xs uppercase tracking-[4px] mb-3">ועוד לא הכל</motion.p>
-          <motion.h2 variants={fadeUp} className="text-3xl sm:text-4xl font-extrabold text-center text-white mb-2">
-            3 בונוסים מתנה
-          </motion.h2>
-          <motion.p variants={fadeUp} className="text-center text-[#C9A96E] font-semibold text-lg mb-1">שווי 597₪ - שלך בחינם</motion.p>
-          <motion.p variants={fadeUp} className="text-center text-gray-400 text-sm mb-8">
-            כשאת רוכשת היום
-          </motion.p>
-
+          <motion.p variants={fadeUp} className="text-center text-[#8B7355] text-xs uppercase tracking-[4px] mb-3">ועוד לא הכל</motion.p>
+          <motion.h2 variants={fadeUp} className="text-3xl sm:text-4xl font-extrabold text-center text-[#1A1A1A] mb-2">3 בונוסים מתנה</motion.h2>
+          <motion.p variants={fadeUp} className="text-center text-[#C49A8A] font-semibold text-lg mb-1">שווי 597 שקל — שלך בחינם</motion.p>
+          <motion.p variants={fadeUp} className="text-center text-[#8B7355] text-sm mb-8">כשאת רוכשת היום</motion.p>
           <div className="space-y-4">
-
-            {/* בונוס 1 */}
-            <motion.div variants={fadeUp} className="relative border border-[#C9A96E]/30 rounded-2xl overflow-hidden flex items-stretch" whileHover={{ scale: 1.01 }} transition={{ duration: 0.2 }}>
-              <div className="absolute inset-0 bg-gradient-to-l from-[#C9A96E]/10 to-transparent pointer-events-none" />
-              {/* תמונה מרובעת ימין */}
-              <div className="relative w-24 flex-shrink-0 overflow-hidden">
-                <img src="/brow3.jpg" alt="צביעת גבות" className="w-full h-full object-cover" style={{ objectPosition: 'center 25%' }} />
-                <div className="absolute inset-0 bg-black/30 flex items-center justify-center">
-                  <div className="w-8 h-8 rounded-full bg-white/30 border border-white/60 flex items-center justify-center">
-                    <div className="w-0 h-0 ml-0.5" style={{ borderTop: '6px solid transparent', borderBottom: '6px solid transparent', borderLeft: '10px solid white' }} />
+            {bonuses.map((b, i) => (
+              <motion.div key={i} variants={fadeUp}
+                className="relative border border-[#D4C5B5] rounded-2xl overflow-hidden flex items-stretch bg-white shadow-sm"
+                whileHover={{ scale: 1.01 }} transition={{ duration: 0.2 }}>
+                <div className="relative flex-shrink-0 w-20 h-20 self-center overflow-hidden">
+                  <img src={b.img} alt={b.name} className="w-full h-full object-cover" />
+                </div>
+                <div className="flex-1 p-4 text-right">
+                  <span className="text-[#C49A8A] text-xs font-bold tracking-wider">בונוס {i + 1}</span>
+                  <h3 className="font-bold text-base text-[#1A1A1A] mt-0.5 mb-1">{b.name}</h3>
+                  <p className="text-[#5C4A3A] text-xs leading-relaxed mb-2">{b.desc}</p>
+                  <div className="flex items-center justify-end gap-2">
+                    <span className="bg-green-100 text-green-700 text-xs font-bold px-2 py-0.5 rounded-full">חינם</span>
+                    <span className="text-[#8B7355] line-through text-xs">{b.val}</span>
                   </div>
                 </div>
-              </div>
-              {/* טקסט */}
-              <div className="flex-1 p-4 text-right">
-                <span className="text-[#C9A96E] text-xs font-bold tracking-wider">בונוס 1</span>
-                <h3 className="font-bold text-base text-white mt-0.5 mb-1">הדרכת צביעת גבות</h3>
-                <p className="text-gray-400 text-xs leading-relaxed mb-2">טיפול נוסף של 5 דקות שמגדיל את ההכנסה</p>
-                <div className="flex items-center justify-end gap-2">
-                  <span className="bg-green-500/20 text-green-400 text-xs font-bold px-2 py-0.5 rounded-full">חינם</span>
-                  <span className="text-gray-500 line-through text-xs">297₪</span>
-                </div>
-              </div>
-            </motion.div>
-
-            {/* בונוס 2 */}
-            <motion.div variants={fadeUp} className="relative border border-[#C9A96E]/30 rounded-2xl overflow-hidden flex items-stretch" whileHover={{ scale: 1.01 }} transition={{ duration: 0.2 }}>
-              <div className="absolute inset-0 bg-gradient-to-l from-[#C9A96E]/10 to-transparent pointer-events-none" />
-              {/* תמונה מרובעת ימין - פלאפון מצלם גבה */}
-              <div className="relative w-24 flex-shrink-0 overflow-hidden bg-[#111]">
-                <img src="/brow1.jpg" alt="מצלמת גבות" className="w-full h-full object-cover opacity-70" style={{ objectPosition: 'center 20%' }} />
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <div className="w-12 h-16 bg-[#111]/70 rounded-xl border border-white/40 flex flex-col overflow-hidden">
-                    <div className="flex-1 relative">
-                      <img src="/brow1.jpg" alt="" className="w-full h-full object-cover opacity-80" style={{ objectPosition: 'center 20%' }} />
-                      <div className="absolute inset-1 border border-[#C9A96E]/80 rounded-sm">
-                        <div className="absolute top-0 left-0 w-1.5 h-1.5 border-t border-l border-[#C9A96E]" />
-                        <div className="absolute top-0 right-0 w-1.5 h-1.5 border-t border-r border-[#C9A96E]" />
-                        <div className="absolute bottom-0 left-0 w-1.5 h-1.5 border-b border-l border-[#C9A96E]" />
-                        <div className="absolute bottom-0 right-0 w-1.5 h-1.5 border-b border-r border-[#C9A96E]" />
-                      </div>
-                    </div>
-                    <div className="h-4 bg-[#111] flex justify-center items-center">
-                      <div className="w-3 h-3 rounded-full border border-white/50" />
-                    </div>
-                  </div>
-                </div>
-              </div>
-              {/* טקסט */}
-              <div className="flex-1 p-4 text-right">
-                <span className="text-[#C9A96E] text-xs font-bold tracking-wider">בונוס 2</span>
-                <h3 className="font-bold text-base text-white mt-0.5 mb-1">שיווק ואינסטגרם</h3>
-                <p className="text-gray-400 text-xs leading-relaxed mb-2">איך לצלם תמונות שמביאות לקוחות ומה לפרסם</p>
-                <div className="flex items-center justify-end gap-2">
-                  <span className="bg-green-500/20 text-green-400 text-xs font-bold px-2 py-0.5 rounded-full">חינם</span>
-                  <span className="text-gray-500 line-through text-xs">150₪</span>
-                </div>
-              </div>
-            </motion.div>
-
-            {/* בונוס 3 */}
-            <motion.div variants={fadeUp} className="relative border border-[#C9A96E]/30 rounded-2xl overflow-hidden flex items-stretch" whileHover={{ scale: 1.01 }} transition={{ duration: 0.2 }}>
-              <div className="absolute inset-0 bg-gradient-to-l from-[#C9A96E]/10 to-transparent pointer-events-none" />
-              {/* מוקאפ PDF */}
-              <div className="relative w-24 flex-shrink-0 bg-[#1a1500] flex items-center justify-center overflow-hidden">
-                <div className="absolute" style={{ transform: 'rotate(8deg) translate(6px,-2px)' }}>
-                  <div className="w-12 h-16 bg-[#2a2200] rounded border border-[#C9A96E]/20" />
-                </div>
-                <div className="absolute" style={{ transform: 'rotate(4deg) translate(3px,-1px)' }}>
-                  <div className="w-12 h-16 bg-[#221b00] rounded border border-[#C9A96E]/20" />
-                </div>
-                <div className="relative w-12 h-16 bg-white rounded shadow-xl overflow-hidden">
-                  <div className="bg-[#1A1A1A] h-4 flex items-center justify-center">
-                    <span className="text-[#C9A96E] text-[5px] font-black tracking-wider">TB ACADEMY</span>
-                  </div>
-                  <div className="p-1.5 space-y-1">
-                    <div className="h-1 bg-gray-200 rounded-full w-full" />
-                    <div className="h-1 bg-gray-200 rounded-full w-4/5" />
-                    <div className="h-3 bg-[#D4C5B5]/30 rounded mt-1" />
-                    <div className="h-1 bg-gray-100 rounded-full w-full" />
-                    <div className="h-1 bg-gray-100 rounded-full w-3/4" />
-                  </div>
-                </div>
-              </div>
-              {/* טקסט */}
-              <div className="flex-1 p-4 text-right">
-                <span className="text-[#C9A96E] text-xs font-bold tracking-wider">בונוס 3</span>
-                <h3 className="font-bold text-base text-white mt-0.5 mb-1">חוברת PDF מקצועית מלאה</h3>
-                <p className="text-gray-400 text-xs leading-relaxed mb-2">כל הידע מסודר בחוברת מוכנה להדפסה</p>
-                <div className="flex items-center justify-end gap-2">
-                  <span className="bg-green-500/20 text-green-400 text-xs font-bold px-2 py-0.5 rounded-full">חינם</span>
-                  <span className="text-gray-500 line-through text-xs">150₪</span>
-                </div>
-              </div>
-            </motion.div>
-
+              </motion.div>
+            ))}
           </div>
-
-          <motion.div variants={fadeUp} className="mt-8 relative">
-            <div className="absolute inset-0 bg-[#C9A96E]/10 rounded-3xl blur-xl" />
-            <div className="relative bg-gradient-to-b from-white/5 to-white/0 border border-[#C9A96E]/40 rounded-3xl p-8 text-center">
-              <p className="text-[#C9A96E] text-xs uppercase tracking-[3px] mb-4">הכל כלול - בלי הפתעות</p>
-              <div className="flex items-center justify-center gap-3 flex-wrap mb-2">
-                <span className="text-gray-600 line-through text-lg">2,794₪</span>
-                <span className="text-white text-6xl font-black">197₪</span>
-              </div>
-              <p className="text-gray-400 text-sm">או 2 תשלומים נוחים של 98₪</p>
-            </div>
-          </motion.div>
         </motion.div>
       </section>
 
@@ -700,9 +595,7 @@ export default function EyebrowCoursePage() {
         <motion.div className="max-w-2xl mx-auto" initial="hidden" whileInView="visible" viewport={{ once: true }} variants={stagger}>
           <motion.p variants={fadeUp} className="text-center text-[#8B7355] text-sm uppercase tracking-wide font-semibold mb-2">עדויות</motion.p>
           <motion.h2 variants={fadeUp} className="text-3xl font-extrabold text-center mb-2">מה הן כותבות אחרי הקורס</motion.h2>
-          <motion.div variants={fadeUp} className="w-16 h-1 bg-[#D4C5B5] mx-auto rounded-full mt-3 mb-10" />
-
-          {/* WhatsApp style */}
+          <motion.div variants={fadeUp} className="w-16 h-1 bg-[#C49A8A] mx-auto rounded-full mt-3 mb-10" />
           <div className="space-y-5">
             {testimonials.map((t, i) => (
               <motion.div key={i} variants={fadeUp} className="flex justify-end items-end gap-2">
@@ -712,115 +605,36 @@ export default function EyebrowCoursePage() {
                   <p className="text-gray-400 text-xs mt-1 text-left">{t.time} ✓✓</p>
                 </div>
                 <div className="flex flex-col items-center gap-1 flex-shrink-0 order-first">
-                  <img src={t.avatar} alt={t.name}
-                    className="w-10 h-10 rounded-full object-cover border-2 border-[#D4C5B5]" />
-                  <span className="text-[10px] text-gray-400">{t.name}</span>
+                  <div className="w-10 h-10 rounded-full bg-[#C49A8A] border-2 border-white flex items-center justify-center font-bold text-white shadow">
+                    {t.name[0]}
+                  </div>
+                  <span className="text-[10px] text-gray-600">{t.name}</span>
                 </div>
               </motion.div>
             ))}
           </div>
-
-          <motion.p variants={fadeUp} className="text-center text-gray-500 mt-10 text-base">
-            אלה הודעות אמיתיות מתלמידות.<br />
-            לא פרסומת. לא המצאה. תוצאות.
+          <motion.p variants={fadeUp} className="text-center text-[#8B7355] mt-10 text-base">
+            הודעות אמיתיות מתלמידות. לא פרסומת. תוצאות.
           </motion.p>
         </motion.div>
       </section>
 
-      {/* ─── URGENCY ─── */}
-      <section className="bg-[#1A1A1A] py-12 px-5 relative overflow-hidden">
-        <div className="absolute inset-0 opacity-5"
-          style={{ backgroundImage: 'url(https://images.unsplash.com/photo-1522337660859-02fbefca4702?w=1400&q=80)', backgroundSize: 'cover' }} />
-        <motion.div className="relative z-10 max-w-3xl mx-auto text-center"
-          initial={{ opacity: 0, scale: 0.95 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }} transition={{ duration: 0.6 }}>
-          <p className="text-white text-2xl sm:text-3xl font-bold leading-relaxed mb-4">
-            הלקוחות שלך לא מחפשות עוד מקום לגבות.<br />
-            הן רוצות לעשות הכל אצלך.<br /><br />
-            <span className="text-[#D4C5B5]">לסמוך עלייך. להישאר אצלך.</span><br />
-            לעשות ציפורניים, גבות, הכל במקום אחד.
-          </p>
-          <p className="text-[#D4C5B5] text-xl mt-6 font-medium">את רק צריכה לתת להן את הסיבה להישאר.</p>
-        </motion.div>
-      </section>
-
-      {/* ─── MY STORY ─── */}
-      <section className="bg-white py-12 px-5">
-        <motion.div className="max-w-2xl mx-auto" initial="hidden" whileInView="visible" viewport={{ once: true }} variants={stagger}>
-          <motion.p variants={fadeUp} className="text-center text-[#8B7355] text-sm uppercase tracking-wide font-semibold mb-2">הסיפור שלי</motion.p>
-          <motion.h2 variants={fadeUp} className="text-2xl sm:text-4xl font-bold text-center mb-6">
-            אני מבינה אותך.<br />כי הייתי בדיוק במקום הזה.
-          </motion.h2>
-
-          {/* PAIN */}
-          <motion.div variants={fadeUp} className="text-right text-gray-700 text-lg leading-loose space-y-4 mb-8">
-            <p>
-              עבדתי מהבוקר עד הערב. שעות שלא רציתי לעבוד בהן.
-            </p>
-            <p>
-              לקוחה אחרי לקוחה. ידיים עובדות בלי הפסקה.
-              כאבי גב, כאבי ידיים - וזה פשוט הפך לשגרה.
-            </p>
-          </motion.div>
-
-          <motion.div variants={fadeUp} className="text-right text-gray-700 text-lg leading-loose space-y-2 mb-8">
-            <p>ובסוף כל חודש עשיתי חשבון.</p>
-            <p><span className="font-bold text-[#1A1A1A]">המספרים לא תאמו את המאמץ שהשקעתי.</span></p>
-            <p>עבדתי קשה. היומן היה מלא. אבל ההכנסה נתקעה באותו מקום.</p>
-          </motion.div>
-
-          {/* SOLUTION */}
-          <motion.div variants={fadeUp} className="text-right text-gray-700 text-lg leading-loose space-y-4 mb-8">
-            <p>
-              ואז הכנסתי עיצוב גבות לקליניקה.
-            </p>
-            <p>
-              הורדתי שעות עבודה. מילאתי את היומן. הכפלתי הכנסה.
-            </p>
-            <p>
-              <span className="font-bold text-[#1A1A1A]">לא עם לקוחות חדשות. עם אותן לקוחות שכבר ישבו אצלי על הכיסא.</span>
-            </p>
-          </motion.div>
-
-          {/* BRIDGE */}
-          <motion.div variants={fadeUp}
-            className="bg-[#1A1A1A] rounded-3xl p-7 text-center">
-            <p className="text-[#D4C5B5] text-lg leading-relaxed">
-              בניתי את הקורס הזה כדי שאת לא תצטרכי לגלות את זה לבד.<br />
-              <strong className="text-white">הדרך כבר סלולה. את רק צריכה ללכת עליה.</strong>
-            </p>
-          </motion.div>
-
-          {/* Practice session photos */}
-          <motion.div variants={fadeUp} className="mt-6 grid grid-cols-2 gap-3">
-            {['/kurs1.jpg','/kurs2.jpg','/kurs3.jpg','/kurs4.jpg'].map((src, i) => (
-              <div key={i} className="relative rounded-xl overflow-hidden shadow-sm aspect-[3/4]">
-                <img src={src} alt="שיעור עיצוב גבות"
-                  className="w-full h-full object-cover object-top" />
-              </div>
-            ))}
-          </motion.div>
-        </motion.div>
-      </section>
-
       {/* ─── FOR WHO ─── */}
-      <section className="bg-white py-12 px-5">
+      <section className="bg-[#F5EDE5] py-12 px-5">
         <motion.div className="max-w-3xl mx-auto" initial="hidden" whileInView="visible" viewport={{ once: true }} variants={stagger}>
           <motion.p variants={fadeUp} className="text-center text-[#8B7355] text-sm font-semibold uppercase tracking-wide mb-2">למי זה מתאים</motion.p>
-          <motion.h2 variants={fadeUp} className="text-2xl sm:text-4xl font-bold text-center mb-8">
-            התוכנית הזו בשבילך אם...
-          </motion.h2>
+          <motion.h2 variants={fadeUp} className="text-2xl sm:text-4xl font-bold text-center mb-8">הקורס בשבילך אם...</motion.h2>
           <div className="space-y-3">
             {[
-              'את קוסמטיקאית שלא מצליחה למלא את היומן כמו שרצית',
-              'את מרגישה שהיומן שלך לא שווה את המאמץ שאת משקיעה',
-              'את רוצה להוסיף שירות נוסף לקליניקה - בלי לצאת להשתלמויות יקרות',
-              'את מפחדת להרוס ללקוחות את הגבות ורוצה ביטחון אמיתי לפני שמתחילות',
-              'ניסית ללמוד מיוטיוב ויצאת מבולבלת יותר - ורוצה שיטה אחת ברורה',
-              'את מרגישה שמגיע לך יותר ורוצה להוכיח את זה לעצמך',
+              'את מניקוריסטית שרוצה להוסיף שירות רווחי בלי לקוחות חדשות',
+              'את בתחום היופי ורוצה ללמוד עיצוב גבות מאפס',
+              'למדת גבות בעבר ולא יצא לך טוב — רוצה שיטה שעובדת',
+              'יש לך לקוחות קבועות שלא מציעה להן גבות',
+              'חולמת על יומן מלא שלא מצריך לרדוף אחרי לקוחות חדשות',
+              'רוצה ללמוד בדיוק כמה שצריך — בלי בזבוז זמן',
             ].map((t, i) => (
-              <motion.div key={i} variants={fadeUp}
-                className="flex items-start gap-4 bg-[#FAF7F4] border border-[#E8DDD4] rounded-2xl px-5 py-4">
-                <span className="text-[#D4C5B5] text-xl mt-0.5 flex-shrink-0">←</span>
+              <motion.div key={i} variants={fadeUp} className="flex items-start gap-4 bg-white border border-[#E8DDD4] rounded-2xl px-5 py-4 shadow-sm">
+                <span className="text-[#C49A8A] text-xl mt-0.5 flex-shrink-0">←</span>
                 <span className="text-[#1A1A1A] text-base">{t}</span>
               </motion.div>
             ))}
@@ -829,90 +643,64 @@ export default function EyebrowCoursePage() {
       </section>
 
       {/* ─── PRICING ─── */}
-      <section className="bg-[#1A1A1A] py-12 px-5">
+      <section id="section-pricing" className="bg-[#F5EDE5] py-12 px-5">
         <motion.div className="max-w-lg mx-auto text-center" initial="hidden" whileInView="visible" viewport={{ once: true }} variants={stagger}>
-          <motion.p variants={fadeUp} className="text-[#D4C5B5]/60 text-sm uppercase tracking-wide mb-2">ההשקעה שלך</motion.p>
-          <motion.h2 variants={fadeUp} className="text-3xl font-extrabold text-white mb-8">
-            כמה עולה לשנות את ההכנסות שלך?
-          </motion.h2>
-
+          <motion.p variants={fadeUp} className="text-[#8B7355] text-sm uppercase tracking-wide mb-2">ההשקעה שלך</motion.p>
+          <motion.h2 variants={fadeUp} className="text-3xl font-extrabold text-[#1A1A1A] mb-8">כמה עולה לשנות את ההכנסות שלך?</motion.h2>
           <motion.div variants={fadeUp} className="bg-white rounded-3xl p-8 mb-6 shadow-2xl">
-            <p className="text-gray-400 line-through text-base mb-1 text-center">שווי מוצהר: 2,197₪</p>
+            <p className="text-gray-400 line-through text-base mb-1 text-center">שווי מוצהר: 397 שקל</p>
             <p className="text-7xl font-black text-[#1A1A1A] leading-none mb-1 text-center">197₪</p>
-            <p className="text-gray-500 text-sm mb-6 text-center">או 2 תשלומים נוחים של 98₪</p>
-
-            <form onSubmit={handlePricingSubmit} className="space-y-3">
-              <div>
-                <label className="block text-sm font-semibold text-gray-500 mb-1 text-right">שם מלא</label>
-                <input
-                  type="text" required placeholder="הכניסי את שמך"
-                  value={pricingForm.name} onChange={e => setPricingForm({ ...pricingForm, name: e.target.value })}
-                  className="w-full border border-[#E8DDD4] rounded-xl px-4 py-3 text-right text-[#1A1A1A] focus:border-[#D4C5B5] focus:outline-none transition-colors text-base"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-semibold text-gray-500 mb-1 text-right">טלפון נייד</label>
-                <input
-                  type="tel" required placeholder="050-0000000"
-                  value={pricingForm.phone} onChange={e => setPricingForm({ ...pricingForm, phone: e.target.value })}
-                  className="w-full border border-[#E8DDD4] rounded-xl px-4 py-3 text-[#1A1A1A] focus:border-[#D4C5B5] focus:outline-none transition-colors text-base"
-                  dir="ltr"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-semibold text-gray-500 mb-1 text-right">כתובת מייל</label>
-                <input
-                  type="email" required placeholder="example@gmail.com"
-                  value={pricingForm.email} onChange={e => setPricingForm({ ...pricingForm, email: e.target.value })}
-                  className="w-full border border-[#E8DDD4] rounded-xl px-4 py-3 text-[#1A1A1A] focus:border-[#D4C5B5] focus:outline-none transition-colors text-base"
-                  dir="ltr"
-                />
-              </div>
+            <p className="text-gray-500 text-sm mb-1 text-center">או 2 תשלומים נוחים של 99 שקל</p>
+            <p className="text-[#C49A8A] text-xs font-bold mb-6 text-center">✅ ערובה של 14 יום — לא מרוצה? מקבלת את הכסף חזרה</p>
+            <form onSubmit={e => handleSubmit(e, false)} className="space-y-3">
+              <input type="text" required placeholder="שם מלא"
+                value={pricingForm.name} onChange={e => setPricingForm({ ...pricingForm, name: e.target.value })}
+                className="w-full border border-[#E8DDD4] rounded-xl px-4 py-3 text-right text-[#1A1A1A] focus:border-[#C49A8A] focus:outline-none text-base" />
+              <input type="tel" required placeholder="מספר טלפון"
+                value={pricingForm.phone} onChange={e => setPricingForm({ ...pricingForm, phone: e.target.value })}
+                className="w-full border border-[#E8DDD4] rounded-xl px-4 py-3 text-[#1A1A1A] focus:border-[#C49A8A] focus:outline-none text-base" dir="ltr" />
+              <input type="email" required placeholder="כתובת מייל"
+                value={pricingForm.email} onChange={e => setPricingForm({ ...pricingForm, email: e.target.value })}
+                className="w-full border border-[#E8DDD4] rounded-xl px-4 py-3 text-[#1A1A1A] focus:border-[#C49A8A] focus:outline-none text-base" dir="ltr" />
               <label className="flex items-start gap-2 cursor-pointer">
-                <input type="checkbox" required className="mt-1 flex-shrink-0 accent-[#1A1A1A]" />
+                <input type="checkbox" required className="mt-1 flex-shrink-0 accent-[#C49A8A]" />
                 <span className="text-xs text-gray-500 text-right leading-snug">
                   אני מאשרת קבלת עדכונים, מבצעים ותכנים שיווקיים למייל מטליה בוזורגי. ניתן לבטל בכל עת.
                 </span>
               </label>
-              <motion.button type="submit"
-                className="w-full bg-[#1A1A1A] text-[#D4C5B5] py-4 rounded-2xl font-bold text-xl hover:bg-[#D4C5B5] hover:text-[#1A1A1A] transition-colors mt-2"
-                disabled={submitting}
-                whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.97 }}>
-                {submitting ? 'שנייה...' : 'אני רוצה להצטרף ✋'}
+              <motion.button type="submit" disabled={loading}
+                className="w-full bg-[#C49A8A] text-white py-4 rounded-2xl font-bold text-xl hover:bg-[#B5897A] transition-colors mt-2 disabled:opacity-60"
+                whileHover={{ scale: loading ? 1 : 1.02 }} whileTap={{ scale: loading ? 1 : 0.97 }}>
+                {loading ? 'מעבירה לתשלום...' : 'אני רוצה להצטרף לקורס →'}
               </motion.button>
             </form>
-            <div className="mt-4 bg-[#1A1A1A]/50 border border-[#C9A96E]/20 rounded-xl px-4 py-3 text-center space-y-1">
-              <p className="text-[#C9A96E] text-xs font-semibold">מה קורה אחרי התשלום?</p>
-              <p className="text-gray-400 text-xs leading-relaxed">
-                תועברי לדף סליקה מאובטח. תוך דקה אחת מהרכישה יגיע למייל שלך הקורס עם שם משתמש וסיסמה אישיים.
-              </p>
-              <p className="text-gray-500 text-xs">ערבות החזר מלא 14 יום</p>
+
+            <div className="mt-5 bg-gray-50 border border-[#E8DDD4] rounded-xl px-4 py-3 text-center space-y-1">
+              <p className="text-[#8B7355] text-xs font-semibold">מה קורה אחרי התשלום?</p>
+              <p className="text-gray-500 text-xs leading-relaxed">תועברי לדף סליקה מאובטח. תוך דקה אחת מהרכישה יגיע למייל שלך הקורס עם שם משתמש וסיסמה אישיים.</p>
+              <p className="text-gray-400 text-xs">גישה לצמיתות — בלי הגבלת זמן</p>
             </div>
           </motion.div>
 
           {/* Guarantee */}
-          <motion.div variants={fadeUp}
-            className="flex items-start gap-4 text-right bg-white/5 border border-[#D4C5B5]/20 rounded-2xl p-5">
+          <motion.div variants={fadeUp} className="flex items-start gap-4 text-right bg-white border border-[#E8DDD4] rounded-2xl p-5 mb-4 shadow-sm">
             <span className="text-4xl flex-shrink-0">🛡️</span>
             <div>
-              <p className="text-[#D4C5B5] font-bold mb-1">ערבות החזר מלא - 14 יום</p>
-              <p className="text-gray-400 text-sm leading-relaxed">
-                צפית בכל החומר ולא הצלחת ליישם כלום? מחזירה לך את הכסף במלואו. בלי שאלות מיותרות.
-              </p>
+              <p className="text-[#C49A8A] font-bold mb-1">ערובה של 14 יום — בלי שאלות</p>
+              <p className="text-[#5C4A3A] text-sm leading-relaxed">צפי בכל החומר. תרגלי. אם לא הרגשת שהשתפרת — מחזירים לך את הכסף במלואו, ללא שאלות.</p>
             </div>
           </motion.div>
 
-          {/* Synced countdown */}
-          <motion.div variants={fadeUp}
-            className="mt-4 bg-white/5 border border-[#C9A96E]/30 rounded-2xl px-6 py-4 text-center">
-            <p className="text-[#C9A96E] text-xs tracking-widest uppercase mb-3">⏳ מחיר ההשקה נגמר בעוד</p>
+          {/* Countdown pricing */}
+          <motion.div variants={fadeUp} className="bg-white border border-[#E8DDD4] rounded-2xl px-6 py-4 text-center shadow-sm">
+            <p className="text-[#8B7355] text-xs tracking-widest uppercase mb-3">מחיר ההשקה נגמר בעוד</p>
             <div className="flex gap-4 items-center justify-center">
               {[{ v: countdown.s, l: 'שניות' }, { v: countdown.m, l: 'דקות' }].map((u, i) => (
                 <div key={i} className="flex gap-4 items-center">
-                  {i > 0 && <span className="text-[#C9A96E] text-2xl font-bold -mt-3">:</span>}
+                  {i > 0 && <span className="text-[#C49A8A] text-2xl font-bold -mt-3">:</span>}
                   <div className="text-center">
-                    <span className="block text-3xl font-black text-[#C9A96E]">{String(u.v).padStart(2, '0')}</span>
-                    <span className="text-[10px] text-gray-400 tracking-wider">{u.l}</span>
+                    <span className="block text-3xl font-black text-[#C49A8A]">{pad(u.v)}</span>
+                    <span className="text-[10px] text-[#8B7355] tracking-wider">{u.l}</span>
                   </div>
                 </div>
               ))}
@@ -922,26 +710,20 @@ export default function EyebrowCoursePage() {
       </section>
 
       {/* ─── FAQ ─── */}
-      <section className="bg-[#FAF7F4] py-12 px-5">
+      <section className="bg-[#FDFAF7] py-12 px-5">
         <motion.div className="max-w-3xl mx-auto" initial="hidden" whileInView="visible" viewport={{ once: true }} variants={stagger}>
           <motion.p variants={fadeUp} className="text-center text-[#8B7355] text-sm font-semibold uppercase tracking-wide mb-2">שאלות ותשובות</motion.p>
-          <motion.h2 variants={fadeUp} className="text-2xl sm:text-4xl font-bold text-center mb-6">
-            שאלות שבטח עולות לך
-          </motion.h2>
+          <motion.h2 variants={fadeUp} className="text-2xl sm:text-4xl font-bold text-center mb-6">שאלות שבטח עולות לך</motion.h2>
           <div className="space-y-3">
             {faqs.map((f, i) => (
-              <motion.div key={i} variants={fadeUp}
-                className="bg-white border border-[#E8DDD4] rounded-2xl overflow-hidden">
-                <button
-                  onClick={() => setOpenFaq(openFaq === i ? null : i)}
+              <motion.div key={i} variants={fadeUp} className="bg-white border border-[#E8DDD4] rounded-2xl overflow-hidden shadow-sm">
+                <button onClick={() => setOpenFaq(openFaq === i ? null : i)}
                   className="w-full flex items-center justify-between px-6 py-4 text-right font-semibold text-[#1A1A1A] hover:bg-[#FAF7F4] transition-colors">
-                  <span className="text-[#D4C5B5] text-2xl font-light ml-2">{openFaq === i ? '−' : '+'}</span>
+                  <span className="text-[#C49A8A] text-2xl font-light ml-2">{openFaq === i ? '−' : '+'}</span>
                   <span className="flex-1">{f.q}</span>
                 </button>
                 {openFaq === i && (
-                  <div className="px-6 pb-5 border-t border-[#E8DDD4] pt-4 text-gray-600 leading-relaxed">
-                    {f.a}
-                  </div>
+                  <div className="px-6 pb-5 border-t border-[#E8DDD4] pt-4 text-gray-600 leading-relaxed">{f.a}</div>
                 )}
               </motion.div>
             ))}
@@ -949,70 +731,40 @@ export default function EyebrowCoursePage() {
         </motion.div>
       </section>
 
-      {/* ─── CTA FORM ─── */}
-      <section id="cta-form" className="bg-[#1A1A1A] py-14 px-5 relative overflow-hidden">
-        <div className="absolute inset-0 opacity-5"
-          style={{ backgroundImage: 'url(https://images.unsplash.com/photo-1616394584738-fc6e612e71b9?w=1400&q=80)', backgroundSize: 'cover' }} />
-        <motion.div className="relative z-10 max-w-md mx-auto" initial="hidden" whileInView="visible" viewport={{ once: true }} variants={stagger}>
-          <motion.h2 variants={fadeUp} className="text-white text-3xl sm:text-4xl font-extrabold text-center mb-2">
-            מוכנה להתחיל?
-          </motion.h2>
-          <motion.p variants={fadeUp} className="text-[#D4C5B5] text-center mb-6 text-lg">
-            מלאי פרטים ותועברי ישירות לדף התשלום המאובטח.
+      {/* ─── FINAL CTA FORM ─── */}
+      <section id="cta-form" className="bg-gradient-to-b from-[#F5EDE5] to-[#EFE5DC] py-14 px-5">
+        <motion.div className="max-w-md mx-auto" initial="hidden" whileInView="visible" viewport={{ once: true }} variants={stagger}>
+          <motion.h2 variants={fadeUp} className="text-[#1A1A1A] text-3xl sm:text-4xl font-extrabold text-center mb-2">מוכנה להתחיל?</motion.h2>
+          <motion.p variants={fadeUp} className="text-[#5C4A3A] text-center mb-6 text-lg">
+            427 מניקוריסטיות כבר בפנים. הבאה יכולה להיות את.
           </motion.p>
-
-          <motion.form variants={fadeUp} onSubmit={handleSubmit}
-              className="bg-white rounded-3xl p-8 sm:p-10 shadow-2xl space-y-5">
-              <div>
-                <label className="block text-sm font-semibold text-gray-500 mb-1 text-right">שם מלא</label>
-                <input
-                  type="text" required placeholder="הכניסי את שמך"
-                  value={form.name} onChange={e => setForm({ ...form, name: e.target.value })}
-                  className="w-full border border-[#E8DDD4] rounded-xl px-4 py-3 text-right text-[#1A1A1A] focus:border-[#D4C5B5] focus:outline-none transition-colors text-base"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-semibold text-gray-500 mb-1 text-right">טלפון נייד</label>
-                <input
-                  type="tel" required placeholder="050-0000000"
-                  value={form.phone} onChange={e => setForm({ ...form, phone: e.target.value })}
-                  className="w-full border border-[#E8DDD4] rounded-xl px-4 py-3 text-[#1A1A1A] focus:border-[#D4C5B5] focus:outline-none transition-colors text-base"
-                  dir="ltr"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-semibold text-gray-500 mb-1 text-right">כתובת מייל</label>
-                <input
-                  type="email" required placeholder="example@gmail.com"
-                  value={form.email} onChange={e => setForm({ ...form, email: e.target.value })}
-                  className="w-full border border-[#E8DDD4] rounded-xl px-4 py-3 text-[#1A1A1A] focus:border-[#D4C5B5] focus:outline-none transition-colors text-base"
-                  dir="ltr"
-                />
-              </div>
-              <label className="flex items-start gap-2 cursor-pointer">
-                <input type="checkbox" required className="mt-1 flex-shrink-0 accent-[#1A1A1A]" />
-                <span className="text-xs text-gray-500 text-right leading-snug">
-                  אני מאשרת קבלת עדכונים, מבצעים ותכנים שיווקיים למייל מטליה בוזורגי. ניתן לבטל בכל עת.
-                </span>
-              </label>
-              <motion.button type="submit"
-                className="w-full bg-[#1A1A1A] text-[#D4C5B5] py-4 rounded-2xl font-bold text-xl hover:bg-[#D4C5B5] hover:text-[#1A1A1A] border-2 border-[#1A1A1A] transition-all duration-300"
-                disabled={submitting}
-                whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.97 }}>
-                {submitting ? 'שנייה...' : 'אני רוצה להתחיל ✋'}
-              </motion.button>
-              <div className="bg-[#2a2a2a] border border-[#C9A96E]/20 rounded-xl px-4 py-3 text-center space-y-1">
-                <p className="text-[#C9A96E] text-xs font-semibold">מה קורה אחרי התשלום?</p>
-                <p className="text-gray-400 text-xs leading-relaxed">
-                  תועברי לדף סליקה מאובטח. תוך דקה אחת מהרכישה יגיע למייל שלך הקורס עם שם משתמש וסיסמה אישיים.
-                </p>
-                <p className="text-gray-500 text-xs">ערבות החזר מלא 14 יום. בלי סיכון.</p>
-              </div>
-            </motion.form>
-
-          <motion.p variants={fadeUp} className="text-[#D4C5B5] text-center mt-8 font-semibold text-xl">
-            מאמינה בך, טליה ✨
-          </motion.p>
+          <motion.form variants={fadeUp} onSubmit={e => handleSubmit(e, false)}
+            className="bg-white rounded-3xl p-8 shadow-2xl space-y-4 border border-[#E8DDD4]">
+            <input type="text" required placeholder="שם מלא"
+              value={pricingForm.name} onChange={e => setPricingForm({ ...pricingForm, name: e.target.value })}
+              className="w-full border border-[#E8DDD4] rounded-xl px-4 py-3 text-right text-[#1A1A1A] focus:border-[#C49A8A] focus:outline-none text-base" />
+            <input type="tel" required placeholder="מספר טלפון"
+              value={pricingForm.phone} onChange={e => setPricingForm({ ...pricingForm, phone: e.target.value })}
+              className="w-full border border-[#E8DDD4] rounded-xl px-4 py-3 text-[#1A1A1A] focus:border-[#C49A8A] focus:outline-none text-base" dir="ltr" />
+            <input type="email" required placeholder="כתובת מייל"
+              value={pricingForm.email} onChange={e => setPricingForm({ ...pricingForm, email: e.target.value })}
+              className="w-full border border-[#E8DDD4] rounded-xl px-4 py-3 text-[#1A1A1A] focus:border-[#C49A8A] focus:outline-none text-base" dir="ltr" />
+            <label className="flex items-start gap-2 cursor-pointer">
+              <input type="checkbox" required className="mt-1 flex-shrink-0 accent-[#C49A8A]" />
+              <span className="text-xs text-gray-500 text-right leading-snug">
+                אני מאשרת קבלת עדכונים ותכנים שיווקיים מטליה בוזורגי. ניתן לבטל בכל עת.
+              </span>
+            </label>
+            <motion.button type="submit" disabled={loading}
+              className="w-full bg-[#C49A8A] text-white py-4 rounded-2xl font-bold text-xl hover:bg-[#B5897A] border-2 border-[#C49A8A] transition-all duration-300 disabled:opacity-60"
+              whileHover={{ scale: loading ? 1 : 1.02 }} whileTap={{ scale: loading ? 1 : 0.97 }}>
+              {loading ? 'מעבירה לתשלום...' : 'אני רוצה להצטרף לקורס →'}
+            </motion.button>
+            <div className="bg-gray-50 border border-[#E8DDD4] rounded-xl px-4 py-3 text-center space-y-1">
+              <p className="text-gray-500 text-xs leading-relaxed">🔒 תשלום מאובטח | גישה מיידית | ערובה 14 יום</p>
+            </div>
+          </motion.form>
+          <motion.p variants={fadeUp} className="text-[#C49A8A] text-center mt-8 font-semibold text-xl">מאמינה בך, טליה</motion.p>
         </motion.div>
       </section>
 
