@@ -346,10 +346,10 @@ export default function EyebrowCoursePage() {
           <motion.p variants={fadeUp} className="text-center text-[#8B7355] font-semibold mb-2 tracking-wide uppercase text-sm">את עובדת קשה</motion.p>
           <motion.h2 variants={fadeUp} className="text-2xl sm:text-3xl font-bold text-center mb-6">שעות ארוכות. לקוחות שלא מעריכות. הכנסה שתקועה.</motion.h2>
           <motion.div variants={fadeUp} className="text-right leading-loose space-y-4 text-[#5C4A3A] text-lg px-2">
-            <p>את עושה לק, ג'ל, ציפורניים — שעה וחצי לטיפול.</p>
-            <p>ומרוויחה 150-180 שקל. בקושי שווה את הזמן.</p>
-            <p className="font-bold text-[#1A1A1A]">אבל הלקוחה שיושבת אצלך — גם עושה גבות. רק לא אצלך.</p>
-            <p className="text-[#8B7355]">היא נוסעת לעוד מקום, משלמת עוד 80 שקל שיכלו להגיע אלייך.</p>
+            <p>שעה וחצי ציפורניים. 150-160 שקל. לקוחה יוצאת, לקוחה נכנסת. ואת עייפה עוד לפני שהיום נגמר.</p>
+            <p>מה שרוב מניקוריסטיות לא יודעות — הלקוחה שזה עתה יצאה ממך הולכת עכשיו לעוד מקום לעשות גבות. 70-80 שקל שיכלו להגיע ישירות אלייך.</p>
+            <p className="font-bold text-[#1A1A1A]">לא כי היא לא אוהבת אותך. פשוט כי לא הצעת לה.</p>
+            <p className="text-[#8B7355]">ולא הצעת — כי לא ידעת איך. עד עכשיו.</p>
           </motion.div>
         </motion.div>
       </section>
@@ -372,32 +372,11 @@ export default function EyebrowCoursePage() {
       {/* ─── STATS ─── */}
       <section className="bg-[#FDFAF7] py-12 px-5">
         <motion.div className="max-w-3xl mx-auto" initial="hidden" whileInView="visible" viewport={{ once: true }} variants={stagger}>
-          <motion.h3 variants={fadeUp} className="text-xl sm:text-2xl font-bold text-center mb-6">למה דווקא עיצוב גבות?</motion.h3>
-          <div className="space-y-3 mb-8">
-            {[
-              { icon: '📈', text: '2025 — ביקוש לגבות גדל כל שנה. מי שיודעת — מלאה בתורים.' },
-              { icon: '💰', text: 'ממוצע תוספת גבות: 70-90 שקל לטיפול. 15 דקות בלבד.' },
-              { icon: '📅', text: '90% מהלקוחות הקיימות יאמרו כן — אם רק תציעי.' },
-              { icon: '📱', text: 'לקוחות שמצלמות גבות — מביאות חברות. שיווק חינמי.' },
-            ].map((stat, i) => (
-              <motion.div key={i} variants={fadeUp} className="flex items-center gap-4 bg-white border border-[#E8DDD4] rounded-2xl p-4 shadow-sm">
-                <span className="text-xl flex-shrink-0">{stat.icon}</span>
-                <p className="text-[#1A1A1A] font-medium text-base">{stat.text}</p>
-              </motion.div>
-            ))}
-          </div>
-          <motion.div variants={fadeUp} className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-            {[
-              { icon: '✦', label: 'בידול מיידי', sub: 'אוטומטית מעל כל מתחרה שלא מציעה גבות' },
-              { icon: '✦', label: 'הכנסה גבוהה יותר', sub: '+70-90 שקל לכל טיפול שממילא עושה' },
-              { icon: '✦', label: 'שיווק אורגני', sub: 'הלקוחות מצלמות ומפרסמות לך בחינם' },
-            ].map((p, i) => (
-              <div key={i} className="bg-[#D4C5B5] text-[#1A1A1A] rounded-2xl p-5 text-center">
-                <span className="block text-[#8B7355] text-xl mb-2">{p.icon}</span>
-                <p className="font-bold text-base mb-1">{p.label}</p>
-                <p className="text-[#5C4A3A] text-xs leading-snug">{p.sub}</p>
-              </div>
-            ))}
+          <motion.h3 variants={fadeUp} className="text-xl sm:text-2xl font-bold text-center mb-8">למה דווקא עיצוב גבות?</motion.h3>
+          <motion.div variants={fadeUp} className="text-right text-[#5C4A3A] text-lg leading-loose space-y-5 px-2">
+            <p>בכל יום, לקוחות שיושבות אצלך לציפורניים — יוצאות ממך ונוסעות למקום אחר לעשות גבות. לא כי את לא טובה. פשוט כי לא הצעת.</p>
+            <p>עיצוב גבות הוא השירות שנשים מחפשות כל חודש. הוא לא טרנד שיעבור — הוא צורך. ומי שמציעה אותו, מלאה בתורים. מי שלא — מפספסת הכנסה שכבר שם, ממתינה.</p>
+            <p>תחשבי על 20 לקוחות בחודש, 70 שקל לגבה. <strong className="text-[#C49A8A] text-xl">1,400 שקל נוספים בלי לקוחה חדשה אחת.</strong> ולקוחות שיוצאות עם גבות יפות? הן מצלמות, שולחות לחברות, וממליצות בקבוצות ווצאפ. שיווק שלא עולה לך כלום.</p>
           </motion.div>
         </motion.div>
       </section>
@@ -471,9 +450,10 @@ export default function EyebrowCoursePage() {
           <motion.p variants={fadeUp} className="text-center text-[#8B7355] text-sm uppercase tracking-wide font-semibold mb-2">הסיפור שלי</motion.p>
           <motion.h2 variants={fadeUp} className="text-2xl sm:text-4xl font-bold text-center mb-8">גם אני הייתי שם.</motion.h2>
           <motion.div variants={fadeUp} className="text-right text-[#5C4A3A] text-lg leading-loose space-y-4 mb-6">
-            <p>התחלתי כמניקוריסטית. שעות ארוכות, הכנסה שתקועה.</p>
-            <p>הוספתי גבות — ולא ידעתי עד כמה זה ישנה הכל.</p>
-            <p>לקוחה ראשונה שאלה אם אני עושה גבות. אמרתי כן. לקחתי 80 שקל נוספים. 15 דקות.</p>
+            <p>התחלתי כמניקוריסטית. שעות ארוכות, מחירים שלא זזים, ותחושה שאני עובדת קשה מבלי לראות את זה בחשבון הבנק.</p>
+            <p>לקוחה אחת שאלה אותי בזמן טיפול: "את עושה גבות?" אמרתי כן — ולא ידעתי בדיוק למה. פשוט הרגשתי שאי אפשר להגיד לא.</p>
+            <p>לקחתי 80 שקל נוספים. 15 דקות. ואז היא שלחה לי עוד שלוש חברות.</p>
+            <p className="font-semibold text-[#1A1A1A]">מאותו רגע הבנתי — הגבות הן לא "שירות נוסף". הן הדרך לעבוד פחות שעות ולהרוויח יותר, עם אותן לקוחות שכבר יש לך.</p>
           </motion.div>
           <motion.div variants={fadeUp} className="bg-white border border-[#E8DDD4] rounded-3xl p-7 text-center shadow-sm">
             <p className="text-[#5C4A3A] text-lg leading-relaxed">
@@ -627,22 +607,13 @@ export default function EyebrowCoursePage() {
       <section className="bg-[#F5EDE5] py-12 px-5">
         <motion.div className="max-w-3xl mx-auto" initial="hidden" whileInView="visible" viewport={{ once: true }} variants={stagger}>
           <motion.p variants={fadeUp} className="text-center text-[#8B7355] text-sm font-semibold uppercase tracking-wide mb-2">למי זה מתאים</motion.p>
-          <motion.h2 variants={fadeUp} className="text-2xl sm:text-4xl font-bold text-center mb-8">הקורס בשבילך אם...</motion.h2>
-          <div className="space-y-3">
-            {[
-              'את מניקוריסטית שרוצה להוסיף שירות רווחי בלי לקוחות חדשות',
-              'את בתחום היופי ורוצה ללמוד עיצוב גבות מאפס',
-              'למדת גבות בעבר ולא יצא לך טוב — רוצה שיטה שעובדת',
-              'יש לך לקוחות קבועות שלא מציעה להן גבות',
-              'חולמת על יומן מלא שלא מצריך לרדוף אחרי לקוחות חדשות',
-              'רוצה ללמוד בדיוק כמה שצריך — בלי בזבוז זמן',
-            ].map((t, i) => (
-              <motion.div key={i} variants={fadeUp} className="flex items-start gap-4 bg-white border border-[#E8DDD4] rounded-2xl px-5 py-4 shadow-sm">
-                <span className="text-[#C49A8A] text-xl mt-0.5 flex-shrink-0">←</span>
-                <span className="text-[#1A1A1A] text-base">{t}</span>
-              </motion.div>
-            ))}
-          </div>
+          <motion.h2 variants={fadeUp} className="text-2xl sm:text-4xl font-bold text-center mb-8">זה בשבילך?</motion.h2>
+          <motion.div variants={fadeUp} className="text-right text-[#5C4A3A] text-lg leading-loose space-y-5 px-2">
+            <p>אם את מניקוריסטית עם לקוחות קבועות אבל ההכנסה תקועה באותה נקודה כבר חודשים — זה בדיוק בשבילך. לא צריך לקוחות חדשות. צריך שירות נוסף ללקוחות שכבר מגיעות אלייך.</p>
+            <p>אם ניסית ללמוד גבות בעבר ויצא לא ישר, לא בטוח, לא מקצועי — שיטת הקוויק נבנתה בדיוק בשבילך. תוצאה נכונה כבר מהפעם הראשונה, בלי ניחושים ובלי טעויות.</p>
+            <p>ואם יש לך לקוחות שמסיימות תור ויוצאות ישר לעוד מקום לגבות — כאן תלמדי לעצור את זה. להפוך כל תור קיים למקור הכנסה נוסף, בלי לרדוף אחרי אנשים ובלי לפרסם כל יום.</p>
+            <p className="font-semibold text-[#1A1A1A]">הקורס מתחיל מאפס, בנוי לקצב שלך, ונגמר כשאת מוכנה לגבות 70-90 שקל על 15 דקות עבודה — בביטחון מלא.</p>
+          </motion.div>
         </motion.div>
       </section>
 
