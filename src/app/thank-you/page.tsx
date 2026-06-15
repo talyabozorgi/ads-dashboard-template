@@ -5,12 +5,12 @@ import Image from 'next/image';
 import Script from 'next/script';
 
 const PIXEL_ID = '1901161570375773';
-const OMBRE_URL = 'https://secure.cardcom.solutions/EA/EA5/5MLJB6WUi0ivCY9FVGYWQ/PaymentSP';
+const OMBRE_URL_FALLBACK = 'https://secure.cardcom.solutions/EA/EA5/5MLJB6WUi0ivCY9FVGYWQ/PaymentSP';
 const TIMER_MINUTES = 15;
 
 declare global {
   interface Window {
-    fbq: (...args: unknown[]) => void;
+    fbq?: (...args: unknown[]) => void;
     _fbq: unknown;
   }
 }
@@ -39,13 +39,42 @@ function useCountdown() {
 }
 
 function CtaButton({ label = 'כן! אני רוצה מאסטרית באומברה ב-97₪', small = false }: { label?: string; small?: boolean }) {
+  const [loading, setLoading] = useState(false);
+
+  const handleClick = async () => {
+    setLoading(true);
+    try {
+      const raw = localStorage.getItem('pending_buyer');
+      const buyer = raw ? JSON.parse(raw) : {};
+      const res = await fetch('/api/cardcom/create-page', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          product: 'ombre_upsell',
+          name: buyer.name,
+          email: buyer.email,
+          phone: buyer.phone,
+          utmParams: {
+            utm_source: buyer.utm_source,
+            utm_campaign: buyer.utm_campaign,
+            utm_content: buyer.utm_content,
+          },
+        }),
+      });
+      const json = await res.json();
+      if (json.url) { window.location.href = json.url; return; }
+    } catch {}
+    window.location.href = OMBRE_URL_FALLBACK;
+  };
+
   return (
-    <a
-      href={OMBRE_URL}
-      className={`block w-full max-w-sm mx-auto bg-[#C49A8A] hover:bg-[#B5897A] active:scale-95 text-white text-center font-extrabold rounded-2xl shadow-lg transition-all duration-150 ${small ? 'text-base py-4' : 'text-lg py-5'}`}
+    <button
+      onClick={handleClick}
+      disabled={loading}
+      className={`block w-full max-w-sm mx-auto bg-[#C49A8A] hover:bg-[#B5897A] active:scale-95 text-white text-center font-extrabold rounded-2xl shadow-lg transition-all duration-150 disabled:opacity-60 ${small ? 'text-base py-4' : 'text-lg py-5'}`}
     >
-      {label}
-    </a>
+      {loading ? 'מעבירה לתשלום...' : label}
+    </button>
   );
 }
 
@@ -65,31 +94,39 @@ function CountdownBar({ mm, ss, expired }: { mm: string; ss: string; expired: bo
 }
 
 export default function ThankYouPage() {
-  const [ready, setReady] = useState(false);
   const { mm, ss, expired } = useCountdown();
 
   useEffect(() => {
-    if (!sessionStorage.getItem('purchase_tracked')) {
+    if (sessionStorage.getItem('purchase_tracked')) return;
+
+    const firePurchase = (fbq: NonNullable<Window['fbq']>) => {
       sessionStorage.setItem('purchase_tracked', '1');
-      if (typeof window !== 'undefined' && window.fbq) {
-        window.fbq('track', 'Purchase', { currency: 'ILS', value: 197, content_name: 'eyebrow_course' });
-      }
+      fbq('track', 'Purchase', { currency: 'ILS', value: 197, content_name: 'eyebrow_course' });
+    };
+
+    if (window.fbq) {
+      firePurchase(window.fbq);
+    } else {
+      const check = setInterval(() => {
+        if (window.fbq) {
+          clearInterval(check);
+          firePurchase(window.fbq!);
+        }
+      }, 50);
+      setTimeout(() => clearInterval(check), 10000);
     }
 
     const raw = localStorage.getItem('pending_buyer');
-    if (!raw) { setReady(true); return; }
+    if (!raw) return;
     let buyer: { name: string; phone: string; email: string; utm_content?: string; utm_campaign?: string; utm_source?: string };
-    try { buyer = JSON.parse(raw); } catch { setReady(true); return; }
+    try { buyer = JSON.parse(raw); } catch { return; }
     localStorage.removeItem('pending_buyer');
     fetch('/api/add-buyer', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(buyer),
     }).catch(() => {});
-    setReady(true);
   }, []);
-
-  if (!ready) return null;
 
   return (
     <main dir="rtl" className="min-h-screen bg-[#FAF7F4] font-[Assistant,sans-serif] text-right text-[#1A1A1A]">
@@ -301,12 +338,7 @@ export default function ThankYouPage() {
             <p className="text-[#1A1A1A] font-extrabold text-lg leading-none">97₪</p>
             <p className="text-[#888] text-xs">במקום 2,197 ש״ח</p>
           </div>
-          <a
-            href={OMBRE_URL}
-            className="flex-1 bg-[#C49A8A] hover:bg-[#B5897A] text-white text-center font-extrabold text-sm py-3 rounded-xl shadow transition-colors"
-          >
-            כן! אני רוצה את זה
-          </a>
+          <CtaButton label="כן! אני רוצה את זה" small />
         </div>
       </div>
 

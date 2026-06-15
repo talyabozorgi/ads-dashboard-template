@@ -13,6 +13,9 @@ export const metadata: Metadata = {
   title: "Meta Ads Dashboard",
   description:
     "דשבורד מעקב הוצאות פרסום ממומן והחזר השקעה — סנכרון אוטומטי מ-Meta Ads ואינסטגרם",
+  other: {
+    "facebook-domain-verification": "0f9emc8xqm3xppkucngfs06uwa6xs4",
+  },
 };
 
 export const viewport: Viewport = {

@@ -1,0 +1,1140 @@
+﻿'use client';
+
+import { motion } from 'framer-motion';
+import { useState, useEffect, useRef } from 'react';
+import Script from 'next/script';
+
+const fadeUp = {
+  hidden: { opacity: 0, y: 30 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.6 } },
+};
+
+const stagger = {
+  hidden: { opacity: 0 },
+  visible: { opacity: 1, transition: { staggerChildren: 0.12, delayChildren: 0.1 } },
+};
+
+function useCountdown() {
+  const [time, setTime] = useState({ h: 0, m: 29, s: 59 });
+  useEffect(() => {
+    const key = 'eyebrow_end';
+    let end = Number(localStorage.getItem(key));
+    if (!end || Date.now() > end) {
+      end = Date.now() + 30 * 60 * 1000;
+      localStorage.setItem(key, String(end));
+    }
+    const tick = () => {
+      const diff = Math.max(0, end - Date.now());
+      setTime({
+        h: Math.floor(diff / 3600000),
+        m: Math.floor((diff % 3600000) / 60000),
+        s: Math.floor((diff % 60000) / 1000),
+      });
+    };
+    tick();
+    const id = setInterval(tick, 1000);
+    return () => clearInterval(id);
+  }, []);
+  return time;
+}
+
+const testimonials = [
+  {
+    quote: '׳”׳™׳™ ׳¨׳›׳©׳×׳™ ׳׳× ׳”׳§׳•׳¨׳¡ ׳”׳“׳™׳’׳™׳˜׳׳™ ׳©׳׳ ׳׳¢׳™׳¦׳•׳‘ ׳’׳‘׳•׳×, ׳¨׳¦׳™׳×׳™ ׳׳•׳׳¨ ׳׳ ׳×׳•׳“׳” ׳¨׳‘׳” ׳¢׳ ׳§׳•׳¨׳¡ ׳ ׳’׳™׳© ׳•׳™׳¢׳™׳!!',
+    time: '20:27',
+    avatar: 'https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?w=80&h=80&fit=crop&crop=faces&q=80',
+    name: '׳ ׳•׳¢׳”',
+  },
+  {
+    quote: '׳×׳§׳©׳™׳‘׳™ ׳—׳©׳‘׳×׳™ ׳©׳׳ ׳™ ׳›׳‘׳¨ ׳׳¨׳™׳׳” ׳™׳“׳™׳™׳. ׳›׳™ ׳׳ ׳”׳¦׳׳—׳×׳™ ׳׳”׳©׳™׳’ ׳׳§׳•׳—׳•׳× ׳—׳“׳©׳•׳×.. ׳•׳”׳§׳‘׳•׳¢׳•׳× ׳©׳׳™ ׳׳ ׳”׳¡׳₪׳™׳§׳•.. ׳¨׳›׳©׳×׳™ ׳׳× ׳”׳§׳•׳¨׳¡ ׳©׳׳ ׳•׳׳× ׳”׳¦׳׳× ׳׳™ ׳׳× ׳”׳¢׳¡׳§!! ׳•׳₪׳©׳•׳˜ ׳”׳×׳׳”׳‘׳×׳™ ׳‘׳¢׳™׳¦׳•׳‘ ׳’׳‘׳•׳× ׳׳– ׳×׳•׳“׳” ׳׳',
+    time: '22:16',
+    avatar: 'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=80&h=80&fit=crop&crop=faces&q=80',
+    name: '׳׳™׳›׳',
+  },
+  {
+    quote: '׳׳ ׳™ ׳”׳×׳—׳׳×׳™ ׳׳©׳׳‘ ׳’׳‘׳•׳× ׳•׳©׳₪׳ ׳׳ ׳™ ׳¢׳•׳©׳” ׳׳§ ׳’׳ ׳‘׳›׳׳׳™ ׳׳‘׳ ׳¨׳¦׳™׳×׳™ ׳›׳׳™׳׳• ׳׳”׳©׳×׳₪׳¨ ׳•׳”׳§׳•׳¨׳¡ ׳–׳” ׳‘׳“׳™׳•׳§!! ׳׳“׳”׳™׳',
+    time: '22:20',
+    avatar: 'https://images.unsplash.com/photo-1488426862026-3ee34a7d66df?w=80&h=80&fit=crop&crop=faces&q=80',
+    name: '׳©׳™׳¨׳”',
+  },
+  {
+    quote: '׳”׳™׳™ ׳˜׳׳™׳” ׳¢׳¨׳‘ ׳˜׳•׳‘ ׳¨׳¦׳™׳×׳™ ׳׳•׳׳¨ ׳×׳•׳“׳” ׳¡׳™׳™׳׳×׳™ ׳¢׳›׳©׳™׳• ׳׳× ׳”׳§׳•׳¨׳¡ ׳¢׳™׳¦׳•׳‘ ׳’׳‘׳•׳× ׳”׳•׳ ׳§׳, ׳™׳©׳¨ ׳•׳׳¢׳ ׳™׳™׳ ׳׳× ׳׳¡׳‘׳™׳¨׳” ׳׳׳© ׳˜׳•׳‘, ׳׳ ׳׳—׳¡׳™׳¨׳” ׳₪׳¨׳˜׳™׳ ׳׳ ׳™ ׳׳¨׳’׳™׳©׳” ׳©׳׳ ׳™ ׳™׳›׳•׳׳” ׳׳”׳×׳—׳™׳ ׳›׳‘׳¨ ׳•׳©׳™׳© ׳׳™ ׳׳× ׳›׳ ׳”׳™׳“׳¢ ׳©׳¦׳¨׳™׳',
+    time: '21:55',
+    avatar: 'https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?w=80&h=80&fit=crop&crop=faces&q=80',
+    name: '׳¨׳•׳ ׳™׳×',
+  },
+  {
+    quote: '׳•׳׳™ ׳”׳©׳×׳׳©׳×׳™ ׳‘׳₪׳™׳ ׳¦׳˜׳” ׳•׳‘׳׳¡׳₪׳¨׳™׳™׳ ׳׳™׳׳׳” ׳׳™׳–׳” ׳׳™׳›׳•׳×׳×׳×׳× ׳›׳™׳£ ׳׳׳© ׳׳¢׳‘׳•׳“ ׳•׳”׳§׳•׳¨׳¡ ׳׳•׳©׳׳ ׳•׳׳“׳•׳™׳§ ׳׳× ׳׳¡׳‘׳™׳¨׳” ׳׳׳© ׳˜׳•׳‘ ׳•׳׳ ׳׳—׳¡׳™׳¨׳” ׳₪׳¨׳˜׳™׳ ׳׳׳© ׳×׳•׳“׳” ׳¨׳‘׳” ׳¢׳ ׳”׳›׳ ׳•׳¢׳ ׳”׳©׳™׳¨׳•׳×׳™׳ ׳”׳׳“׳”׳™׳ ׳©׳׳ ׳׳¢׳¨׳™׳›׳” ׳׳׳•׳“ ג₪ן¸',
+    time: '23:06',
+    avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=80&h=80&fit=crop&crop=faces&q=80',
+    name: '׳׳™׳¨׳•׳',
+  },
+  {
+    quote: '׳”׳™׳™ ׳˜׳׳™׳” ׳¦׳₪׳™׳×׳™ ׳‘׳”׳©׳×׳׳׳•׳× ׳׳•׳-׳׳™׳™׳ ׳¢׳›׳©׳™׳• ׳•׳–׳” ׳׳׳© ׳׳•׳©׳׳ ׳©׳”׳©׳ ׳™׳‘׳¨׳ ׳׳•׳×׳ ׳×׳•׳“׳” ׳¨׳‘׳” ׳¢׳ ׳›׳ ׳”׳¢׳©׳™׳™׳” ׳©׳׳ ׳•׳¢׳ ׳”׳¨׳¦׳•׳ ׳”׳˜׳•׳‘ ׳©׳׳ ׳׳¢׳–׳•׳¨ ׳׳‘׳ ׳•׳× ׳×׳‘׳•׳¨׳›׳™ נ˜',
+    time: '17:15',
+    avatar: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=80&h=80&fit=crop&crop=faces&q=80',
+    name: '׳×׳׳¨',
+  },
+];
+
+function CTAButton({ text = '׳׳ ׳™ ׳׳•׳›׳ ׳” ׳׳”׳¨׳•׳•׳™׳— ׳™׳•׳×׳¨ ׳׳›׳ ׳׳§׳•׳—׳” ג‹' }: { text?: string }) {
+  const scrollToForm = () => document.getElementById('cta-form')?.scrollIntoView({ behavior: 'smooth' });
+  return (
+    <motion.button
+      onClick={scrollToForm}
+      className="w-full sm:w-auto bg-[#C49A8A] text-white py-4 px-10 rounded-2xl font-bold text-xl shadow-lg hover:bg-[#B5897A] transition-all duration-300"
+      whileHover={{ scale: 1.03 }}
+      whileTap={{ scale: 0.97 }}
+    >
+      {text}
+    </motion.button>
+  );
+}
+
+const PIXEL_ID = '1901161570375773';
+const BASE_PURCHASE_URL = 'https://secure.cardcom.solutions/EA/EA5/00YPdJyAU2CAAMHVtWd7A/PaymentSP';
+
+declare global {
+  interface Window {
+    fbq?: (...args: unknown[]) => void;
+    _fbq: unknown;
+  }
+}
+
+const modules = [
+  { n: 1, title: '׳‘׳¨׳•׳›׳” ׳”׳‘׳׳” ׳׳¢׳•׳׳ ׳¢׳™׳¦׳•׳‘ ׳”׳’׳‘׳•׳×', desc: '׳”׳‘׳¡׳™׳¡ ׳©׳¨׳•׳‘ ׳”׳§׳•׳¨׳¡׳™׳ ׳׳“׳׳’׳™׳ ׳¢׳׳™׳• - ׳׳” ׳ ׳›׳•׳ ׳׳¢׳©׳•׳× ׳•׳׳” ׳׳', img: 'https://plus.unsplash.com/premium_photo-1671656333452-7369599f92ee?w=120&h=120&fit=crop&q=80' },
+  { n: 2, title: '׳©׳™׳˜׳× 3 ׳”׳ ׳§׳•׳“׳•׳× ׳׳’׳‘׳” ׳׳•׳©׳׳׳×', desc: 'A, B, C - 3 ׳ ׳§׳•׳“׳•׳× ׳׳“׳™׳“׳” ׳©׳׳™׳™׳¦׳¨׳•׳× ׳’׳‘׳” ׳׳“׳•׳™׳§׳× ׳׳›׳ ׳׳‘׳ ׳” ׳₪׳ ׳™׳', img: 'https://images.unsplash.com/photo-1519415387722-a1c3bbef716c?w=120&h=120&fit=crop&q=80' },
+  { n: 3, title: '׳׳¨׳’׳– ׳”׳›׳׳™׳ ׳©׳ ׳”׳§׳•׳•׳™׳§', desc: '׳›׳ ׳”׳›׳׳™׳ ׳©׳׳ ׳™ ׳¢׳•׳‘׳“׳× ׳׳™׳×׳ ׳׳×׳•׳¦׳׳” ׳׳”׳™׳¨׳” ׳•׳׳“׳•׳™׳§׳×', img: 'https://images.unsplash.com/photo-1637851497145-0faa2e456081?w=120&h=120&fit=crop&q=80' },
+  { n: 4, title: '׳©׳׳™׳˜׳” ׳׳׳׳” ׳‘׳›׳ ׳›׳׳™', desc: '׳”׳¡׳‘׳¨ ׳׳₪׳•׳¨׳˜ ׳¢׳ ׳”׳©׳™׳˜׳•׳× ׳©׳₪׳™׳×׳—׳×׳™ ׳׳¢׳‘׳•׳“׳” ׳§׳׳”, ׳׳”׳™׳¨׳” ׳•׳‘׳˜׳•׳—׳”', img: 'https://images.unsplash.com/photo-1547078902-2911dfaaa53a?w=120&h=120&fit=crop&q=80' },
+  { n: 5, title: '׳¢׳•׳׳ ׳”׳©׳¢׳•׳•׳× - ׳׳׳₪׳¡ ׳׳׳•׳׳—׳™׳×', desc: '׳¡׳§׳™׳¨׳× ׳¡׳•׳’׳™׳, ׳”׳“׳’׳׳•׳×, ׳•׳˜׳›׳ ׳™׳§׳•׳× ׳©׳׳§׳¦׳¨׳•׳× ׳׳× ׳–׳׳ ׳”׳˜׳™׳₪׳•׳', img: 'https://plus.unsplash.com/premium_photo-1671717724080-b31452cad3fa?w=120&h=120&fit=crop&q=80' },
+  { n: 6, title: '׳©׳™׳˜׳× ׳”׳§׳•׳•׳™׳§ ׳”׳׳׳׳”', desc: '׳”׳“׳¨׳ ׳”׳׳”׳™׳¨׳” ׳•׳”׳‘׳˜׳•׳—׳” - ׳¢׳™׳¦׳•׳‘ + ׳¡׳¨׳˜׳•׳˜ ׳׳₪׳™ ׳׳‘׳ ׳” ׳”׳₪׳ ׳™׳', img: 'https://images.unsplash.com/photo-1567629307995-b9f33097bd30?w=120&h=120&fit=crop&q=80' },
+  { n: 7, title: '׳¦׳₪׳™ ׳‘׳˜׳™׳₪׳•׳ ׳׳׳™׳×׳™ ׳׳”׳×׳—׳׳” ׳׳¡׳•׳£', desc: '׳›׳׳™׳׳• ׳§׳™׳‘׳׳× ׳©׳™׳¢׳•׳¨ ׳₪׳¨׳˜׳™ - ׳‘׳¦׳™׳׳•׳ ׳׳™׳›׳•׳×׳™ ׳•׳‘׳§׳¦׳‘ ׳©׳׳', img: 'https://images.unsplash.com/photo-1595550912256-b24059bb08e8?w=120&h=120&fit=crop&q=80' },
+  { n: 8, title: '׳›׳ ׳¡׳•׳’׳™ ׳”׳’׳‘׳•׳× - ׳׳ ׳×׳•׳₪׳×׳¢׳™', desc: '׳׳•׳׳“׳™׳ ׳׳™׳ ׳׳”׳×׳ ׳”׳ ׳¢׳ ׳›׳ ׳’׳‘׳” ׳©׳×׳’׳™׳¢ - ׳‘׳׳™ ׳‘׳”׳׳” ׳•׳‘׳׳™ ׳ ׳™׳—׳•׳©׳™׳', img: 'https://images.unsplash.com/photo-1611352110288-9e204ae300bb?w=120&h=120&fit=crop&q=80' },
+  { n: 9, title: '׳”׳₪׳›׳™ ׳׳׳©׳§׳׳× ׳’׳‘׳•׳× ׳©׳›׳•׳׳ ׳׳—׳₪׳©׳•׳×', desc: '׳׳× ׳×׳”׳™׳™ ׳–׳• ׳©׳׳¦׳™׳׳” ׳׳ ׳©׳™׳ ׳׳× ׳”׳’׳‘׳•׳× ׳•׳׳—׳–׳™׳¨׳” ׳׳”׳ ׳׳× ׳”׳‘׳™׳˜׳—׳•׳', img: 'https://plus.unsplash.com/premium_photo-1663050996462-4671145bf66f?w=120&h=120&fit=crop&q=80' },
+  { n: 10, title: '׳×׳¢׳•׳“׳” ׳׳§׳¦׳•׳¢׳™׳× - ׳‘׳™׳˜׳—׳•׳ ׳¨׳©׳׳™', desc: '׳×׳¢׳•׳“׳× ׳¡׳™׳•׳ ׳׳׳§׳“׳׳™׳™׳× ׳˜׳׳™׳” ׳‘׳•׳–׳•׳¨׳’׳™ ׳©׳×׳¦׳™׳’׳™ ׳‘׳’׳׳•׳•׳” ׳׳׳§׳•׳—׳•׳×', img: 'https://images.unsplash.com/photo-1637851496670-2bdc6c548d27?w=120&h=120&fit=crop&q=80' },
+];
+
+const faqs = [
+  { q: '׳׳ ׳™ ׳׳ ׳™׳•׳“׳¢׳× ׳›׳׳•׳ ׳¢׳ ׳’׳‘׳•׳× - ׳–׳” ׳׳×׳׳™׳ ׳׳™?', a: '׳‘׳”׳—׳׳˜ ׳›׳. ׳”׳§׳•׳¨׳¡ ׳׳×׳—׳™׳ ׳׳׳₪׳¡ ׳׳•׳—׳׳˜. ׳©׳™׳¢׳•׳¨ 1 ׳׳›׳¡׳” ׳׳× ׳”׳‘׳¡׳™׳¡ ׳©׳¨׳•׳‘ ׳”׳§׳•׳¨׳¡׳™׳ ׳׳“׳׳’׳™׳ ׳¢׳׳™׳•.' },
+  { q: '׳׳” ׳׳ ׳׳ ׳™ ׳׳₪׳—׳“׳× ׳׳”׳¨׳•׳¡ ׳׳׳§׳•׳—׳•׳× ׳׳× ׳”׳’׳‘׳•׳×?', a: '׳–׳” ׳”׳₪׳—׳“ ׳”׳›׳™ ׳ ׳₪׳•׳¥ - ׳•׳׳›׳ ׳”׳©׳™׳˜׳” ׳©׳׳™ ׳‘׳ ׳•׳™׳” ׳‘׳“׳™׳•׳§ ׳¢׳ ׳–׳”. ׳×׳¡׳¨׳˜׳˜׳™ ׳׳₪׳™ ׳׳‘׳ ׳” ׳”׳₪׳ ׳™׳, ׳¢׳ ׳‘׳˜׳™׳—׳•׳× ׳׳׳׳”. ׳×׳׳™׳“ ׳×׳”׳™׳™ ׳‘׳¦׳“ ׳”׳׳©׳§׳.' },
+  { q: '׳›׳׳” ׳–׳׳ ׳׳•׳§׳— ׳׳׳׳•׳“ ׳׳× ׳›׳ ׳”׳—׳•׳׳¨?', a: '׳ ׳™׳×׳ ׳׳¦׳₪׳•׳× ׳‘׳›׳ ׳”׳×׳›׳ ׳™׳ ׳‘׳¢׳¨׳‘ ׳׳—׳“. ׳׳׳—׳¨׳× - ׳׳×׳—׳™׳׳•׳× ׳׳™׳™׳©׳ ׳¢׳ ׳”׳׳§׳•׳—׳•׳×.' },
+  { q: '׳”׳’׳™׳©׳” ׳׳—׳•׳׳¨ ׳₪׳’׳”?', a: '׳׳. ׳’׳™׳©׳” ׳׳¦׳׳™׳×׳•׳×, ׳׳׳ ׳”׳’׳‘׳׳× ׳–׳׳. ׳—׳•׳–׳¨׳™׳ ׳‘׳›׳ ׳¢׳×.' },
+  { q: '׳׳” ׳׳ ׳׳ ׳׳×׳׳™׳ ׳׳™?', a: '׳¢׳¨׳‘׳•׳× ׳”׳—׳–׳¨ ׳׳׳ ׳©׳ 14 ׳™׳•׳. ׳׳ ׳¦׳₪׳™׳× ׳‘׳›׳ ׳”׳—׳•׳׳¨ ׳•׳׳ ׳”׳¦׳׳—׳× ׳׳™׳™׳©׳ - ׳׳—׳–׳™׳¨׳” ׳׳ ׳׳× ׳”׳›׳¡׳£ ׳‘׳׳™ ׳©׳׳׳•׳×.' },
+  { q: '׳׳” ׳›׳׳•׳ ׳‘׳׳—׳™׳¨ 197ג‚×?', a: '10 ׳©׳™׳¢׳•׳¨׳™ ׳•׳™׳“׳׳• + ׳—׳•׳‘׳¨׳× PDF + ׳×׳¢׳•׳“׳× ׳¡׳™׳•׳ + 3 ׳‘׳•׳ ׳•׳¡׳™׳ ׳‘׳©׳•׳•׳™ 597ג‚× - ׳”׳›׳ ׳›׳׳•׳, ׳‘׳׳™ ׳×׳•׳¡׳₪׳•׳×.' },
+  { q: '׳›׳׳” ׳׳”׳¨ ׳”׳§׳•׳¨׳¡ ׳׳—׳–׳™׳¨ ׳׳× ׳¢׳¦׳׳•?', a: '׳˜׳™׳₪׳•׳ ׳¢׳™׳¦׳•׳‘ ׳’׳‘׳•׳× ׳׳•׳¡׳™׳£ 80-120ג‚× ׳׳׳§׳•׳—׳”. ׳׳—׳¨׳™ 2-3 ׳˜׳™׳₪׳•׳׳™׳ ׳‘׳׳‘׳“ - ׳”׳§׳•׳¨׳¡ ׳›׳™׳¡׳” ׳׳× ׳¢׳¦׳׳•. ׳›׳ ׳”׳©׳׳¨? ׳¨׳•׳•׳— ׳˜׳”׳•׳¨.' },
+];
+
+export default function EyebrowCoursePage() {
+  const [form, setForm] = useState({ name: '', phone: '', email: '' });
+  const [pricingForm, setPricingForm] = useState({ name: '', phone: '', email: '' });
+  const [openFaq, setOpenFaq] = useState<number | null>(null);
+  const [submitting, setSubmitting] = useState(false);
+  const countdown = useCountdown();
+  const utmRef = useRef<string>('');
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const utmKeys = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term', 'fbclid'];
+    const utmParts: string[] = [];
+    utmKeys.forEach(k => {
+      const v = params.get(k);
+      if (v) utmParts.push(`${k}=${encodeURIComponent(v)}`);
+    });
+    utmRef.current = utmParts.join('&');
+  }, []);
+
+  useEffect(() => {
+    const fired = new Set<string>();
+    function track(event: string, params?: Record<string, unknown>) {
+      if (fired.has(event)) return;
+      fired.add(event);
+      if (typeof window !== 'undefined' && window.fbq) {
+        window.fbq('trackCustom', event, params);
+      }
+    }
+    function onScroll() {
+      const pct = Math.round((window.scrollY / (document.body.scrollHeight - window.innerHeight)) * 100);
+      if (pct >= 25) track('ScrollDepth25', { page: 'eyebrow_course' });
+      if (pct >= 50) track('ScrollDepth50', { page: 'eyebrow_course' });
+      if (pct >= 75) track('ScrollDepth75', { page: 'eyebrow_course' });
+      if (pct >= 90) track('ScrollDepth90', { page: 'eyebrow_course' });
+    }
+    window.addEventListener('scroll', onScroll, { passive: true });
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (!e.isIntersecting) return;
+        if (e.target.id === 'section-pricing') track('ViewedPricing', { page: 'eyebrow_course' });
+        if (e.target.id === 'cta-form') track('ViewedCTA', { page: 'eyebrow_course' });
+      });
+    }, { threshold: 0.3 });
+    ['section-pricing', 'cta-form'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) observer.observe(el);
+    });
+    return () => {
+      window.removeEventListener('scroll', onScroll);
+      observer.disconnect();
+    };
+  }, []);
+
+  function getPurchaseUrl() {
+    return utmRef.current ? `${BASE_PURCHASE_URL}?${utmRef.current}` : BASE_PURCHASE_URL;
+  }
+
+  function trackLead(email: string) {
+    if (typeof window !== 'undefined' && window.fbq) {
+      window.fbq('track', 'Lead', { content_name: 'eyebrow_course', currency: 'ILS', value: 197 });
+      window.fbq('track', 'InitiateCheckout', { content_name: 'eyebrow_course', currency: 'ILS', value: 197 });
+    }
+  }
+
+  async function subscribeToRavMeser(data: { name: string; phone: string; email: string }) {
+    try {
+      const params = new URLSearchParams(window.location.search);
+      await fetch('/api/subscribe', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          ...data,
+          utm_source: params.get('utm_source') || '',
+          utm_medium: params.get('utm_medium') || '',
+          utm_campaign: params.get('utm_campaign') || '',
+          utm_content: params.get('utm_content') || '',
+        }),
+      });
+    } catch {
+      // don't block the user if this fails
+    }
+  }
+
+  function savePendingPurchase(data: { name: string; phone: string; email: string }) {
+    const params = new URLSearchParams(window.location.search);
+    localStorage.setItem('pending_buyer', JSON.stringify({
+      ...data,
+      utm_content: params.get('utm_content') || '',
+      utm_campaign: params.get('utm_campaign') || '',
+      utm_source: params.get('utm_source') || '',
+    }));
+  }
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setSubmitting(true);
+    trackLead(form.email);
+    savePendingPurchase(form);
+    window.location.href = getPurchaseUrl();
+  };
+
+  const handlePricingSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setSubmitting(true);
+    trackLead(pricingForm.email);
+    savePendingPurchase(pricingForm);
+    window.location.href = getPurchaseUrl();
+  };
+
+  const scrollToForm = () => document.getElementById('cta-form')?.scrollIntoView({ behavior: 'smooth' });
+
+  return (
+    <main dir="rtl" className="font-[Assistant,sans-serif] bg-[#FDFAF7] text-[#1A1A1A] overflow-x-hidden pb-24">
+
+      {/* Microsoft Clarity */}
+      <Script id="clarity" strategy="afterInteractive">{`
+        (function(c,l,a,r,i,t,y){
+          c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+          t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+          y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+        })(window, document, "clarity", "script", "wol6ha22ge");
+      `}</Script>
+
+      {/* Meta Pixel */}
+      <Script id="fb-pixel" strategy="afterInteractive">{`
+        !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+        n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
+        n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
+        t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,
+        document,'script','https://connect.facebook.net/en_US/fbevents.js');
+        fbq('init', '${PIXEL_ID}');
+        fbq('track', 'PageView');
+      `}</Script>
+
+      {/* ג”€ג”€ג”€ STICKY CTA ג”€ג”€ג”€ */}
+      <motion.div
+        className="fixed bottom-0 left-0 right-0 z-50 px-4 pb-4 pt-3"
+        initial={{ y: 100, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ delay: 1.5, duration: 0.4 }}
+      >
+        <button
+          onClick={scrollToForm}
+          className="w-full max-w-lg mx-auto flex items-center justify-center gap-3 bg-[#C49A8A] text-white py-4 rounded-2xl font-black text-xl shadow-2xl hover:bg-[#B5897A] transition-colors"
+          style={{ display: 'flex' }}
+        >
+          <span>׳׳ ׳™ ׳׳₪׳¡׳™׳§׳” ׳׳¢׳‘׳•׳“ ׳§׳©׳” ׳‘׳©׳‘׳™׳ ׳›׳¡׳£ ׳׳•׳¢׳˜ ג‹</span>
+        </button>
+      </motion.div>
+
+      {/* ג”€ג”€ג”€ HERO ג”€ג”€ג”€ */}
+      <section className="min-h-[70vh] bg-gradient-to-b from-[#EFE5DC] via-[#F5EDE5] to-[#FDFAF7] flex flex-col items-center justify-center px-5 pb-6 pt-0 text-center relative overflow-hidden">
+        <div className="absolute inset-0"
+          style={{
+            backgroundImage: 'url(https://images.unsplash.com/photo-1616394584738-fc6e612e71b9?w=1400&q=80)',
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+            opacity: 0.06,
+          }} />
+
+        {/* Hook bar */}
+        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.5 }}
+          className="relative z-10 w-full bg-white py-3 px-6 text-center mb-0 border-b border-[#E8DDD4]">
+          <p className="text-[#1A1A1A] font-bold text-sm sm:text-base tracking-wide">
+            ׳”׳‘׳¢׳™׳” ׳”׳™׳ ׳׳ ׳©׳׳™׳ ׳׳ ׳׳§׳•׳—׳•׳× ג€” ׳”׳‘׳¢׳™׳” ׳”׳™׳ ׳›׳׳” ׳׳× ׳׳¨׳•׳•׳™׳—׳” ׳׳›׳ ׳׳—׳× ׳׳”׳.
+          </p>
+        </motion.div>
+
+        <motion.div className="relative z-10 max-w-3xl mt-10" initial="hidden" animate="visible" variants={stagger}>
+          <motion.h2 variants={fadeUp} className="text-[#8B7355] text-xl font-semibold mb-3">
+            ׳׳§׳•׳¡׳׳˜׳™׳§׳׳™׳•׳× ׳©׳¢׳•׳‘׳“׳•׳× ׳§׳©׳” ג€” ׳•׳¢׳“׳™׳™׳ ׳׳ ׳׳’׳™׳¢׳•׳× ׳׳׳ ׳©׳¨׳¦׳•.
+          </motion.h2>
+          <motion.h1 variants={fadeUp} className="text-[#1A1A1A] text-3xl sm:text-5xl font-extrabold leading-tight mb-5">
+            ׳˜׳™׳₪׳•׳ ׳׳—׳“ ׳©׳
+            <span className="text-[#C49A8A]"> 15 ׳“׳§׳•׳× </span>
+            ׳©׳”׳•׳₪׳ ׳›׳ ׳׳§׳•׳—׳” ׳§׳™׳™׳׳×
+            <span className="underline underline-offset-4 decoration-[#C49A8A]"> ׳׳¨׳•׳•׳—׳™׳× ׳™׳•׳×׳¨</span>
+          </motion.h1>
+          <motion.p variants={fadeUp} className="text-[#5C4A3A] text-lg mb-6 leading-relaxed">
+            ׳‘׳׳™ ׳׳§׳•׳—׳•׳× ׳—׳“׳©׳•׳×. ׳‘׳׳™ ׳©׳¢׳•׳× ׳ ׳•׳¡׳₪׳•׳×. ׳¨׳§ ׳˜׳™׳₪׳•׳ ׳׳—׳“ ׳©׳”׳׳§׳•׳—׳•׳× ׳©׳׳ ׳›׳‘׳¨ ׳׳—׳₪׳©׳•׳× - ׳׳¦׳ ׳׳™׳©׳”׳™ ׳׳—׳¨׳×.
+          </motion.p>
+
+          {/* Countdown */}
+          <motion.div variants={fadeUp} className="inline-flex flex-col items-center gap-2 bg-white border border-[#D4C5B5] rounded-2xl px-8 py-4 mb-5 shadow-sm">
+            <p className="text-[#8B7355] text-xs tracking-widest uppercase">ג³ ׳׳—׳™׳¨ ׳”׳”׳©׳§׳” ׳ ׳’׳׳¨ ׳‘׳¢׳•׳“</p>
+            <div className="flex gap-4 items-center">
+              {[{ v: countdown.s, l: '׳©׳ ׳™׳•׳×' }, { v: countdown.m, l: '׳“׳§׳•׳×' }].map((u, i) => (
+                <div key={i} className="flex gap-4 items-center">
+                  {i > 0 && <span className="text-[#8B7355] text-2xl font-bold -mt-3">:</span>}
+                  <div className="text-center">
+                    <span className="block text-3xl font-black text-[#C49A8A]">{String(u.v).padStart(2, '0')}</span>
+                    <span className="text-[10px] text-[#8B7355] tracking-wider">{u.l}</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </motion.div>
+        </motion.div>
+
+        <div className="absolute bottom-0 left-0 right-0 h-10 bg-gradient-to-t from-[#FDFAF7] to-transparent" />
+      </section>
+
+      {/* ג”€ג”€ג”€ LOGICAL BRIDGE ג€” ׳׳׳” ׳™׳•׳׳ ׳׳׳ ׳׳ ׳׳¡׳₪׳™׳§ ג”€ג”€ג”€ */}
+      <section className="bg-[#FDFAF7] py-12 px-5">
+        <motion.div className="max-w-3xl mx-auto" initial="hidden" whileInView="visible" viewport={{ once: true }} variants={stagger}>
+          <motion.p variants={fadeUp} className="text-center text-[#8B7355] font-semibold mb-2 tracking-wide uppercase text-sm">׳§׳¦׳¨ ׳•׳׳¢׳ ׳™׳™׳</motion.p>
+          <motion.h2 variants={fadeUp} className="text-2xl sm:text-3xl font-bold text-center mb-6">
+            ׳׳׳” ׳™׳•׳׳ ׳׳׳ ׳¢׳“׳™׳™׳ ׳׳ ׳׳‘׳™׳ ׳׳•׳×׳ ׳׳—׳•׳₪׳© ׳›׳׳›׳׳™
+          </motion.h2>
+
+          <motion.div variants={fadeUp} className="space-y-4 text-[#5C4A3A] text-lg text-right leading-relaxed max-w-2xl mx-auto">
+
+            <p className="font-semibold text-[#1A1A1A]">׳¢׳©׳™ ׳׳¢׳¦׳׳ ׳—׳©׳‘׳•׳ ׳₪׳©׳•׳˜.</p>
+
+            <p>
+              ׳§׳•׳¡׳׳˜׳™׳§׳׳™׳× ׳׳׳•׳¦׳¢׳× ׳¢׳•׳‘׳“׳× 8 ׳©׳¢׳•׳× ׳‘׳™׳•׳. ׳׳¨׳•׳•׳™׳—׳” 150-200ג‚× ׳׳˜׳™׳₪׳•׳. ׳׳₪׳©׳¨ ׳׳¢׳©׳•׳× ׳‘׳¢׳¨׳ 6-8 ׳˜׳™׳₪׳•׳׳™׳ ׳‘׳™׳•׳.
+            </p>
+
+            <p>
+              ׳–׳” ׳ ׳©׳׳¢ ׳‘׳¡׳“׳¨, ׳ ׳›׳•׳? ׳¢׳“ ׳©׳׳—׳©׳‘׳™׳ ׳׳× ׳™׳׳™ ׳”׳—׳•׳₪׳©. ׳׳× ׳”׳™׳׳™׳ ׳”׳—׳•׳׳”. ׳׳× ׳™׳׳™ ׳”׳׳—׳–׳•׳¨ ׳©׳׳₪׳©׳¨ ׳׳¢׳‘׳•׳“ ׳¨׳§ ׳—׳¦׳™ ׳™׳•׳. <span className="font-bold text-[#1A1A1A]">׳•׳₪׳×׳׳•׳ ׳”-8,000-12,000ג‚× ׳©׳—׳©׳‘׳× ׳׳”׳¨׳•׳•׳™׳— - ׳ ׳”׳₪׳›׳™׳ ׳-6,000-8,000ג‚×.</span>
+            </p>
+
+            <p>
+              ׳•׳–׳” ׳׳₪׳ ׳™ ׳”׳•׳¦׳׳•׳×. ׳׳₪׳ ׳™ ׳¦׳™׳•׳“. ׳׳₪׳ ׳™ ׳©׳›׳™׳¨׳•׳× ׳”׳§׳׳™׳ ׳™׳§׳”. ׳׳₪׳ ׳™ ׳›׳ ׳”׳©׳׳¨.
+            </p>
+
+            <p className="text-[#8B7355] font-semibold">
+              ׳”׳‘׳¢׳™׳” ׳”׳™׳ ׳׳ ׳©׳׳× ׳׳ ׳¢׳•׳‘׳“׳× ׳׳¡׳₪׳™׳§ ׳§׳©׳”. ׳”׳‘׳¢׳™׳” ׳”׳™׳ ׳©׳™׳© ׳×׳§׳¨׳” ׳׳›׳׳” ׳©׳׳₪׳©׳¨ ׳׳”׳¨׳•׳•׳™׳— ׳׳˜׳™׳₪׳•׳ ׳׳—׳“ ג€” ׳›׳©׳׳× ׳׳•׳›׳¨׳× ׳¨׳§ ׳©׳™׳¨׳•׳× ׳׳—׳“ ׳׳›׳ ׳׳§׳•׳—׳”.
+            </p>
+          </motion.div>
+        </motion.div>
+      </section>
+
+      {/* ג”€ג”€ג”€ COMMON ENEMY ג”€ג”€ג”€ */}
+      <section className="bg-[#F8F0EB] py-12 px-5">
+        <motion.div className="max-w-3xl mx-auto" initial="hidden" whileInView="visible" viewport={{ once: true }} variants={stagger}>
+          <motion.h2 variants={fadeUp} className="text-2xl sm:text-3xl font-bold text-center mb-8 text-[#1A1A1A]">
+            ׳”׳˜׳¢׳•׳× ׳©׳¨׳•׳‘ ׳”׳§׳•׳¡׳׳˜׳™׳§׳׳™׳•׳× ׳¢׳•׳©׳•׳×
+          </motion.h2>
+
+          <motion.div variants={fadeUp} className="text-right text-[#5C4A3A] text-lg leading-relaxed space-y-4 max-w-2xl mx-auto">
+
+            <p className="font-bold text-[#1A1A1A]">׳”׳ ׳—׳•׳©׳‘׳•׳× ׳©׳”׳₪׳×׳¨׳•׳ ׳”׳•׳ ׳¢׳•׳“ ׳׳§׳•׳—׳•׳×.</p>
+
+            <p>
+              ׳׳– ׳”׳ ׳׳₪׳¨׳¡׳׳•׳× ׳™׳•׳×׳¨. ׳׳•׳¡׳™׳₪׳•׳× ׳©׳¢׳•׳×. ׳׳•׳¨׳™׳“׳•׳× ׳׳—׳™׳¨. ׳¢׳•׳‘׳“׳•׳× ׳™׳•׳×׳¨ ׳§׳©׳”. ׳׳×׳©׳—׳§׳•׳× ׳׳”׳¨ ׳™׳•׳×׳¨.
+            </p>
+
+            <p>
+              ׳׳‘׳ ׳”׳§׳•׳¡׳׳˜׳™׳§׳׳™׳•׳× ׳©׳׳¨׳•׳•׳™׳—׳•׳× ׳”׳›׳™ ׳”׳¨׳‘׳”? <span className="font-bold text-[#1A1A1A]">׳”׳ ׳׳ ׳¨׳•׳“׳₪׳•׳× ׳׳—׳¨׳™ ׳׳§׳•׳—׳•׳× ׳—׳“׳©׳•׳×. ׳”׳ ׳₪׳©׳•׳˜ ׳׳¨׳•׳•׳™׳—׳•׳× ׳™׳•׳×׳¨ ׳׳›׳ ׳׳§׳•׳—׳” ׳©׳›׳‘׳¨ ׳™׳•׳©׳‘׳× ׳׳¦׳׳.</span>
+            </p>
+
+            <p>
+              ׳׳§׳•׳—׳” ׳©׳׳׳™׳׳ ׳‘׳׳” ׳׳¦׳™׳₪׳•׳¨׳ ׳™׳™׳ ג€” ׳™׳›׳•׳׳” ׳׳¦׳׳× ׳¢׳ ׳¦׳™׳₪׳•׳¨׳ ׳™׳™׳ ׳•׳’׳‘׳•׳×. <span className="text-[#8B7355]">׳׳•׳×׳• ׳‘׳™׳§׳•׳¨. ׳׳•׳×׳• ׳–׳׳ ׳ ׳¡׳™׳¢׳” ׳©׳׳”. ׳׳•׳×׳• ׳™׳•׳ ׳©׳׳. ׳¨׳§ 80-120ג‚× ׳™׳•׳×׳¨ ׳‘׳›׳™׳¡ ׳©׳׳.</span>
+            </p>
+          </motion.div>
+
+          {/* inline testimonial - proof adjacent to claim */}
+          <motion.div variants={fadeUp} className="mt-8 flex justify-end items-end gap-2 max-w-md mr-auto ml-0 sm:ml-auto">
+            <div className="relative max-w-xs bg-[#DCF8C6] px-4 py-3 shadow-sm"
+              style={{ borderRadius: '18px 18px 4px 18px' }}>
+              <p className="text-[#1A1A1A] text-sm leading-relaxed text-right">
+                ׳×׳§׳©׳™׳‘׳™ ׳—׳©׳‘׳×׳™ ׳©׳׳ ׳™ ׳›׳‘׳¨ ׳׳¨׳™׳׳” ׳™׳“׳™׳™׳. ׳›׳™ ׳׳ ׳”׳¦׳׳—׳×׳™ ׳׳”׳©׳™׳’ ׳׳§׳•׳—׳•׳× ׳—׳“׳©׳•׳×.. ׳¨׳›׳©׳×׳™ ׳׳× ׳”׳§׳•׳¨׳¡ ׳©׳׳ ׳•׳׳× ׳”׳¦׳׳× ׳׳™ ׳׳× ׳”׳¢׳¡׳§!!
+              </p>
+              <p className="text-gray-400 text-xs mt-1 text-left">22:16 ג“ג“</p>
+            </div>
+            <div className="flex flex-col items-center gap-1 flex-shrink-0 order-first">
+              <img src="https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=80&h=80&fit=crop&crop=faces&q=80"
+                alt="׳׳™׳›׳" className="w-10 h-10 rounded-full object-cover border-2 border-[#D4C5B5]" />
+              <span className="text-[10px] text-gray-400">׳׳™׳›׳</span>
+            </div>
+          </motion.div>
+        </motion.div>
+      </section>
+
+      {/* ג”€ג”€ג”€ PAIN ג”€ג”€ג”€ */}
+      <section className="bg-[#FDFAF7] py-12 px-5">
+        <motion.div className="max-w-3xl mx-auto" initial="hidden" whileInView="visible" viewport={{ once: true }} variants={stagger}>
+          <motion.h2 variants={fadeUp} className="text-2xl sm:text-4xl font-bold text-center mb-8 text-[#1A1A1A]">
+            ׳׳ ׳™ ׳™׳•׳“׳¢׳× ׳‘׳“׳™׳•׳§ ׳׳™׳ ׳–׳” ׳ ׳¨׳׳”.
+          </motion.h2>
+
+          <motion.div variants={fadeUp} className="text-right text-[#5C4A3A] text-lg leading-loose space-y-5 max-w-2xl mx-auto">
+
+            <p className="text-[#8B7355] font-semibold text-base">׳›׳©׳”׳™׳•׳׳ ׳׳׳ ג€” ׳׳‘׳ ׳”׳׳¨׳ ׳§ ׳¢׳“׳™׳™׳ ׳׳ ׳׳¨׳’׳™׳© ׳›׳›׳”.</p>
+            <p>
+              ׳׳× ׳§׳׳” ׳‘׳‘׳•׳§׳¨. ׳׳›׳™׳ ׳” ׳׳× ׳”׳§׳׳™׳ ׳™׳§׳”. ׳׳§׳•׳—׳” ׳׳—׳×, ׳©׳×׳™׳™׳, ׳©׳׳•׳©. ׳”׳™׳“׳™׳™׳ ׳¢׳•׳‘׳“׳•׳× ׳‘׳׳™ ׳”׳₪׳¡׳§׳”.
+            </p>
+
+            <p className="text-[#8B7355] font-semibold text-base">׳•׳׳× ׳׳ ׳׳×׳׳•׳ ׳ ׳× ג€” ׳›׳™ ׳׳× ׳׳•׳”׳‘׳× ׳׳× ׳׳” ׳©׳׳× ׳¢׳•׳©׳”.</p>
+            <p>
+              ׳׳‘׳ ׳‘׳¡׳•׳£ ׳”׳™׳•׳, ׳›׳©׳׳× ׳™׳•׳©׳‘׳×, ׳™׳© ׳׳× ׳”׳¨׳’׳¢ ׳”׳–׳”. <span className="font-bold text-[#1A1A1A]">׳”׳¨׳’׳¢ ׳©׳׳× ׳₪׳•׳×׳—׳× ׳׳× ׳”׳׳—׳©׳‘׳•׳ ׳•׳¢׳•׳©׳” ׳—׳©׳‘׳•׳.</span>
+            </p>
+
+            <p className="text-[#8B7355] font-semibold text-base">׳•׳”׳׳¡׳₪׳¨׳™׳ ׳₪׳©׳•׳˜ ׳׳ ׳׳¡׳×׳“׳¨׳™׳.</p>
+            <p>
+              ׳¢׳‘׳“׳× ׳§׳©׳”. ׳”׳™׳•׳׳ ׳”׳™׳” ׳׳׳. ׳׳‘׳ ׳”׳”׳›׳ ׳¡׳” ׳ ׳©׳׳¨׳× ׳‘׳׳•׳×׳• ׳׳§׳•׳ ׳©׳‘׳•׳¢׳•׳×, ׳—׳•׳“׳©׳™׳. ׳•׳׳× ׳׳ ׳׳‘׳™׳ ׳” ׳׳׳”.
+            </p>
+
+            <p className="text-[#8B7355]">
+              ׳•׳׳× ׳׳ ׳׳©׳׳” ׳‘׳–׳”. ׳׳›׳¨׳• ׳׳ ׳• ׳׳× ׳”׳¡׳™׳₪׳•׳¨ ׳©׳׳ ׳×׳¢׳‘׳“׳™ ׳§׳©׳” - ׳™׳’׳™׳¢ ׳”׳›׳¡׳£. ׳׳‘׳ ׳׳£ ׳׳—׳“ ׳׳ ׳׳™׳׳“ ׳׳•׳×׳ ׳• <span className="font-bold text-[#1A1A1A]">׳׳¢׳‘׳•׳“ ׳—׳›׳.</span>
+            </p>
+          </motion.div>
+        </motion.div>
+      </section>
+
+      {/* ג”€ג”€ג”€ STATS ג”€ג”€ג”€ */}
+      <section className="bg-[#FAF7F4] py-8 px-5">
+        <motion.div className="max-w-3xl mx-auto" initial="hidden" whileInView="visible" viewport={{ once: true }} variants={stagger}>
+          <motion.h3 variants={fadeUp} className="text-xl sm:text-2xl font-bold text-center mb-6">
+            ׳׳׳” ׳“׳•׳•׳§׳ ׳¢׳™׳¦׳•׳‘ ׳’׳‘׳•׳×?
+          </motion.h3>
+          <div className="space-y-3 mb-8">
+            {[
+              { icon: 'ג±ן¸', text: '׳˜׳™׳₪׳•׳ ׳¢׳™׳¦׳•׳‘ ׳’׳‘׳•׳× ׳׳•׳§׳— 15 ׳“׳§׳•׳× ׳‘׳׳‘׳“ - ׳‘׳–׳׳ ׳©׳”׳׳› ׳’׳ ׳׳×׳™׳™׳‘׳©.' },
+              { icon: 'נ’°', text: '׳׳•׳¡׳™׳₪׳” 80-120ג‚× ׳׳˜׳™׳₪׳•׳ - ׳¢׳ ׳׳§׳•׳—׳” ׳©׳׳׳™׳׳ ׳™׳•׳©׳‘׳× ׳׳¦׳׳.' },
+              { icon: 'נ“…', text: '20 ׳׳§׳•׳—׳•׳× ׳‘׳—׳•׳“׳© ׳©׳׳•׳¡׳™׳₪׳•׳× ׳’׳‘׳•׳× = 1,600-2,400ג‚× ׳ ׳•׳¡׳₪׳™׳. ׳‘׳׳™ ׳׳§׳•׳—׳” ׳—׳“׳©׳” ׳׳—׳×.' },
+              { icon: 'נ”‘', text: '׳”׳׳§׳•׳—׳•׳× ׳©׳׳ ׳›׳‘׳¨ ׳׳—׳₪׳©׳•׳× ׳׳× ׳–׳”. ׳”׳©׳׳׳” ׳”׳™׳ ׳׳¦׳ ׳׳™ ׳”׳ ׳”׳•׳׳›׳•׳× ׳׳¢׳©׳•׳× ׳׳•׳×׳•.' },
+            ].map((stat, i) => (
+              <motion.div key={i} variants={fadeUp}
+                className="flex items-center gap-4 bg-white border border-[#E8DDD4] rounded-2xl p-4 shadow-sm">
+                <span className="text-xl flex-shrink-0">{stat.icon}</span>
+                <p className="text-[#1A1A1A] font-medium text-base">{stat.text}</p>
+              </motion.div>
+            ))}
+          </div>
+
+          <motion.div variants={fadeUp} className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+            {[
+              { icon: 'ג¦', label: '׳‘׳™׳˜׳—׳•׳ ׳׳׳™׳×׳™', sub: '׳™׳•׳¦׳׳× ׳׳•׳›׳ ׳” ׳׳’׳¢׳× ׳‘׳׳§׳•׳—׳•׳× ׳›׳‘׳¨ ׳‘׳™׳•׳ ׳©׳׳—׳¨׳™' },
+              { icon: 'ג¦', label: '׳©׳™׳˜׳” ׳‘׳¨׳•׳¨׳”', sub: '׳׳ ׳ ׳™׳—׳•׳©׳™׳ - ׳©׳™׳˜׳” ׳‘׳¨׳•׳¨׳” ׳©׳¢׳•׳‘׳“׳× ׳‘׳›׳ ׳₪׳¢׳' },
+              { icon: 'ג¦', label: '׳§׳ ׳׳™׳™׳©׳•׳', sub: '׳¢׳¨׳‘ ׳׳—׳“ ׳׳׳׳•׳“ - ׳׳׳—׳¨׳× ׳׳×׳—׳™׳׳•׳× ׳׳”׳¨׳•׳•׳™׳—' },
+            ].map((p, i) => (
+              <div key={i} className="bg-[#D4C5B5] text-[#1A1A1A] rounded-2xl p-5 text-center">
+                <span className="block text-[#8B7355] text-xl mb-2">{p.icon}</span>
+                <p className="font-bold text-base mb-1">{p.label}</p>
+                <p className="text-[#5C4A3A] text-xs leading-snug">{p.sub}</p>
+              </div>
+            ))}
+          </motion.div>
+        </motion.div>
+      </section>
+
+      {/* ג”€ג”€ג”€ GALLERY ג”€ג”€ג”€ */}
+      <section className="bg-[#FDFAF7] py-8 px-5">
+        <motion.div className="max-w-4xl mx-auto" initial="hidden" whileInView="visible" viewport={{ once: true }} variants={stagger}>
+          <motion.p variants={fadeUp} className="text-center text-[#8B7355] text-sm uppercase tracking-widest font-semibold mb-2">׳”׳×׳•׳¦׳׳•׳× ׳׳“׳‘׳¨׳•׳× ׳‘׳¢׳“ ׳¢׳¦׳׳</motion.p>
+          <motion.h3 variants={fadeUp} className="text-center text-2xl font-bold mb-5">׳’׳‘׳•׳× ׳©׳¢׳™׳¦׳‘׳ ׳• ׳‘׳©׳™׳˜׳× ׳”׳§׳•׳•׳™׳§</motion.h3>
+          <motion.div variants={stagger} className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+            {[
+              { src: '/brow1.jpg', pos: 'center 20%' },
+              { src: '/brow2.jpg', pos: 'center 40%' },
+              { src: '/brow3.jpg', pos: 'center 30%' },
+              { src: '/brow4.jpg', pos: 'center 35%' },
+              { src: '/brow5.jpg', pos: 'center 25%' },
+              { src: '/brow6.jpg', pos: 'center 30%' },
+            ].map((img, i) => (
+              <motion.div key={i} variants={fadeUp}
+                className="relative rounded-2xl overflow-hidden shadow-md aspect-square"
+                whileHover={{ scale: 1.03 }} transition={{ duration: 0.2 }}>
+                <img src={img.src} alt="׳’׳‘׳•׳× ׳׳׳—׳¨ ׳¢׳™׳¦׳•׳‘"
+                  className="w-full h-full object-cover"
+                  style={{ objectPosition: img.pos }} />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/10 to-transparent" />
+              </motion.div>
+            ))}
+          </motion.div>
+        </motion.div>
+      </section>
+
+      {/* ג”€ג”€ג”€ CTA ׳׳™׳ ׳™ ג”€ג”€ג”€ */}
+      <section className="bg-[#D4C5B5] py-8 px-5 text-center">
+        <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp}>
+          <p className="text-[#1A1A1A] text-xl font-semibold mb-4">
+            ׳”׳׳§׳•׳—׳•׳× ׳©׳׳ ׳›׳‘׳¨ ׳׳—׳₪׳©׳•׳× ׳׳™׳©׳”׳™ ׳©׳×׳¢׳¦׳‘ ׳׳”׳ ׳’׳‘׳•׳×. ׳”׳©׳׳׳” ׳”׳™׳ - ׳׳¦׳ ׳׳™ ׳”׳ ׳”׳•׳׳›׳•׳×?
+          </p>
+          <CTAButton text="׳׳ ׳™ ׳¨׳•׳¦׳” ׳©׳–׳” ׳™׳”׳™׳” ׳׳¦׳׳™ ג‹" />
+        </motion.div>
+      </section>
+
+      {/* ג”€ג”€ג”€ CALCULATOR / FOGG MOMENTS ג”€ג”€ג”€ */}
+      <section className="bg-[#FAF7F4] py-12 px-5">
+        <motion.div className="max-w-3xl mx-auto" initial="hidden" whileInView="visible" viewport={{ once: true }} variants={stagger}>
+          <motion.p variants={fadeUp} className="text-center text-[#8B7355] text-sm font-semibold uppercase tracking-wide mb-2">׳”׳—׳©׳‘׳•׳ ׳©׳׳©׳ ׳” ׳”׳›׳</motion.p>
+          <motion.h2 variants={fadeUp} className="text-2xl sm:text-4xl font-bold text-center mb-2">
+            ׳›׳׳” ׳›׳¡׳£ ׳׳× ׳׳₪׳¡׳™׳“׳” ׳›׳ ׳—׳•׳“׳© ׳©׳׳× ׳׳ ׳¢׳•׳©׳” ׳׳× ׳–׳”?
+          </motion.h2>
+          <motion.p variants={fadeUp} className="text-center text-[#5C4A3A] text-lg mb-8 leading-relaxed">
+            ׳×׳—׳©׳‘׳™ ׳¢׳ ׳›׳ ׳׳§׳•׳—׳” ׳§׳‘׳•׳¢׳” ׳©׳׳. ׳›׳׳” ׳׳”׳ ׳”׳™׳• ׳׳•׳¡׳™׳₪׳•׳× ׳’׳‘׳•׳× - ׳׳ ׳”׳™׳™׳× ׳׳¦׳™׳¢׳”?
+          </motion.p>
+
+          {/* Calculator cards */}
+          <motion.div variants={fadeUp} className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
+            {[
+              { clients: '10', earn: '800-1,000ג‚×', label: '׳׳§׳•׳—׳•׳× ׳׳•׳¡׳™׳₪׳•׳× ׳’׳‘׳•׳×', sub: '׳×׳•׳¡׳₪׳× ׳—׳•׳“׳©׳™׳×' },
+              { clients: '20', earn: '1,600-2,000ג‚×', label: '׳׳§׳•׳—׳•׳× ׳׳•׳¡׳™׳₪׳•׳× ׳’׳‘׳•׳×', sub: '׳×׳•׳¡׳₪׳× ׳—׳•׳“׳©׳™׳×' },
+              { clients: '30', earn: '2,400-3,000ג‚×', label: '׳׳§׳•׳—׳•׳× ׳׳•׳¡׳™׳₪׳•׳× ׳’׳‘׳•׳×', sub: '׳×׳•׳¡׳₪׳× ׳—׳•׳“׳©׳™׳×' },
+            ].map((c, i) => (
+              <div key={i} className={`rounded-2xl p-5 text-center border ${i === 1 ? 'bg-[#D4C5B5] border-[#C49A8A]' : 'bg-white border-[#E8DDD4]'}`}>
+                <p className="text-4xl font-black text-[#1A1A1A]">{c.clients}</p>
+                <p className="text-[#5C4A3A] text-xs mb-2">{c.label}</p>
+                <p className={`text-xl font-bold ${i === 1 ? 'text-[#1A1A1A]' : 'text-[#C49A8A]'}`}>{c.earn}</p>
+                <p className="text-[#8B7355] text-xs mt-1">{c.sub}</p>
+              </div>
+            ))}
+          </motion.div>
+
+          <motion.div variants={fadeUp} className="bg-white border border-[#E8DDD4] rounded-3xl p-7 shadow-sm mb-6">
+            <p className="text-center text-[#8B7355] text-sm uppercase tracking-wide mb-5">׳”׳—׳™׳©׳•׳‘ ׳”׳₪׳©׳•׳˜ ׳‘׳™׳•׳×׳¨</p>
+            <div className="flex items-center justify-center gap-4 flex-wrap mb-5">
+              <div className="text-center">
+                <p className="text-4xl font-black text-[#1A1A1A]">150ג‚×</p>
+                <p className="text-gray-400 text-sm mt-1">׳˜׳™׳₪׳•׳ ׳¦׳™׳₪׳•׳¨׳ ׳™׳™׳</p>
+              </div>
+              <span className="text-3xl text-[#D4C5B5] font-bold">+</span>
+              <div className="text-center">
+                <p className="text-4xl font-black text-[#8B7355]">90ג‚×</p>
+                <p className="text-gray-400 text-sm mt-1">׳’׳‘׳•׳× 15 ׳“׳§׳•׳×</p>
+              </div>
+              <span className="text-3xl text-[#D4C5B5] font-bold">=</span>
+              <div className="text-center bg-[#D4C5B5] rounded-2xl px-6 py-3">
+                <p className="text-4xl font-black text-[#1A1A1A]">240ג‚×</p>
+                <p className="text-[#5C4A3A] text-sm mt-1">׳׳׳•׳×׳• ׳‘׳™׳§׳•׳¨</p>
+              </div>
+            </div>
+            <div className="border-t border-[#E8DDD4] pt-4 text-center">
+              <p className="text-[#1A1A1A] font-bold text-lg">
+                ׳–׳” 60% ׳™׳•׳×׳¨ ׳”׳›׳ ׳¡׳” ׳׳׳•׳×׳” ׳׳§׳•׳—׳”. <span className="text-[#C49A8A]">׳‘׳׳™ ׳׳§׳•׳—׳” ׳—׳“׳©׳”. ׳‘׳׳™ ׳©׳¢׳” ׳ ׳•׳¡׳₪׳×.</span>
+              </p>
+            </div>
+          </motion.div>
+
+          <motion.div variants={fadeUp} className="bg-[#F0E8E0] border border-[#D4C5B5] rounded-2xl p-5 text-center">
+            <p className="text-[#8B7355] font-semibold mb-2">׳¨׳’׳¢ - ׳”׳§׳•׳¨׳¡ ׳¢׳•׳׳” 197ג‚×.</p>
+            <p className="text-[#1A1A1A] font-bold text-lg">
+              ׳׳—׳¨׳™ 2-3 ׳˜׳™׳₪׳•׳׳™׳ ׳¢׳™׳¦׳•׳‘ ׳’׳‘׳•׳× - ׳”׳§׳•׳¨׳¡ ׳©׳™׳׳ ׳׳× ׳¢׳¦׳׳•. <span className="text-[#C49A8A]">׳›׳ ׳”׳©׳׳¨? ׳¨׳•׳•׳— ׳˜׳”׳•׳¨ ׳׳›׳ ׳”׳—׳™׳™׳.</span>
+            </p>
+          </motion.div>
+
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-6">
+            {[
+              { n: '15', l: '׳“׳§׳•׳× ׳׳˜׳™׳₪׳•׳' },
+              { n: '300+', l: '׳§׳•׳¡׳׳˜׳™׳§׳׳™׳•׳× ׳©׳™׳ ׳• ׳”׳›׳ ׳¡׳”' },
+              { n: '2-3', l: '׳˜׳™׳₪׳•׳׳™׳ ׳׳”׳—׳–׳¨ ׳”׳©׳§׳¢׳”' },
+              { n: 'ֳ—2', l: '׳”׳›׳ ׳¡׳” ׳©׳”׳•׳›׳₪׳׳”' },
+            ].map((s, i) => (
+              <motion.div key={i} variants={fadeUp}
+                className="bg-[#D4C5B5] rounded-2xl p-4 text-center">
+                <p className="text-3xl font-black text-[#1A1A1A]">{s.n}</p>
+                <p className="text-[#5C4A3A] text-xs mt-1 leading-tight">{s.l}</p>
+              </motion.div>
+            ))}
+          </div>
+        </motion.div>
+      </section>
+
+      {/* ג”€ג”€ג”€ TALYA'S CINEMATIC STORY ג”€ג”€ג”€ */}
+      <section className="bg-[#FDFAF7] py-12 px-5">
+        <motion.div className="max-w-2xl mx-auto" initial="hidden" whileInView="visible" viewport={{ once: true }} variants={stagger}>
+          <motion.p variants={fadeUp} className="text-center text-[#8B7355] text-sm uppercase tracking-wide font-semibold mb-2">׳”׳¡׳™׳₪׳•׳¨ ׳©׳׳™</motion.p>
+          <motion.h2 variants={fadeUp} className="text-2xl sm:text-4xl font-bold text-center mb-8">
+            ׳”׳™׳™׳×׳™ ׳‘׳“׳™׳•׳§ ׳‘׳׳§׳•׳ ׳©׳׳. <span className="text-[#C49A8A]">׳׳׳© ׳‘׳“׳™׳•׳§.</span>
+          </motion.h2>
+
+          <motion.div variants={fadeUp} className="text-right text-[#5C4A3A] text-lg leading-loose space-y-5">
+
+            <p className="text-[#8B7355] font-semibold">׳”׳¨׳’׳¢ ׳©׳‘׳• ׳”׳‘׳ ׳×׳™ ׳©׳׳©׳”׳• ׳¦׳¨׳™׳ ׳׳”׳©׳×׳ ׳•׳×.</p>
+            <p>
+              ׳–׳” ׳”׳™׳” ׳™׳•׳ ׳¨׳‘׳™׳¢׳™ ׳‘׳¢׳¨׳‘. ׳¡׳™׳™׳׳×׳™ 8 ׳˜׳™׳₪׳•׳׳™׳. ׳”׳’׳‘ ׳›׳׳‘. ׳”׳™׳“׳™׳™׳ ׳”׳™׳• ׳¢׳™׳™׳₪׳•׳×. ׳™׳©׳‘׳×׳™ ׳׳•׳ ׳”׳׳—׳©׳‘׳•׳ ׳•׳¢׳©׳™׳×׳™ ׳׳× ׳”׳—׳©׳‘׳•׳ ׳©׳ ׳”׳™׳•׳.
+            </p>
+
+            <p className="text-[#8B7355] font-semibold">1,200ג‚×. ׳׳—׳¨׳™ ׳™׳•׳ ׳©׳׳ ׳©׳ ׳¢׳‘׳•׳“׳”.</p>
+            <p>
+              ׳׳ 1,200ג‚× ׳¨׳•׳•׳— - 1,200ג‚× ׳”׳›׳ ׳¡׳” ׳‘׳¨׳•׳˜׳•. ׳׳₪׳ ׳™ ׳¦׳™׳•׳“. ׳׳₪׳ ׳™ ׳“׳׳™ ׳©׳›׳™׳¨׳•׳×. ׳׳₪׳ ׳™ ׳”׳›׳. <span className="font-bold text-[#1A1A1A]">׳•׳™׳“׳¢׳×׳™ ׳©׳׳ ׳™ ׳׳ ׳™׳›׳•׳׳” ׳׳”׳׳©׳™׳ ׳›׳›׳”.</span>
+            </p>
+
+            <p className="text-[#8B7355] font-semibold">׳׳ ׳©׳׳ ׳™ ׳׳ ׳׳•׳”׳‘׳× ׳׳× ׳׳” ׳©׳׳ ׳™ ׳¢׳•׳©׳”.</p>
+            <p>
+              ׳׳ ׳™ ׳׳׳•׳”׳‘׳× ׳‘׳×׳—׳•׳ ׳”׳–׳”. ׳׳‘׳ ׳׳”׳‘׳” ׳׳ ׳׳©׳׳׳× ׳©׳›׳¨ ׳“׳™׳¨׳”. ׳•׳׳”׳‘׳” ׳׳ ׳׳•׳׳¨׳× ׳©׳¦׳¨׳™׳›׳•׳× ׳׳©׳—׳•׳§ ׳׳•׳×׳ ׳•.
+            </p>
+
+            <p className="text-[#8B7355] font-semibold">׳׳– ׳”׳•׳¡׳₪׳×׳™ ׳¢׳™׳¦׳•׳‘ ׳’׳‘׳•׳× ׳׳§׳׳™׳ ׳™׳§׳”.</p>
+            <p>
+              ׳׳ ׳¦׳™׳₪׳™׳×׳™ ׳׳ ׳¡. ׳₪׳©׳•׳˜ ׳”׳•׳¡׳₪׳×׳™ ׳©׳™׳¨׳•׳× ׳׳—׳“ ׳׳›׳ ׳׳§׳•׳—׳” ׳§׳™׳™׳׳× ׳©׳¡׳™׳›׳׳” ׳©׳¨׳•׳¦׳”.
+            </p>
+
+            <p>
+              ׳׳•׳×׳• ׳—׳•׳“׳© ׳”׳¨׳•׳•׳™׳—׳×׳™ 2,200ג‚× ׳™׳•׳×׳¨. <span className="font-bold text-[#1A1A1A]">׳‘׳׳™ ׳׳§׳•׳—׳” ׳׳—׳× ׳—׳“׳©׳”.</span> ׳‘׳׳™ ׳©׳¢׳” ׳׳—׳× ׳ ׳•׳¡׳₪׳×.
+            </p>
+
+            <p className="text-[#8B7355]">
+              ׳‘׳ ׳™׳×׳™ ׳׳× ׳”׳§׳•׳¨׳¡ ׳”׳–׳” ׳›׳™ ׳׳ ׳™ ׳׳ ׳¨׳•׳¦׳” ׳©׳׳× ׳×׳’׳™׳¢׳™ ׳׳׳•׳×׳• ׳™׳•׳ ׳¨׳‘׳™׳¢׳™ ׳©׳׳ ׳™ ׳”׳’׳¢׳×׳™. <span className="font-bold text-[#1A1A1A]">׳”׳“׳¨׳ ׳›׳‘׳¨ ׳¡׳׳•׳׳”. ׳׳× ׳¨׳§ ׳¦׳¨׳™׳›׳” ׳׳׳›׳× ׳¢׳׳™׳”.</span>
+            </p>
+          </motion.div>
+
+          {/* Practice session photos */}
+          <motion.div variants={fadeUp} className="mt-8 grid grid-cols-2 gap-3">
+            {['/kurs1.jpg','/kurs2.jpg','/kurs3.jpg','/kurs4.jpg'].map((src, i) => (
+              <div key={i} className="relative rounded-xl overflow-hidden shadow-sm aspect-[3/4]">
+                <img src={src} alt="׳©׳™׳¢׳•׳¨ ׳¢׳™׳¦׳•׳‘ ׳’׳‘׳•׳×" className="w-full h-full object-cover object-top" />
+              </div>
+            ))}
+          </motion.div>
+
+          <motion.div variants={fadeUp} className="mt-6 text-center">
+            <CTAButton text="׳’׳ ׳׳ ׳™ ׳¨׳•׳¦׳” ׳׳”׳¨׳•׳•׳™׳— ׳™׳•׳×׳¨ - ׳‘׳׳™ ׳©׳¢׳•׳× ׳ ׳•׳¡׳₪׳•׳× ג‹" />
+          </motion.div>
+        </motion.div>
+      </section>
+
+      {/* ג”€ג”€ג”€ AUTHORITY ג”€ג”€ג”€ */}
+      <section className="bg-white py-12 px-5 relative overflow-hidden">
+        <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-[#D4C5B5] to-transparent" />
+        <motion.div className="max-w-4xl mx-auto" initial="hidden" whileInView="visible" viewport={{ once: true }} variants={stagger}>
+          <div className="flex flex-col sm:flex-row items-center gap-8">
+            <motion.div variants={fadeUp} className="flex-shrink-0 relative">
+              <div className="absolute inset-0 rounded-full bg-[#D4C5B5]/30 blur-2xl scale-110" />
+              <div className="relative w-52 h-52 rounded-full border-4 border-[#D4C5B5] shadow-2xl overflow-hidden">
+                <img
+                  src="/talya-pro.jpg"
+                  alt="׳˜׳׳™׳” ׳‘׳•׳–׳•׳¨׳’׳™"
+                  style={{
+                    width: '100%',
+                    height: '100%',
+                    objectFit: 'cover',
+                    objectPosition: 'center 15%',
+                    transform: 'scale(1.6)',
+                    transformOrigin: 'center 20%',
+                  }}
+                />
+              </div>
+            </motion.div>
+            <motion.div variants={fadeUp} className="text-right flex-1">
+              <p className="text-[#8B7355] font-semibold text-sm uppercase tracking-wide mb-1">׳׳™ ׳׳ ׳™?</p>
+              <h2 className="text-3xl font-extrabold mb-1">׳”׳™׳™, ׳׳ ׳™ ׳˜׳׳™׳”.</h2>
+              <p className="text-[#8B7355] font-semibold mb-4">׳׳•׳׳—׳™׳× ׳¢׳™׳¦׳•׳‘ ׳’׳‘׳•׳× | 8 ׳©׳ ׳•׳× ׳ ׳™׳¡׳™׳•׳ | ׳׳¢׳ 300 ׳×׳׳׳™׳“׳•׳×</p>
+              <p className="text-gray-700 text-lg leading-relaxed">
+                ׳׳™׳׳“׳×׳™ ׳׳¢׳ 300 ׳§׳•׳¡׳׳˜׳™׳§׳׳™׳•׳× ׳׳”׳•׳¡׳™׳£ ׳¢׳™׳¦׳•׳‘ ׳’׳‘׳•׳× ׳׳§׳׳™׳ ׳™׳§׳” ׳©׳׳”׳. ׳¨׳•׳‘׳ ׳¨׳׳• ׳×׳•׳¡׳₪׳× ׳”׳›׳ ׳¡׳” ׳›׳‘׳¨ ׳‘׳—׳•׳“׳© ׳”׳¨׳׳©׳•׳. <span className="font-bold text-[#1A1A1A]">׳׳ ׳›׳™ ׳”׳ ׳׳™׳•׳—׳“׳•׳× - ׳›׳™ ׳”׳©׳™׳˜׳” ׳¢׳•׳‘׳“׳×.</span>
+              </p>
+            </motion.div>
+          </div>
+
+          {/* Social proof photos */}
+          <motion.div variants={fadeUp} className="mt-8">
+            <p className="text-center text-[#8B7355] text-sm uppercase tracking-widest font-semibold mb-4">׳×׳׳׳™׳“׳•׳× ׳©׳׳׳“׳• ׳׳¦׳׳™ ׳׳¢׳™׳“׳•׳×</p>
+            <div className="grid grid-cols-3 gap-2">
+              {['/td1.jpg','/td2.jpg','/td3.jpg','/td4.jpg','/td5.jpg','/td6.jpg'].map((src, i) => (
+                <motion.div key={i} variants={fadeUp}
+                  className="relative rounded-xl overflow-hidden shadow-sm aspect-[3/4]"
+                  whileHover={{ scale: 1.02 }} transition={{ duration: 0.2 }}>
+                  <img src={src} alt="׳‘׳•׳’׳¨׳× ׳§׳•׳¨׳¡ ׳¢׳™׳¦׳•׳‘ ׳’׳‘׳•׳×"
+                    className="w-full h-full object-cover object-top" />
+                </motion.div>
+              ))}
+            </div>
+          </motion.div>
+
+          <motion.div variants={fadeUp}
+            className="mt-8 bg-[#D4C5B5] rounded-3xl p-7 text-center relative overflow-hidden">
+            <p className="text-[#5C4A3A] text-lg leading-relaxed">
+              ׳”׳©׳׳™׳—׳•׳× ׳©׳׳™ ׳”׳™׳ ׳׳—׳×. ׳׳¢׳–׳•׳¨ ׳׳‘׳ ׳•׳× ׳׳’׳“׳•׳ ׳‘׳׳™ ׳׳”׳™׳©׳—׳§.<br /> <strong className="text-[#1A1A1A]">׳›׳™ ׳¢׳‘׳•׳“׳” ׳§׳©׳” ׳׳’׳™׳¢ ׳׳” ׳©׳›׳¨ ׳”׳•׳’׳.</strong><br /> ׳•׳׳ ׳™׳© ׳˜׳™׳₪׳•׳ ׳׳—׳“ ׳©׳™׳›׳•׳ ׳׳©׳ ׳•׳× ׳׳× ׳”׳׳¡׳₪׳¨׳™׳ ׳©׳׳ - ׳׳× ׳—׳™׳™׳‘׳× ׳׳¢׳¦׳׳ ׳׳“׳¢׳× ׳¢׳׳™׳•.
+            </p>
+            <p className="text-[#1A1A1A] font-bold mt-5 text-xl">׳׳׳׳™׳ ׳” ׳‘׳, ׳˜׳׳™׳” ג¨</p>
+          </motion.div>
+        </motion.div>
+      </section>
+
+      {/* ג”€ג”€ג”€ "׳׳ ׳¢׳•׳“ ׳§׳•׳¨׳¡" FRAMING ג”€ג”€ג”€ */}
+      <section className="bg-[#F8F4F0] py-12 px-5">
+        <motion.div className="max-w-3xl mx-auto text-center" initial="hidden" whileInView="visible" viewport={{ once: true }} variants={stagger}>
+          <motion.h2 variants={fadeUp} className="text-2xl sm:text-4xl font-bold mb-6">
+            ׳–׳” ׳׳ ׳¢׳•׳“ ׳§׳•׳¨׳¡ ׳©׳׳©׳׳™׳¨ ׳׳•׳×׳ ׳׳‘׳“
+          </motion.h2>
+
+          <motion.div variants={fadeUp} className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-right">
+            {[
+              { icon: 'נ¯', title: '׳©׳™׳˜׳” ׳׳—׳× ׳‘׳¨׳•׳¨׳”', desc: '׳׳ 10 ׳’׳™׳©׳•׳× ׳©׳׳‘׳׳‘׳׳•׳×. ׳©׳™׳˜׳” ׳׳—׳× ׳©׳¢׳•׳‘׳“׳× ׳׳”׳™׳•׳ ׳”׳¨׳׳©׳•׳.' },
+              { icon: 'נ’×', title: '׳‘׳™׳˜׳—׳•׳ ׳׳׳™׳×׳™', desc: '׳™׳•׳¦׳׳× ׳׳•׳›׳ ׳” ׳׳’׳¢׳× ׳‘׳׳§׳•׳—׳•׳× - ׳׳ ׳¢׳ ׳×׳™׳׳•׳¨׳™׳”, ׳¢׳ ׳‘׳™׳˜׳—׳•׳.' },
+              { icon: 'ג¡', title: '׳§׳ ׳•׳¨׳•׳•׳—׳™ ׳׳™׳™׳©׳•׳', desc: '15 ׳“׳§׳•׳× ׳׳˜׳™׳₪׳•׳. ׳׳”׳™׳¨. ׳׳“׳•׳™׳§. ׳”׳׳§׳•׳—׳•׳× ׳׳•׳”׳‘׳•׳×.' },
+              { icon: 'נ₪', title: '׳׳™׳•׳•׳™ ׳’׳ ׳׳—׳¨׳™', desc: '׳™׳© ׳©׳׳׳”? ׳׳ ׳™ ׳›׳׳. ׳׳ ׳©׳•׳׳—׳× ׳׳•׳×׳ ׳”׳‘׳™׳×׳” ׳׳‘׳“.' },
+              { icon: 'נ“±', title: '׳¢׳¨׳‘ ׳׳—׳“ ׳׳׳׳•׳“', desc: '׳¦׳•׳₪׳” ׳‘׳›׳ ׳”׳—׳•׳׳¨ ׳‘׳¢׳¨׳‘ ׳׳—׳“. ׳׳׳—׳¨׳× ׳׳×׳—׳™׳׳•׳× ׳׳”׳¨׳•׳•׳™׳—.' },
+              { icon: 'ג…', title: '׳”׳׳˜׳¨׳” ׳”׳™׳ ׳×׳•׳¦׳׳•׳×', desc: '׳׳ ׳©׳×׳“׳¢׳™ - ׳©׳×׳¢׳©׳™. ׳©׳×׳¨׳•׳•׳™׳—׳™. ׳©׳×׳¨׳’׳™׳©׳™ ׳׳× ׳”׳”׳‘׳“׳ ׳‘׳›׳™׳¡.' },
+            ].map((item, i) => (
+              <motion.div key={i} variants={fadeUp}
+                className="bg-white border border-[#E8DDD4] rounded-2xl p-5 shadow-sm">
+                <div className="flex items-start gap-3">
+                  <span className="text-2xl flex-shrink-0">{item.icon}</span>
+                  <div>
+                    <p className="font-bold text-[#1A1A1A] mb-1">{item.title}</p>
+                    <p className="text-[#5C4A3A] text-sm leading-snug">{item.desc}</p>
+                  </div>
+                </div>
+              </motion.div>
+            ))}
+          </motion.div>
+        </motion.div>
+      </section>
+
+      {/* ג”€ג”€ג”€ SOLUTION ג”€ג”€ג”€ */}
+      <section className="bg-[#FAF7F4] py-12 px-5">
+        <motion.div className="max-w-3xl mx-auto" initial="hidden" whileInView="visible" viewport={{ once: true }} variants={stagger}>
+          <motion.p variants={fadeUp} className="text-center text-[#8B7355] text-sm font-semibold uppercase tracking-wide mb-2">׳׳– ׳׳” ׳‘׳“׳™׳•׳§ ׳׳§׳‘׳׳™׳?</motion.p>
+          <motion.h2 variants={fadeUp} className="text-3xl sm:text-5xl font-extrabold text-center mb-2">
+            ׳¢׳™׳¦׳•׳‘ ׳’׳‘׳•׳× ׳‘׳©׳™׳˜׳× ׳”׳§׳•׳•׳™׳§
+          </motion.h2>
+          <motion.p variants={fadeUp} className="text-center text-[#8B7355] font-semibold mb-2">"15 ׳“׳§׳•׳× ׳׳’׳‘׳•׳× ׳¡׳™׳׳˜׳¨׳™׳•׳× ׳•׳׳•׳©׳׳׳•׳× ג€” ׳•׳‘׳™׳˜׳—׳•׳ ׳׳׳ ׳׳’׳¢׳× ׳‘׳׳§׳•׳—׳•׳×"</motion.p>
+          <motion.div variants={fadeUp} className="w-16 h-1 bg-[#D4C5B5] mx-auto rounded-full my-4" />
+          <motion.p variants={fadeUp} className="text-center text-gray-500 mb-6 text-lg">
+            10 ׳©׳™׳¢׳•׳¨׳™ ׳•׳™׳“׳׳•. ׳¢׳¨׳‘ ׳׳—׳“ ׳׳׳׳•׳“. ׳—׳™׳™׳ ׳©׳׳׳™׳ ׳׳”׳¨׳•׳•׳™׳— ׳׳׳ ׳•.
+          </motion.p>
+
+          <div className="space-y-3 mb-6">
+            {modules.map((m) => (
+              <motion.div key={m.n} variants={fadeUp}
+                className="flex items-center gap-4 bg-white border border-[#E8DDD4] rounded-2xl px-4 py-3 shadow-sm hover:shadow-md transition-shadow">
+                <span className="w-8 h-8 rounded-full bg-[#C49A8A] text-white text-sm font-bold flex items-center justify-center flex-shrink-0">
+                  {m.n}
+                </span>
+                <div className="flex-1 min-w-0">
+                  <p className="font-bold text-[#1A1A1A] text-base">{m.title}</p>
+                  <p className="text-gray-500 text-sm mt-0.5">{m.desc}</p>
+                </div>
+                <div className="w-14 h-14 rounded-xl overflow-hidden flex-shrink-0 border border-[#E8DDD4]">
+                  <img src={m.img} alt={m.title} className="w-full h-full object-cover" />
+                </div>
+              </motion.div>
+            ))}
+          </div>
+
+          <motion.div variants={fadeUp} className="bg-[#D4C5B5] rounded-2xl p-5">
+            <p className="text-[#1A1A1A] font-semibold mb-3 text-center text-sm uppercase tracking-wide">׳׳” ׳›׳׳•׳</p>
+            <div className="flex flex-wrap gap-2 justify-center">
+              {['ג… 10 ׳©׳™׳¢׳•׳¨׳™ ׳•׳™׳“׳׳•', 'ג… ׳’׳™׳©׳” ׳׳¦׳׳™׳×׳•׳×', 'ג… ׳—׳•׳‘׳¨׳× PDF', 'ג… ׳×׳¢׳•׳“׳× ׳¡׳™׳•׳', 'ג… 3 ׳‘׳•׳ ׳•׳¡׳™׳', 'ג… ׳׳™׳•׳•׳™ ׳׳™׳©׳™'].map((t) => (
+                <span key={t} className="bg-white/60 text-[#1A1A1A] text-sm px-3 py-1 rounded-full border border-white/80">{t}</span>
+              ))}
+            </div>
+          </motion.div>
+        </motion.div>
+      </section>
+
+      {/* ג”€ג”€ג”€ CERTIFICATE ג”€ג”€ג”€ */}
+      <section className="bg-white py-10 px-5">
+        <motion.div className="max-w-2xl mx-auto text-center" initial="hidden" whileInView="visible" viewport={{ once: true }} variants={stagger}>
+          <motion.p variants={fadeUp} className="text-[#8B7355] text-sm font-semibold uppercase tracking-wide mb-2">׳‘׳¡׳•׳£ ׳”׳§׳•׳¨׳¡</motion.p>
+          <motion.h2 variants={fadeUp} className="text-2xl sm:text-3xl font-bold mb-8">
+            ׳×׳¢׳•׳“׳” ׳׳§׳¦׳•׳¢׳™׳× ג€” ׳‘׳™׳˜׳—׳•׳ ׳¨׳©׳׳™
+          </motion.h2>
+          <motion.div variants={fadeUp} className="relative shadow-2xl rounded-2xl overflow-hidden border border-[#E8DDD4]">
+            <img src="/cert-eyebrow.png" alt="׳×׳¢׳•׳“׳× ׳¡׳™׳•׳ ׳§׳•׳¨׳¡ ׳¢׳™׳¦׳•׳‘ ׳’׳‘׳•׳×" className="w-full h-auto" />
+          </motion.div>
+          <motion.p variants={fadeUp} className="text-gray-400 text-sm mt-4">
+            ׳×׳¢׳•׳“׳” ׳©׳×׳¦׳™׳’׳™ ׳‘׳’׳׳•׳•׳” - ׳•׳©׳”׳׳§׳•׳—׳•׳× ׳©׳׳ ׳™׳¨׳׳•.
+          </motion.p>
+        </motion.div>
+      </section>
+
+      {/* ג”€ג”€ג”€ BONUSES ג”€ג”€ג”€ */}
+      <section className="bg-[#F8F4F0] py-12 px-5">
+        <motion.div className="max-w-3xl mx-auto" initial="hidden" whileInView="visible" viewport={{ once: true }} variants={stagger}>
+          <motion.p variants={fadeUp} className="text-center text-[#C9A96E] text-xs uppercase tracking-[4px] mb-3">׳•׳¢׳•׳“ ׳׳ ׳”׳›׳</motion.p>
+          <motion.h2 variants={fadeUp} className="text-3xl sm:text-4xl font-extrabold text-center text-[#1A1A1A] mb-2">
+            3 ׳‘׳•׳ ׳•׳¡׳™׳ ׳©׳¢׳•׳–׳¨׳™׳ ׳׳ ׳׳”׳¨׳•׳•׳™׳— ׳׳”׳¨ ׳™׳•׳×׳¨
+          </motion.h2>
+          <motion.p variants={fadeUp} className="text-center text-[#C9A96E] font-semibold text-lg mb-1">׳©׳•׳•׳™ 597ג‚× - ׳©׳׳ ׳‘׳—׳™׳ ׳</motion.p>
+          <motion.p variants={fadeUp} className="text-center text-[#5C4A3A] text-sm mb-8">׳›׳©׳׳× ׳¨׳•׳›׳©׳× ׳”׳™׳•׳</motion.p>
+
+          <div className="space-y-4">
+            <motion.div variants={fadeUp} className="relative bg-white border border-[#E8DDD4] rounded-2xl overflow-hidden flex items-stretch shadow-sm" whileHover={{ scale: 1.01 }}>
+              <div className="relative w-24 flex-shrink-0 overflow-hidden">
+                <img src="/brow3.jpg" alt="׳¦׳‘׳™׳¢׳× ׳’׳‘׳•׳×" className="w-full h-full object-cover" style={{ objectPosition: 'center 25%' }} />
+                <div className="absolute inset-0 bg-black/20 flex items-center justify-center">
+                  <div className="w-8 h-8 rounded-full bg-white/60 border border-white flex items-center justify-center">
+                    <div className="w-0 h-0 ml-0.5" style={{ borderTop: '6px solid transparent', borderBottom: '6px solid transparent', borderLeft: '10px solid #1A1A1A' }} />
+                  </div>
+                </div>
+              </div>
+              <div className="flex-1 p-4 text-right">
+                <span className="text-[#C9A96E] text-xs font-bold tracking-wider">׳‘׳•׳ ׳•׳¡ 1</span>
+                <h3 className="font-bold text-base text-[#1A1A1A] mt-0.5 mb-1">׳”׳“׳¨׳›׳× ׳¦׳‘׳™׳¢׳× ׳’׳‘׳•׳×</h3>
+                <p className="text-[#5C4A3A] text-xs leading-relaxed mb-2">׳˜׳™׳₪׳•׳ ׳ ׳•׳¡׳£ ׳©׳ 5 ׳“׳§׳•׳× ׳©׳׳•׳¡׳™׳£ ׳¢׳•׳“ 40-60ג‚× ׳׳›׳ ׳׳§׳•׳—׳”. ׳¢׳•׳“ ׳©׳›׳‘׳” ׳©׳ ׳”׳›׳ ׳¡׳”.</p>
+                <div className="flex items-center justify-end gap-2">
+                  <span className="bg-green-100 text-green-700 text-xs font-bold px-2 py-0.5 rounded-full">׳—׳™׳ ׳</span>
+                  <span className="text-gray-400 line-through text-xs">297ג‚×</span>
+                </div>
+              </div>
+            </motion.div>
+
+            <motion.div variants={fadeUp} className="relative bg-white border border-[#E8DDD4] rounded-2xl overflow-hidden flex items-stretch shadow-sm" whileHover={{ scale: 1.01 }}>
+              <div className="relative w-24 flex-shrink-0 overflow-hidden bg-[#F5EAE0]">
+                <img src="/brow1.jpg" alt="׳׳¦׳׳׳× ׳’׳‘׳•׳×" className="w-full h-full object-cover opacity-80" style={{ objectPosition: 'center 20%' }} />
+              </div>
+              <div className="flex-1 p-4 text-right">
+                <span className="text-[#C9A96E] text-xs font-bold tracking-wider">׳‘׳•׳ ׳•׳¡ 2</span>
+                <h3 className="font-bold text-base text-[#1A1A1A] mt-0.5 mb-1">׳©׳™׳•׳•׳§ ׳•׳׳™׳ ׳¡׳˜׳’׳¨׳</h3>
+                <p className="text-[#5C4A3A] text-xs leading-relaxed mb-2">׳׳™׳ ׳׳¦׳׳ ׳’׳‘׳•׳× ׳©׳׳‘׳™׳׳•׳× ׳׳§׳•׳—׳•׳× ׳—׳“׳©׳•׳× - ׳‘׳׳™ ׳׳¦׳׳׳” ׳׳§׳¦׳•׳¢׳™׳× ׳•׳‘׳׳™ ׳׳“׳¢׳× ׳©׳™׳•׳•׳§.</p>
+                <div className="flex items-center justify-end gap-2">
+                  <span className="bg-green-100 text-green-700 text-xs font-bold px-2 py-0.5 rounded-full">׳—׳™׳ ׳</span>
+                  <span className="text-gray-400 line-through text-xs">150ג‚×</span>
+                </div>
+              </div>
+            </motion.div>
+
+            <motion.div variants={fadeUp} className="relative bg-white border border-[#E8DDD4] rounded-2xl overflow-hidden flex items-stretch shadow-sm" whileHover={{ scale: 1.01 }}>
+              <div className="relative w-24 flex-shrink-0 bg-[#F5EAE0] flex items-center justify-center overflow-hidden">
+                <div className="relative w-12 h-16 bg-white rounded shadow-xl overflow-hidden border border-[#E8DDD4]">
+                  <div className="bg-[#D4C5B5] h-4 flex items-center justify-center">
+                    <span className="text-[#1A1A1A] text-[5px] font-black tracking-wider">TB ACADEMY</span>
+                  </div>
+                  <div className="p-1.5 space-y-1">
+                    <div className="h-1 bg-gray-200 rounded-full w-full" />
+                    <div className="h-1 bg-gray-200 rounded-full w-4/5" />
+                    <div className="h-3 bg-[#D4C5B5]/30 rounded mt-1" />
+                  </div>
+                </div>
+              </div>
+              <div className="flex-1 p-4 text-right">
+                <span className="text-[#C9A96E] text-xs font-bold tracking-wider">׳‘׳•׳ ׳•׳¡ 3</span>
+                <h3 className="font-bold text-base text-[#1A1A1A] mt-0.5 mb-1">׳—׳•׳‘׳¨׳× PDF ׳׳§׳¦׳•׳¢׳™׳× ׳׳׳׳”</h3>
+                <p className="text-[#5C4A3A] text-xs leading-relaxed mb-2">׳›׳ ׳”׳™׳“׳¢ ׳׳¡׳•׳“׳¨ ׳‘׳—׳•׳‘׳¨׳× ׳׳•׳›׳ ׳” ׳׳”׳“׳₪׳¡׳”. ׳¢׳‘׳“׳×׳™ ׳¢׳׳™׳” ׳—׳•׳“׳©׳™׳.</p>
+                <div className="flex items-center justify-end gap-2">
+                  <span className="bg-green-100 text-green-700 text-xs font-bold px-2 py-0.5 rounded-full">׳—׳™׳ ׳</span>
+                  <span className="text-gray-400 line-through text-xs">150ג‚×</span>
+                </div>
+              </div>
+            </motion.div>
+          </div>
+
+          <motion.div variants={fadeUp} className="mt-8 relative">
+            <div className="relative bg-white border border-[#C9A96E]/40 rounded-3xl p-8 text-center shadow-sm">
+              <p className="text-[#C9A96E] text-xs uppercase tracking-[3px] mb-4">׳”׳›׳ ׳›׳׳•׳ - ׳‘׳׳™ ׳”׳₪׳×׳¢׳•׳×</p>
+              <div className="flex items-center justify-center gap-3 flex-wrap mb-2">
+                <span className="text-gray-400 line-through text-lg">2,794ג‚×</span>
+                <span className="text-[#1A1A1A] text-6xl font-black">197ג‚×</span>
+              </div>
+              <p className="text-[#5C4A3A] text-sm">׳׳• 2 ׳×׳©׳׳•׳׳™׳ ׳ ׳•׳—׳™׳ ׳©׳ 98ג‚×</p>
+            </div>
+          </motion.div>
+        </motion.div>
+      </section>
+
+      {/* ג”€ג”€ג”€ TESTIMONIALS ג”€ג”€ג”€ */}
+      <section className="bg-[#FDFAF7] py-12 px-5">
+        <motion.div className="max-w-2xl mx-auto" initial="hidden" whileInView="visible" viewport={{ once: true }} variants={stagger}>
+          <motion.p variants={fadeUp} className="text-center text-[#8B7355] text-sm uppercase tracking-wide font-semibold mb-2">׳¢׳“׳•׳™׳•׳×</motion.p>
+          <motion.h2 variants={fadeUp} className="text-3xl font-extrabold text-center mb-2">׳׳” ׳”׳ ׳›׳•׳×׳‘׳•׳× ׳׳—׳¨׳™ ׳”׳§׳•׳¨׳¡</motion.h2>
+          <motion.div variants={fadeUp} className="w-16 h-1 bg-[#D4C5B5] mx-auto rounded-full mt-3 mb-10" />
+
+          <div className="space-y-5">
+            {testimonials.map((t, i) => (
+              <motion.div key={i} variants={fadeUp} className="flex justify-end items-end gap-2">
+                <div className="relative max-w-xs sm:max-w-sm bg-[#DCF8C6] px-4 py-3 shadow-sm"
+                  style={{ borderRadius: '18px 18px 4px 18px' }}>
+                  <p className="text-[#1A1A1A] text-sm leading-relaxed text-right">{t.quote}</p>
+                  <p className="text-gray-400 text-xs mt-1 text-left">{t.time} ג“ג“</p>
+                </div>
+                <div className="flex flex-col items-center gap-1 flex-shrink-0 order-first">
+                  <img src={t.avatar} alt={t.name}
+                    className="w-10 h-10 rounded-full object-cover border-2 border-[#D4C5B5]" />
+                  <span className="text-[10px] text-gray-400">{t.name}</span>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+
+          <motion.p variants={fadeUp} className="text-center text-gray-500 mt-10 text-base">
+            ׳׳׳” ׳”׳•׳“׳¢׳•׳× ׳׳׳™׳×׳™׳•׳× ׳׳×׳׳׳™׳“׳•׳×. ׳׳ ׳₪׳¨׳¡׳•׳׳×. ׳׳ ׳”׳׳¦׳׳”. ׳×׳•׳¦׳׳•׳×.
+          </motion.p>
+        </motion.div>
+      </section>
+
+      {/* ג”€ג”€ג”€ URGENCY ג”€ג”€ג”€ */}
+      <section className="bg-[#EFE5DC] py-12 px-5">
+        <motion.div className="max-w-3xl mx-auto text-center"
+          initial={{ opacity: 0, scale: 0.95 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }} transition={{ duration: 0.6 }}>
+          <p className="text-[#1A1A1A] text-2xl sm:text-3xl font-bold leading-relaxed mb-4">
+            ׳”׳׳§׳•׳—׳•׳× ׳©׳׳ ׳׳ ׳׳—׳₪׳©׳•׳× ׳¢׳•׳“ ׳׳§׳•׳ ׳׳’׳‘׳•׳×. ׳”׳ ׳¨׳•׳¦׳•׳× ׳׳¢׳©׳•׳× ׳”׳›׳ ׳׳¦׳׳.<br /> <span className="text-[#8B7355]">׳׳¡׳׳•׳ ׳¢׳׳™׳™׳. ׳׳”׳™׳©׳׳¨ ׳׳¦׳׳.</span> ׳׳¢׳©׳•׳× ׳¦׳™׳₪׳•׳¨׳ ׳™׳™׳, ׳’׳‘׳•׳×, ׳”׳›׳ ׳‘׳׳§׳•׳ ׳׳—׳“.
+          </p>
+          <p className="text-[#5C4A3A] text-xl mt-4 font-medium">
+            ׳›׳ ׳—׳•׳“׳© ׳©׳׳× ׳׳ ׳׳¦׳™׳¢׳” ׳׳× ׳–׳” ג€” <span className="font-bold text-[#1A1A1A]">׳׳× ׳¢׳•׳–׳‘׳× ׳›׳¡׳£ ׳¢׳ ׳”׳›׳™׳¡׳.</span>
+          </p>
+        </motion.div>
+      </section>
+
+      {/* ג”€ג”€ג”€ FOR WHO ג”€ג”€ג”€ */}
+      <section className="bg-white py-12 px-5">
+        <motion.div className="max-w-3xl mx-auto" initial="hidden" whileInView="visible" viewport={{ once: true }} variants={stagger}>
+          <motion.p variants={fadeUp} className="text-center text-[#8B7355] text-sm font-semibold uppercase tracking-wide mb-2">׳׳׳™ ׳–׳” ׳׳×׳׳™׳</motion.p>
+          <motion.h2 variants={fadeUp} className="text-2xl sm:text-4xl font-bold text-center mb-8">
+            ׳–׳” ׳‘׳©׳‘׳™׳׳ ׳׳...
+          </motion.h2>
+          <div className="space-y-3">
+            {[
+              '׳׳× ׳§׳•׳¡׳׳˜׳™׳§׳׳™׳× ׳¢׳ ׳׳§׳•׳—׳•׳× ׳§׳‘׳•׳¢׳•׳× ׳©׳™׳›׳•׳׳•׳× ׳׳”׳•׳¡׳™׳£ ׳’׳‘׳•׳× - ׳•׳¢׳“׳™׳™׳ ׳׳ ׳”׳¦׳¢׳× ׳׳”׳',
+              '׳׳× ׳׳¨׳’׳™׳©׳” ׳©׳”׳™׳•׳׳ ׳©׳׳ ׳׳ ׳©׳•׳•׳” ׳׳× ׳”׳׳׳׳¥ ׳©׳׳× ׳׳©׳§׳™׳¢׳”',
+              '׳׳× ׳¨׳•׳¦׳” ׳׳”׳•׳¡׳™׳£ ׳”׳›׳ ׳¡׳” ׳‘׳׳™ ׳׳—׳₪׳© ׳׳§׳•׳—׳•׳× ׳—׳“׳©׳•׳×',
+              '׳׳₪׳—׳“׳× ׳׳”׳¨׳•׳¡ ׳׳׳§׳•׳—׳•׳× ׳׳× ׳”׳’׳‘׳•׳× ׳•׳¨׳•׳¦׳” ׳‘׳™׳˜׳—׳•׳ ׳׳׳™׳×׳™ ׳׳₪׳ ׳™ ׳©׳׳×׳—׳™׳׳•׳×',
+              '׳ ׳™׳¡׳™׳× ׳׳׳׳•׳“ ׳׳™׳•׳˜׳™׳•׳‘ ׳•׳™׳¦׳׳× ׳׳‘׳•׳׳‘׳׳× - ׳•׳¨׳•׳¦׳” ׳©׳™׳˜׳” ׳׳—׳× ׳‘׳¨׳•׳¨׳”',
+              '׳׳× ׳׳¨׳’׳™׳©׳” ׳©׳׳’׳™׳¢ ׳׳ ׳™׳•׳×׳¨ ׳•׳¨׳•׳¦׳” ׳׳”׳•׳›׳™׳— ׳׳× ׳–׳” ׳׳¢׳¦׳׳',
+            ].map((t, i) => (
+              <motion.div key={i} variants={fadeUp}
+                className="flex items-start gap-4 bg-[#FAF7F4] border border-[#E8DDD4] rounded-2xl px-5 py-4">
+                <span className="text-[#C49A8A] text-xl mt-0.5 flex-shrink-0">ג†</span>
+                <span className="text-[#1A1A1A] text-base">{t}</span>
+              </motion.div>
+            ))}
+          </div>
+        </motion.div>
+      </section>
+
+      {/* ג”€ג”€ג”€ PRICE FRAMING ג€” NO BRAINER ג”€ג”€ג”€ */}
+      <section className="bg-[#F8F4F0] py-12 px-5">
+        <motion.div className="max-w-2xl mx-auto" initial="hidden" whileInView="visible" viewport={{ once: true }} variants={stagger}>
+          <motion.h2 variants={fadeUp} className="text-2xl sm:text-3xl font-bold text-center mb-8 text-[#1A1A1A]">
+            ׳׳₪׳ ׳™ ׳©׳ ׳“׳‘׳¨ ׳¢׳ ׳׳—׳™׳¨ ג€” <span className="text-[#C49A8A]">׳‘׳•׳׳™ ׳ ׳¢׳©׳” ׳—׳©׳‘׳•׳.</span>
+          </motion.h2>
+
+          <motion.div variants={fadeUp} className="space-y-3 mb-8">
+            {[
+              { label: '׳§׳•׳¨׳¡ ׳₪׳¨׳•׳ ׳˜׳׳™ ׳¢׳™׳¦׳•׳‘ ׳’׳‘׳•׳× (׳׳¦׳ ׳˜׳׳™׳”)', val: '2,800ג‚×', crossed: false, highlight: false },
+              { label: '׳”׳©׳×׳׳׳•׳× ׳׳™׳§׳¨׳•׳‘׳׳™׳™׳“׳™׳ ׳’ (׳™׳•׳ ׳©׳׳)', val: '2,500ג‚×', crossed: false, highlight: false },
+              { label: '׳§׳•׳¨׳¡׳™׳ ׳“׳™׳’׳™׳˜׳׳™׳™׳ ׳׳×׳—׳¨׳™׳', val: '500-900ג‚×', crossed: false, highlight: false },
+              { label: '׳”׳§׳•׳¨׳¡ ׳”׳–׳” ג€” ׳¢׳ 3 ׳‘׳•׳ ׳•׳¡׳™׳ + ׳׳™׳•׳•׳™', val: '197ג‚×', crossed: false, highlight: true },
+            ].map((row, i) => (
+              <div key={i} className={`flex items-center justify-between px-5 py-4 rounded-2xl border ${row.highlight ? 'bg-[#D4C5B5] border-[#C49A8A]' : 'bg-white border-[#E8DDD4]'}`}>
+                <span className={`font-bold text-lg ${row.highlight ? 'text-[#1A1A1A]' : 'text-[#C49A8A]'}`}>{row.val}</span>
+                <span className={`text-right text-sm ${row.highlight ? 'font-bold text-[#1A1A1A]' : 'text-[#5C4A3A]'}`}>{row.label}</span>
+              </div>
+            ))}
+          </motion.div>
+
+          <motion.div variants={fadeUp} className="bg-white border border-[#D4C5B5] rounded-2xl p-5 text-right space-y-2">
+            <p className="font-bold text-[#1A1A1A]">נ‘ˆ ׳˜׳™׳₪׳•׳ ׳׳—׳“ ׳¢׳™׳¦׳•׳‘ ׳’׳‘׳•׳× = 80-120ג‚×</p>
+            <p className="text-[#5C4A3A]">׳׳—׳¨׳™ 2 ׳˜׳™׳₪׳•׳׳™׳ - ׳”׳§׳•׳¨׳¡ ׳©׳™׳׳ ׳׳× ׳¢׳¦׳׳•.</p>
+            <p className="font-bold text-[#C49A8A]">׳›׳ ׳”׳©׳׳¨ - ׳¨׳•׳•׳— ׳˜׳”׳•׳¨ ׳׳›׳ ׳”׳—׳™׳™׳.</p>
+          </motion.div>
+        </motion.div>
+      </section>
+
+      {/* ג”€ג”€ג”€ PRICING ג”€ג”€ג”€ */}
+      <section id="section-pricing" className="bg-[#FAF7F4] py-12 px-5">
+        <motion.div className="max-w-lg mx-auto text-center" initial="hidden" whileInView="visible" viewport={{ once: true }} variants={stagger}>
+          <motion.p variants={fadeUp} className="text-[#8B7355] text-sm uppercase tracking-wide mb-2">׳”׳”׳©׳§׳¢׳” ׳©׳׳</motion.p>
+          <motion.h2 variants={fadeUp} className="text-3xl font-extrabold text-[#1A1A1A] mb-8">
+            ׳›׳׳” ׳¢׳•׳׳” ׳׳©׳ ׳•׳× ׳׳× ׳”׳”׳›׳ ׳¡׳•׳× ׳©׳׳?
+          </motion.h2>
+
+          <motion.div variants={fadeUp} className="bg-white rounded-3xl p-8 mb-6 shadow-md border border-[#E8DDD4]">
+            <p className="text-gray-400 line-through text-base mb-1 text-center">׳©׳•׳•׳™ ׳׳•׳¦׳”׳¨: 2,197ג‚×</p>
+            <p className="text-7xl font-black text-[#1A1A1A] leading-none mb-1 text-center">197ג‚×</p>
+            <p className="text-gray-500 text-sm mb-1 text-center">׳׳• 2 ׳×׳©׳׳•׳׳™׳ ׳ ׳•׳—׳™׳ ׳©׳ 98ג‚×</p>
+            <p className="text-gray-400 text-xs mb-6 text-center">׳×׳•׳ ׳“׳§׳” ׳׳”׳¨׳›׳™׳©׳” ׳™׳’׳™׳¢ ׳׳׳™׳™׳ ׳©׳׳ ׳”׳§׳•׳¨׳¡ ׳¢׳ ׳©׳ ׳׳©׳×׳׳© ׳•׳¡׳™׳¡׳׳” ׳׳™׳©׳™׳™׳.</p>
+
+            <form onSubmit={handlePricingSubmit} className="space-y-3">
+              <div>
+                <label className="block text-sm font-semibold text-gray-500 mb-1 text-right">׳©׳ ׳׳׳</label>
+                <input type="text" required placeholder="׳”׳›׳ ׳™׳¡׳™ ׳׳× ׳©׳׳"
+                  value={pricingForm.name} onChange={e => setPricingForm({ ...pricingForm, name: e.target.value })}
+                  className="w-full border border-[#E8DDD4] rounded-xl px-4 py-3 text-right text-[#1A1A1A] focus:border-[#C49A8A] focus:outline-none transition-colors text-base" />
+              </div>
+              <div>
+                <label className="block text-sm font-semibold text-gray-500 mb-1 text-right">׳˜׳׳₪׳•׳ ׳ ׳™׳™׳“</label>
+                <input type="tel" required placeholder="050-0000000"
+                  value={pricingForm.phone} onChange={e => setPricingForm({ ...pricingForm, phone: e.target.value })}
+                  className="w-full border border-[#E8DDD4] rounded-xl px-4 py-3 text-[#1A1A1A] focus:border-[#C49A8A] focus:outline-none transition-colors text-base" dir="ltr" />
+              </div>
+              <div>
+                <label className="block text-sm font-semibold text-gray-500 mb-1 text-right">׳›׳×׳•׳‘׳× ׳׳™׳™׳</label>
+                <input type="email" required placeholder="example@gmail.com"
+                  value={pricingForm.email} onChange={e => setPricingForm({ ...pricingForm, email: e.target.value })}
+                  className="w-full border border-[#E8DDD4] rounded-xl px-4 py-3 text-[#1A1A1A] focus:border-[#C49A8A] focus:outline-none transition-colors text-base" dir="ltr" />
+              </div>
+              <label className="flex items-start gap-2 cursor-pointer">
+                <input type="checkbox" required className="mt-1 flex-shrink-0 accent-[#C49A8A]" />
+                <span className="text-xs text-gray-500 text-right leading-snug">
+                  ׳׳ ׳™ ׳׳׳©׳¨׳× ׳§׳‘׳׳× ׳¢׳“׳›׳•׳ ׳™׳, ׳׳‘׳¦׳¢׳™׳ ׳•׳×׳›׳ ׳™׳ ׳©׳™׳•׳•׳§׳™׳™׳ ׳׳׳™׳™׳ ׳׳˜׳׳™׳” ׳‘׳•׳–׳•׳¨׳’׳™. ׳ ׳™׳×׳ ׳׳‘׳˜׳ ׳‘׳›׳ ׳¢׳×.
+                </span>
+              </label>
+              <motion.button type="submit"
+                className="w-full bg-[#C49A8A] text-white py-4 rounded-2xl font-bold text-xl hover:bg-[#B5897A] transition-colors mt-2"
+                disabled={submitting} whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.97 }}>
+                {submitting ? '׳©׳ ׳™׳™׳”...' : '׳›׳, ׳׳ ׳™ ׳¨׳•׳¦׳” ׳׳”׳¨׳•׳•׳™׳— ׳™׳•׳×׳¨ ׳׳›׳ ׳׳§׳•׳—׳” ג‹'}
+              </motion.button>
+            </form>
+            <div className="mt-4 bg-[#F5EAE0] border border-[#D4C5B5] rounded-xl px-4 py-3 text-center space-y-1">
+              <p className="text-[#8B7355] text-xs font-semibold">׳׳” ׳§׳•׳¨׳” ׳׳—׳¨׳™ ׳”׳×׳©׳׳•׳?</p>
+              <p className="text-[#5C4A3A] text-xs leading-relaxed">
+                ׳×׳•׳¢׳‘׳¨׳™ ׳׳“׳£ ׳¡׳׳™׳§׳” ׳׳׳•׳‘׳˜׳—. ׳×׳•׳ ׳“׳§׳” ׳׳—׳× ׳׳”׳¨׳›׳™׳©׳” ׳™׳’׳™׳¢ ׳׳׳™׳™׳ ׳©׳׳ ׳”׳§׳•׳¨׳¡ ׳¢׳ ׳©׳ ׳׳©׳×׳׳© ׳•׳¡׳™׳¡׳׳” ׳׳™׳©׳™׳™׳.
+              </p>
+              <p className="text-[#8B7355] text-xs">׳¢׳¨׳‘׳•׳× ׳”׳—׳–׳¨ ׳׳׳ 14 ׳™׳•׳</p>
+            </div>
+          </motion.div>
+
+          <motion.div variants={fadeUp}
+            className="flex items-start gap-4 text-right bg-white border border-[#E8DDD4] rounded-2xl p-5 shadow-sm mb-4">
+            <span className="text-4xl flex-shrink-0">נ›¡ן¸</span>
+            <div>
+              <p className="text-[#8B7355] font-bold mb-1">׳¢׳¨׳‘׳•׳× ׳”׳—׳–׳¨ ׳׳׳ - 14 ׳™׳•׳</p>
+              <p className="text-[#5C4A3A] text-sm leading-relaxed">
+                ׳¦׳₪׳™׳× ׳‘׳›׳ ׳”׳—׳•׳׳¨ ׳•׳׳ ׳”׳¦׳׳—׳× ׳׳™׳™׳©׳ ׳›׳׳•׳? ׳׳—׳–׳™׳¨׳” ׳׳ ׳׳× ׳”׳›׳¡׳£ ׳‘׳׳׳•׳׳•. ׳‘׳׳™ ׳©׳׳׳•׳× ׳׳™׳•׳×׳¨׳•׳×.
+              </p>
+            </div>
+          </motion.div>
+
+          <motion.div variants={fadeUp}
+            className="bg-[#FFF8F3] border border-[#C9A96E]/30 rounded-2xl px-6 py-4 text-center">
+            <p className="text-[#C9A96E] text-xs tracking-widest uppercase mb-3">ג³ ׳׳—׳™׳¨ ׳”׳”׳©׳§׳” ׳ ׳’׳׳¨ ׳‘׳¢׳•׳“</p>
+            <div className="flex gap-4 items-center justify-center">
+              {[{ v: countdown.s, l: '׳©׳ ׳™׳•׳×' }, { v: countdown.m, l: '׳“׳§׳•׳×' }].map((u, i) => (
+                <div key={i} className="flex gap-4 items-center">
+                  {i > 0 && <span className="text-[#C9A96E] text-2xl font-bold -mt-3">:</span>}
+                  <div className="text-center">
+                    <span className="block text-3xl font-black text-[#C49A8A]">{String(u.v).padStart(2, '0')}</span>
+                    <span className="text-[10px] text-[#8B7355] tracking-wider">{u.l}</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </motion.div>
+        </motion.div>
+      </section>
+
+      {/* ג”€ג”€ג”€ FAQ ג”€ג”€ג”€ */}
+      <section className="bg-[#FAF7F4] py-12 px-5">
+        <motion.div className="max-w-3xl mx-auto" initial="hidden" whileInView="visible" viewport={{ once: true }} variants={stagger}>
+          <motion.p variants={fadeUp} className="text-center text-[#8B7355] text-sm font-semibold uppercase tracking-wide mb-2">׳©׳׳׳•׳× ׳•׳×׳©׳•׳‘׳•׳×</motion.p>
+          <motion.h2 variants={fadeUp} className="text-2xl sm:text-4xl font-bold text-center mb-6">
+            ׳©׳׳׳•׳× ׳©׳‘׳˜׳— ׳¢׳•׳׳•׳× ׳׳
+          </motion.h2>
+          <div className="space-y-3">
+            {faqs.map((f, i) => (
+              <motion.div key={i} variants={fadeUp}
+                className="bg-white border border-[#E8DDD4] rounded-2xl overflow-hidden">
+                <button
+                  onClick={() => setOpenFaq(openFaq === i ? null : i)}
+                  className="w-full flex items-center justify-between px-6 py-4 text-right font-semibold text-[#1A1A1A] hover:bg-[#FAF7F4] transition-colors">
+                  <span className="text-[#C49A8A] text-2xl font-light ml-2">{openFaq === i ? 'גˆ’' : '+'}</span>
+                  <span className="flex-1">{f.q}</span>
+                </button>
+                {openFaq === i && (
+                  <div className="px-6 pb-5 border-t border-[#E8DDD4] pt-4 text-gray-600 leading-relaxed">
+                    {f.a}
+                  </div>
+                )}
+              </motion.div>
+            ))}
+          </div>
+        </motion.div>
+      </section>
+
+      {/* ג”€ג”€ג”€ CTA FORM ג”€ג”€ג”€ */}
+      <section id="cta-form" className="bg-gradient-to-b from-[#EFE5DC] to-[#FAF7F4] py-14 px-5 relative overflow-hidden">
+        <div className="absolute inset-0 opacity-4"
+          style={{ backgroundImage: 'url(https://images.unsplash.com/photo-1616394584738-fc6e612e71b9?w=1400&q=80)', backgroundSize: 'cover', opacity: 0.04 }} />
+        <motion.div className="relative z-10 max-w-md mx-auto" initial="hidden" whileInView="visible" viewport={{ once: true }} variants={stagger}>
+          <motion.h2 variants={fadeUp} className="text-[#1A1A1A] text-3xl sm:text-4xl font-extrabold text-center mb-2">
+            ׳׳•׳›׳ ׳” ׳׳”׳¨׳•׳•׳™׳— ׳™׳•׳×׳¨ ׳׳›׳ ׳׳§׳•׳—׳”?
+          </motion.h2>
+          <motion.p variants={fadeUp} className="text-[#8B7355] text-center mb-2 text-lg">
+            ׳׳׳׳™ ׳₪׳¨׳˜׳™׳ ׳•׳×׳•׳¢׳‘׳¨׳™ ׳™׳©׳™׳¨׳•׳× ׳׳“׳£ ׳”׳×׳©׳׳•׳.
+          </motion.p>
+          <motion.p variants={fadeUp} className="text-[#5C4A3A] text-sm text-center mb-6">
+            ׳×׳•׳ ׳“׳§׳” ׳׳”׳¨׳›׳™׳©׳” ׳™׳’׳™׳¢ ׳׳׳™׳™׳ ׳©׳׳ ׳”׳§׳•׳¨׳¡ ׳¢׳ ׳©׳ ׳׳©׳×׳׳© ׳•׳¡׳™׳¡׳׳” ׳׳™׳©׳™׳™׳.
+          </motion.p>
+
+          <motion.form variants={fadeUp} onSubmit={handleSubmit}
+            className="bg-white rounded-3xl p-8 sm:p-10 shadow-md border border-[#E8DDD4] space-y-5">
+            <div>
+              <label className="block text-sm font-semibold text-gray-500 mb-1 text-right">׳©׳ ׳׳׳</label>
+              <input type="text" required placeholder="׳”׳›׳ ׳™׳¡׳™ ׳׳× ׳©׳׳"
+                value={form.name} onChange={e => setForm({ ...form, name: e.target.value })}
+                className="w-full border border-[#E8DDD4] rounded-xl px-4 py-3 text-right text-[#1A1A1A] focus:border-[#C49A8A] focus:outline-none transition-colors text-base" />
+            </div>
+            <div>
+              <label className="block text-sm font-semibold text-gray-500 mb-1 text-right">׳˜׳׳₪׳•׳ ׳ ׳™׳™׳“</label>
+              <input type="tel" required placeholder="050-0000000"
+                value={form.phone} onChange={e => setForm({ ...form, phone: e.target.value })}
+                className="w-full border border-[#E8DDD4] rounded-xl px-4 py-3 text-[#1A1A1A] focus:border-[#C49A8A] focus:outline-none transition-colors text-base" dir="ltr" />
+            </div>
+            <div>
+              <label className="block text-sm font-semibold text-gray-500 mb-1 text-right">׳›׳×׳•׳‘׳× ׳׳™׳™׳</label>
+              <input type="email" required placeholder="example@gmail.com"
+                value={form.email} onChange={e => setForm({ ...form, email: e.target.value })}
+                className="w-full border border-[#E8DDD4] rounded-xl px-4 py-3 text-[#1A1A1A] focus:border-[#C49A8A] focus:outline-none transition-colors text-base" dir="ltr" />
+            </div>
+            <label className="flex items-start gap-2 cursor-pointer">
+              <input type="checkbox" required className="mt-1 flex-shrink-0 accent-[#C49A8A]" />
+              <span className="text-xs text-gray-500 text-right leading-snug">
+                ׳׳ ׳™ ׳׳׳©׳¨׳× ׳§׳‘׳׳× ׳¢׳“׳›׳•׳ ׳™׳, ׳׳‘׳¦׳¢׳™׳ ׳•׳×׳›׳ ׳™׳ ׳©׳™׳•׳•׳§׳™׳™׳ ׳׳׳™׳™׳ ׳׳˜׳׳™׳” ׳‘׳•׳–׳•׳¨׳’׳™. ׳ ׳™׳×׳ ׳׳‘׳˜׳ ׳‘׳›׳ ׳¢׳×.
+              </span>
+            </label>
+            <motion.button type="submit"
+              className="w-full bg-[#C49A8A] text-white py-4 rounded-2xl font-bold text-xl hover:bg-[#B5897A] transition-all duration-300"
+              disabled={submitting} whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.97 }}>
+              {submitting ? '׳©׳ ׳™׳™׳”...' : '׳׳ ׳™ ׳׳•׳›׳ ׳” ׳׳”׳¨׳•׳•׳™׳— ׳™׳•׳×׳¨ ׳׳›׳ ׳׳§׳•׳—׳” ג‹'}
+            </motion.button>
+            <div className="bg-[#F5EAE0] border border-[#D4C5B5] rounded-xl px-4 py-3 text-center space-y-1">
+              <p className="text-[#8B7355] text-xs font-semibold">׳׳” ׳§׳•׳¨׳” ׳׳—׳¨׳™ ׳”׳×׳©׳׳•׳?</p>
+              <p className="text-[#5C4A3A] text-xs leading-relaxed">
+                ׳×׳•׳¢׳‘׳¨׳™ ׳׳“׳£ ׳¡׳׳™׳§׳” ׳׳׳•׳‘׳˜׳—. ׳×׳•׳ ׳“׳§׳” ׳׳—׳× ׳׳”׳¨׳›׳™׳©׳” ׳™׳’׳™׳¢ ׳׳׳™׳™׳ ׳©׳׳ ׳”׳§׳•׳¨׳¡ ׳¢׳ ׳©׳ ׳׳©׳×׳׳© ׳•׳¡׳™׳¡׳׳” ׳׳™׳©׳™׳™׳.
+              </p>
+              <p className="text-[#8B7355] text-xs">׳¢׳¨׳‘׳•׳× ׳”׳—׳–׳¨ ׳׳׳ 14 ׳™׳•׳. ׳‘׳׳™ ׳¡׳™׳›׳•׳.</p>
+            </div>
+          </motion.form>
+
+          <motion.p variants={fadeUp} className="text-[#8B7355] text-center mt-8 font-semibold text-xl">
+            ׳׳׳׳™׳ ׳” ׳‘׳, ׳˜׳׳™׳” ג¨
+          </motion.p>
+        </motion.div>
+      </section>
+
+    </main>
+  );
+}
+

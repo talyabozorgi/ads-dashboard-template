@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { addSubscriberToList } from '@/lib/utils/ravmeser'
+import { sendCapiEvent } from '@/lib/utils/meta-capi'
 
 const BUYERS_LIST_ID = '49071'
 
@@ -10,9 +11,20 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: 'Missing email' }, { status: 400 })
   }
 
-  if (!process.env.RAVMESER_C_KEY) {
+  // Send Purchase event via Conversions API (server-side, always fires regardless of ad blockers)
+  await sendCapiEvent({
+    eventName: 'Purchase',
+    email,
+    phone,
+    value: 197,
+    currency: 'ILS',
+    contentName: 'eyebrow_course',
+    eventId: `purchase_${Date.now()}`,
+  })
+
+  if (!process.env.RAVMESER_CLIENT_ID) {
     console.error('Missing RavMeser credentials')
-    return NextResponse.json({ error: 'Not configured' }, { status: 500 })
+    return NextResponse.json({ success: true })
   }
 
   try {
@@ -27,12 +39,11 @@ export async function POST(request: NextRequest) {
 
     if (!result.ok) {
       console.error('RavMeser add-buyer error:', result.status, result.body)
-      return NextResponse.json({ error: 'RavMeser failed', details: result.body, status: result.status }, { status: 502 })
     }
 
     return NextResponse.json({ success: true })
   } catch (err) {
     console.error('add-buyer error:', err)
-    return NextResponse.json({ error: 'Server error' }, { status: 500 })
+    return NextResponse.json({ success: true })
   }
 }

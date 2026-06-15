@@ -10,7 +10,7 @@ export async function POST(request: NextRequest) {
     const source = utm_content || utm_campaign || utm_source || 'ישיר'
 
     // Add to RavMeser leads list directly
-    if (process.env.RAVMESER_C_KEY && LEADS_LIST_ID) {
+    if (process.env.RAVMESER_CLIENT_ID && LEADS_LIST_ID) {
       try {
         const result = await addSubscriberToList(LEADS_LIST_ID, {
           email,

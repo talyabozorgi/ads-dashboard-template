@@ -1,17 +1,29 @@
-import crypto from 'crypto'
+const API_BASE = 'https://graph.responder.live/v2'
 
-const API_BASE = 'https://api.responder.co.il/api/v1.0'
+let cachedToken: string | null = null
+let tokenExpiry = 0
 
-function buildAuthHeader(): string {
-  const nonce = crypto.randomBytes(16).toString('hex')
-  const timestamp = Math.floor(Date.now() / 1000).toString()
-  const cKey = process.env.RAVMESER_C_KEY!
-  const cSecretRaw = process.env.RAVMESER_C_SECRET!
-  const uKey = process.env.RAVMESER_U_KEY!
-  const uSecretRaw = process.env.RAVMESER_U_SECRET!
-  const cSecret = crypto.createHash('md5').update(cSecretRaw + nonce).digest('hex')
-  const uSecret = crypto.createHash('md5').update(uSecretRaw + nonce).digest('hex')
-  return `c_key=${cKey},c_secret=${cSecret},u_key=${uKey},u_secret=${uSecret},nonce=${nonce},timestamp=${timestamp}`
+async function getToken(): Promise<string> {
+  if (cachedToken && Date.now() < tokenExpiry) return cachedToken
+
+  const res = await fetch(`${API_BASE}/oauth/token`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      grant_type: 'client_credentials',
+      scope: '*',
+      client_id: Number(process.env.RAVMESER_CLIENT_ID),
+      client_secret: process.env.RAVMESER_CLIENT_SECRET,
+      user_token: process.env.RAVMESER_USER_TOKEN,
+    }),
+  })
+
+  const data = await res.json()
+  if (!data.token) throw new Error('RavMeser auth failed: ' + JSON.stringify(data))
+
+  cachedToken = data.token
+  tokenExpiry = Date.now() + 13 * 24 * 60 * 60 * 1000 // 13 days (expires in 14)
+  return cachedToken!
 }
 
 export interface SubscriberData {
@@ -21,20 +33,26 @@ export interface SubscriberData {
   custom_fields?: Record<string, string>
 }
 
-export async function addSubscriberToList(listId: string, data: SubscriberData): Promise<{ ok: boolean; status: number; body: string }> {
-  const res = await fetch(`${API_BASE}/lists/${listId}/subscribers`, {
+export async function addSubscriberToList(
+  listId: string,
+  data: SubscriberData
+): Promise<{ ok: boolean; status: number; body: string }> {
+  const token = await getToken()
+
+  const res = await fetch(`${API_BASE}/subscribers`, {
     method: 'POST',
     headers: {
-      'Authorization': buildAuthHeader(),
+      Authorization: `Bearer ${token}`,
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({
+      list_id: Number(listId),
       email: data.email,
-      first_name: data.first_name,
       phone: data.phone,
-      custom_fields: data.custom_fields,
+      first: data.first_name,
     }),
   })
+
   const body = await res.text()
   return { ok: res.ok, status: res.status, body }
 }
