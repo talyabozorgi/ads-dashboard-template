@@ -122,15 +122,18 @@ function SocialProofNotification() {
   const [name, setName] = useState('');
   const [index, setIndex] = useState(0);
   useEffect(() => {
-    const show = () => {
-      setName(recentBuyers[index % recentBuyers.length]);
-      setIndex(i => i + 1);
-      setVisible(true);
-      setTimeout(() => setVisible(false), 4000);
+    let timeout: ReturnType<typeof setTimeout>;
+    const schedule = (delay: number) => {
+      timeout = setTimeout(() => {
+        setName(recentBuyers[index % recentBuyers.length]);
+        setIndex(i => i + 1);
+        setVisible(true);
+        setTimeout(() => setVisible(false), 3500 + Math.random() * 1000);
+        schedule(18000 + Math.random() * 22000);
+      }, delay);
     };
-    const t1 = setTimeout(show, 8000);
-    const interval = setInterval(show, 25000);
-    return () => { clearTimeout(t1); clearInterval(interval); };
+    schedule(7000 + Math.random() * 6000);
+    return () => clearTimeout(timeout);
   }, [index]);
 
   return (
@@ -292,10 +295,10 @@ export default function EyebrowCoursePage() {
             427 מניקוריסטיות כבר למדו את השיטה
           </motion.p>
           <motion.h1 variants={fadeUp} className="text-[#1A1A1A] text-3xl sm:text-5xl font-extrabold leading-tight mb-5">
-            הוסיפי גבות לתפריט ותרוויחי
-            <span className="text-[#C49A8A]"> 70-90 שקל יותר </span>
-            מכל לקוחה
-            <span className="underline underline-offset-4 decoration-[#C49A8A] whitespace-nowrap"> שכבר יושבת אצלך</span>
+            הטיפול שאת חייבת ללמוד
+            <span className="text-[#C49A8A]"> כדי להכפיל הכנסה </span>
+            בעסק מאותן לקוחות
+            <span className="underline underline-offset-4 decoration-[#C49A8A] whitespace-nowrap"> שכבר מגיעות אלייך</span>
           </motion.h1>
           <motion.p variants={fadeUp} className="text-[#5C4A3A] text-lg mb-6 leading-relaxed">
             15 דקות לטיפול. בלי למלא יומן מחדש. בלי לקוחות חדשות.
