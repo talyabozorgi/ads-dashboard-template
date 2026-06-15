@@ -301,7 +301,8 @@ export default function EyebrowCoursePage() {
             <span className="underline underline-offset-4 decoration-[#C49A8A] whitespace-nowrap"> שכבר מגיעות אלייך</span>
           </motion.h1>
           <motion.p variants={fadeUp} className="text-[#5C4A3A] text-lg mb-6 leading-relaxed">
-            15 דקות לטיפול. בלי למלא יומן מחדש. בלי לקוחות חדשות.
+            בלי ציוד יקר. בלי לצאת מהבית.<br />
+            <span className="font-semibold text-[#1A1A1A]">רק שירות נוסף שהלקוחות שלך כבר מחפשות.</span>
           </motion.p>
 
           {/* Countdown hero */}
