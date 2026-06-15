@@ -6,7 +6,7 @@ import Script from 'next/script';
 
 const PIXEL_ID = '1901161570375773';
 const BASE_PURCHASE_URL = 'https://secure.cardcom.solutions/EA/EA5/00YPdJyAU2CAAMHVtWd7A/PaymentSP';
-const WHATSAPP_NUMBER = '972XXXXXXXXX'; // החליפי במספר הטלפון שלך
+const WHATSAPP_NUMBER = '972509368887';
 
 declare global {
   interface Window { fbq?: (...args: unknown[]) => void; _fbq: unknown; }
