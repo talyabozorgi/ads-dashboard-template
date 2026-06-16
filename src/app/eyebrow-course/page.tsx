@@ -360,7 +360,7 @@ export default function EyebrowCoursePage() {
           <motion.h2 variants={fadeUp} className="text-2xl sm:text-4xl font-bold text-center mb-6 text-[#1A1A1A]">
             זה לא שאין לך זמן. זה שאין לך את השירות הנכון.
           </motion.h2>
-          <motion.div variants={fadeUp} className="bg-white border border-[#E8DDD4] rounded-3xl p-8 text-right leading-loose space-y-4 text-[#5C4A3A] text-lg shadow-sm">
+          <motion.div variants={fadeUp} className="text-right leading-loose space-y-4 text-[#5C4A3A] text-lg px-2">
             <p>עיצוב גבות לוקח <strong className="text-[#1A1A1A]">15 דקות</strong> בשיטת הקוויק.</p>
             <p>תוספת של <strong className="text-[#1A1A1A]">70-90 שקל</strong> לכל לקוחה שממילא יושבת אצלך.</p>
             <p>20 לקוחות בחודש = <strong className="text-[#C49A8A] text-xl">1,400-1,800 שקל נוספים — בלי לקוחה חדשה אחת.</strong></p>
@@ -415,32 +415,18 @@ export default function EyebrowCoursePage() {
           <motion.h2 variants={fadeUp} className="text-2xl sm:text-4xl font-bold text-center mb-8">
             כמה שווה גבה אחת ללקוחה הממוצעת שלך?
           </motion.h2>
-          <motion.div variants={fadeUp} className="bg-[#FAF7F4] border border-[#E8DDD4] rounded-3xl p-8 shadow-sm mb-8">
-            <div className="flex items-center justify-center gap-4 flex-wrap mb-6">
-              {[{ val: '160₪', label: 'טיפול לק/ג\'ל', color: '#1A1A1A' },
-                { val: '+70₪', label: 'תוספת גבות', color: '#8B7355' },
-                { val: '=230₪', label: 'לטיפול אחד', color: '#C49A8A', bg: true }].map((item, i) => (
-                <div key={i} className={`text-center ${item.bg ? 'bg-[#C49A8A] rounded-2xl px-6 py-3' : ''}`}>
-                  <p className={`text-4xl font-black`} style={{ color: item.bg ? 'white' : item.color }}>{item.val}</p>
-                  <p className={`text-sm mt-1 ${item.bg ? 'text-white/80' : 'text-gray-400'}`}>{item.label}</p>
-                </div>
-              ))}
-            </div>
-            <div className="border-t border-[#E8DDD4] pt-5 text-center">
-              <p className="text-gray-600 text-lg">20 לקוחות בחודש x 70 שקל נוספים =
-                <strong className="text-[#1A1A1A] text-xl"> 1,400 שקל נוספים בחודש</strong>
-              </p>
-              <p className="text-gray-400 text-sm mt-2">בלי לקוחה חדשה אחת.</p>
-            </div>
+          <motion.div variants={fadeUp} className="text-right text-[#5C4A3A] text-lg leading-loose space-y-5 px-2 mb-10">
+            <p>לקוחה שיושבת אצלך לג'ל מוציאה בממוצע 160 שקל. תוסיפי לה גבות — עוד 70 שקל, 15 דקות בלבד. <strong className="text-[#1A1A1A]">אותה לקוחה שווה לך עכשיו 230 שקל.</strong></p>
+            <p>20 לקוחות בחודש, כל אחת מוסיפה 70 שקל = <strong className="text-[#C49A8A] text-xl">1,400 שקל נוספים בחודש</strong>. בלי לקוחה חדשה אחת. בלי פרסומות. בלי לרדוף אחרי אף אחת.</p>
           </motion.div>
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-            {[{ n: '10', l: 'שיעורי וידאו' }, { n: '+70-90₪', l: 'לכל טיפול' }, { n: '15 דק\'', l: 'לגבה מושלמת' }, { n: '427', l: 'תלמידות' }].map((s, i) => (
-              <motion.div key={i} variants={fadeUp} className="bg-[#F5EDE5] border border-[#E8DDD4] rounded-2xl p-4 text-center">
+          <motion.div variants={fadeUp} className="grid grid-cols-2 sm:grid-cols-4 border-t border-[#E8DDD4] pt-8">
+            {[{ n: '10', l: 'שיעורי וידאו' }, { n: '+70-90₪', l: 'לכל טיפול' }, { n: "15 דק'", l: 'לגבה מושלמת' }, { n: '427', l: 'תלמידות' }].map((s, i) => (
+              <div key={i} className="text-center py-4 px-2">
                 <p className="text-3xl font-black text-[#C49A8A]">{s.n}</p>
                 <p className="text-[#5C4A3A] text-xs mt-1 leading-tight">{s.l}</p>
-              </motion.div>
+              </div>
             ))}
-          </div>
+          </motion.div>
         </motion.div>
       </section>
 
@@ -455,10 +441,10 @@ export default function EyebrowCoursePage() {
             <p>לקחתי 80 שקל נוספים. 15 דקות. ואז היא שלחה לי עוד שלוש חברות.</p>
             <p className="font-semibold text-[#1A1A1A]">מאותו רגע הבנתי — הגבות הן לא "שירות נוסף". הן הדרך לעבוד פחות שעות ולהרוויח יותר, עם אותן לקוחות שכבר יש לך.</p>
           </motion.div>
-          <motion.div variants={fadeUp} className="bg-white border border-[#E8DDD4] rounded-3xl p-7 text-center shadow-sm">
-            <p className="text-[#5C4A3A] text-lg leading-relaxed">
+          <motion.div variants={fadeUp} className="text-center py-6 border-t border-[#D4C5B5]">
+            <p className="text-[#5C4A3A] text-xl italic leading-relaxed">
               "לעבוד פחות שעות. להרוויח יותר כסף.<br />
-              <strong className="text-[#1A1A1A]">עם אותן לקוחות שכבר יש לך."</strong>
+              <strong className="text-[#1A1A1A] not-italic">עם אותן לקוחות שכבר יש לך."</strong>
             </p>
             <p className="text-[#C49A8A] font-bold mt-5 text-xl">מאמינה בך, טליה</p>
           </motion.div>
@@ -487,10 +473,10 @@ export default function EyebrowCoursePage() {
               </div>
             </motion.div>
           </div>
-          <motion.div variants={fadeUp} className="bg-[#FAF7F4] border border-[#E8DDD4] rounded-3xl p-7 text-center mb-8 shadow-sm">
-            <p className="text-[#5C4A3A] text-lg leading-relaxed">
+          <motion.div variants={fadeUp} className="text-center py-6 border-t border-[#E8DDD4] mb-8">
+            <p className="text-[#5C4A3A] text-lg italic leading-relaxed">
               "השליחות שלי — לעזור לכל מניקוריסטית שאוהבת את המקצוע<br />
-              <strong className="text-[#1A1A1A]">להפוך לעסק רווחי שמכבד אותה."</strong>
+              <strong className="text-[#1A1A1A] not-italic">להפוך לעסק רווחי שמכבד אותה."</strong>
             </p>
           </motion.div>
           <motion.div variants={stagger} className="grid grid-cols-2 gap-3">
@@ -510,18 +496,13 @@ export default function EyebrowCoursePage() {
           <motion.h2 variants={fadeUp} className="text-3xl sm:text-5xl font-extrabold text-center mb-2">עיצוב גבות בשיטת הקוויק</motion.h2>
           <motion.p variants={fadeUp} className="text-center text-[#8B7355] font-semibold mb-4">10 שיעורים שישנו את העסק שלך</motion.p>
           <motion.div variants={fadeUp} className="w-16 h-1 bg-[#C49A8A] mx-auto rounded-full my-4" />
-          <div className="space-y-3 mb-6">
-            {modules.map((m) => (
-              <motion.div key={m.n} variants={fadeUp}
-                className="flex items-center gap-4 bg-white border border-[#E8DDD4] rounded-2xl px-4 py-3 shadow-sm hover:shadow-md transition-shadow">
-                <span className="w-8 h-8 rounded-full bg-[#C49A8A] text-white text-xs font-bold flex items-center justify-center flex-shrink-0">{m.n}</span>
-                <div className="flex-1 min-w-0">
-                  <p className="font-bold text-[#1A1A1A] text-base">{m.title}</p>
-                  <p className="text-gray-500 text-sm mt-0.5">{m.desc}</p>
-                </div>
-              </motion.div>
+          <motion.div variants={fadeUp} className="grid grid-cols-3 gap-2 mb-6">
+            {['/brow1.jpg', '/brow2.jpg', '/brow3.jpg', '/brow4.jpg', '/brow5.jpg', '/brow6.jpg'].map((src, i) => (
+              <div key={i} className="rounded-xl overflow-hidden aspect-square">
+                <img src={src} alt="עיצוב גבות" className="w-full h-full object-cover" />
+              </div>
             ))}
-          </div>
+          </motion.div>
           <motion.div variants={fadeUp} className="bg-[#C49A8A] rounded-2xl p-5">
             <p className="text-white font-semibold mb-3 text-center text-sm uppercase tracking-wide">מה כלול בקורס</p>
             <div className="flex flex-wrap gap-2 justify-center">
@@ -658,7 +639,7 @@ export default function EyebrowCoursePage() {
           </motion.div>
 
           {/* Guarantee */}
-          <motion.div variants={fadeUp} className="flex items-start gap-4 text-right bg-white border border-[#E8DDD4] rounded-2xl p-5 mb-4 shadow-sm">
+          <motion.div variants={fadeUp} className="flex items-start gap-4 text-right py-5 mb-4 border-t border-[#E8DDD4]">
             <span className="text-4xl flex-shrink-0">🛡️</span>
             <div>
               <p className="text-[#C49A8A] font-bold mb-1">ערובה של 14 יום — בלי שאלות</p>
@@ -667,7 +648,7 @@ export default function EyebrowCoursePage() {
           </motion.div>
 
           {/* Countdown pricing */}
-          <motion.div variants={fadeUp} className="bg-white border border-[#E8DDD4] rounded-2xl px-6 py-4 text-center shadow-sm">
+          <motion.div variants={fadeUp} className="px-6 py-4 text-center border-t border-[#E8DDD4]">
             <p className="text-[#8B7355] text-xs tracking-widest uppercase mb-3">מחיר ההשקה נגמר בעוד</p>
             <div className="flex gap-4 items-center justify-center">
               {[{ v: countdown.s, l: 'שניות' }, { v: countdown.m, l: 'דקות' }].map((u, i) => (
@@ -689,16 +670,16 @@ export default function EyebrowCoursePage() {
         <motion.div className="max-w-3xl mx-auto" initial="hidden" whileInView="visible" viewport={{ once: true }} variants={stagger}>
           <motion.p variants={fadeUp} className="text-center text-[#8B7355] text-sm font-semibold uppercase tracking-wide mb-2">שאלות ותשובות</motion.p>
           <motion.h2 variants={fadeUp} className="text-2xl sm:text-4xl font-bold text-center mb-6">שאלות שבטח עולות לך</motion.h2>
-          <div className="space-y-3">
+          <div className="divide-y divide-[#E8DDD4] border-t border-[#E8DDD4]">
             {faqs.map((f, i) => (
-              <motion.div key={i} variants={fadeUp} className="bg-white border border-[#E8DDD4] rounded-2xl overflow-hidden shadow-sm">
+              <motion.div key={i} variants={fadeUp}>
                 <button onClick={() => setOpenFaq(openFaq === i ? null : i)}
-                  className="w-full flex items-center justify-between px-6 py-4 text-right font-semibold text-[#1A1A1A] hover:bg-[#FAF7F4] transition-colors">
+                  className="w-full flex items-center justify-between px-2 py-5 text-right font-semibold text-[#1A1A1A] hover:text-[#C49A8A] transition-colors">
                   <span className="text-[#C49A8A] text-2xl font-light ml-2">{openFaq === i ? '−' : '+'}</span>
                   <span className="flex-1">{f.q}</span>
                 </button>
                 {openFaq === i && (
-                  <div className="px-6 pb-5 border-t border-[#E8DDD4] pt-4 text-gray-600 leading-relaxed">{f.a}</div>
+                  <div className="px-2 pb-5 text-gray-600 leading-relaxed">{f.a}</div>
                 )}
               </motion.div>
             ))}
