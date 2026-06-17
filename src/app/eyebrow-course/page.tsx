@@ -254,7 +254,7 @@ export default function EyebrowCoursePage() {
 
       {/* ─── URGENT TOP BAR ─── */}
       <div className="bg-[#FDF5F0] border-b border-[#E8DDD4] text-[#C49A8A] text-center py-2 px-4 text-sm font-bold">
-        ⏱️ מחיר השקה נגמר בעוד: {pad(countdown.m)}:{pad(countdown.s)} — אחרי זה המחיר עולה ל-397₪
+        ⏱️ מחיר השקה נגמר בעוד: {pad(countdown.m)}:{pad(countdown.s)}, אחרי זה המחיר עולה ל-397₪
       </div>
 
       {/* ─── STICKY CTA ─── */}
@@ -273,21 +273,23 @@ export default function EyebrowCoursePage() {
 
         <motion.div className="relative z-10 max-w-3xl mt-6" initial="hidden" animate="visible" variants={stagger}>
           <motion.p variants={fadeUp} className="text-[#8B7355] text-sm font-semibold uppercase tracking-widest mb-3">
-            427 מניקוריסטיות כבר למדו את השיטה
+            427 קוסמטיקאיות ומניקוריסטיות כבר למדו את השיטה
           </motion.p>
           <motion.h1 variants={fadeUp} className="text-[#1A1A1A] text-3xl sm:text-5xl font-extrabold leading-tight mb-5">
-            הטיפול שאת חייבת ללמוד
-            <span className="text-[#C49A8A]"> כדי להכפיל הכנסה </span>
-            בעסק מאותן לקוחות
-            <span className="underline underline-offset-4 decoration-[#C49A8A] whitespace-nowrap"> שכבר מגיעות אלייך</span>
+            קוסמטיקאית, מניקוריסטית או מאפרת?
+            <br />
+            <span className="text-[#C49A8A]">הוסיפי 2,500-4,000 ₪ לרווח הנקי </span>
+            בכל חודש
+            <span className="underline underline-offset-4 decoration-[#C49A8A] whitespace-nowrap"> בלי אף לקוחה חדשה</span>
           </motion.h1>
           <motion.p variants={fadeUp} className="text-[#5C4A3A] text-lg mb-6 leading-relaxed">
-            בלי ציוד יקר. בלי לצאת מהבית.<br />
-            <span className="font-semibold text-[#1A1A1A]">רק שירות נוסף שהלקוחות שלך כבר מחפשות.</span>
+            הנוסחה המהירה להפיכת הלקוחות שכבר יושבות אצלך
+            <br />
+            <span className="font-semibold text-[#1A1A1A]">למנוי חודשי קבוע לעיצוב ושיקום גבות, מהבית, בקורס דיגיטלי קצר.</span>
           </motion.p>
 
           <motion.div variants={fadeUp} className="inline-flex flex-col items-center gap-2 bg-white border-2 border-[#C49A8A]/40 rounded-2xl px-8 py-4 mb-6 shadow-md">
-            <p className="text-[#8B7355] text-xs tracking-widest uppercase font-semibold">מחיר השקה — 197₪ במקום 397₪ — נגמר בעוד</p>
+            <p className="text-[#8B7355] text-xs tracking-widest uppercase font-semibold">מחיר השקה: 197₪ במקום 397₪, נגמר בעוד</p>
             <div className="flex gap-4 items-center">
               {[{ v: countdown.s, l: 'שניות' }, { v: countdown.m, l: 'דקות' }].map((u, i) => (
                 <div key={i} className="flex gap-4 items-center">
@@ -301,7 +303,7 @@ export default function EyebrowCoursePage() {
             </div>
           </motion.div>
 
-          {/* Hero form — שם + מייל בלבד */}
+          {/* Hero form */}
           <motion.form variants={fadeUp} onSubmit={e => handleSubmit(e, true)}
             className="bg-white rounded-3xl p-6 shadow-xl border border-[#E8DDD4] max-w-md mx-auto space-y-3">
             <p className="font-bold text-[#1A1A1A] text-lg mb-1">מלאי פרטים ותתחילי עכשיו</p>
@@ -330,7 +332,7 @@ export default function EyebrowCoursePage() {
           ].map((item, i) => (
             <motion.div key={i} variants={fadeUp} className="flex items-center gap-2">
               <span className="text-2xl">{item.icon}</span>
-              <div className="text-right">
+              <div className="text-center">
                 <p className="font-black text-[#1A1A1A] text-base leading-none">{item.value}</p>
                 <p className="text-[#8B7355] text-xs mt-0.5">{item.label}</p>
               </div>
@@ -342,13 +344,15 @@ export default function EyebrowCoursePage() {
       {/* ─── PROBLEM ─── */}
       <section className="bg-[#FDFAF7] py-12 px-5">
         <motion.div className="max-w-3xl mx-auto" initial="hidden" whileInView="visible" viewport={{ once: true }} variants={stagger}>
-          <motion.p variants={fadeUp} className="text-center text-[#8B7355] font-semibold mb-2 tracking-wide uppercase text-sm">את עובדת קשה</motion.p>
-          <motion.h2 variants={fadeUp} className="text-2xl sm:text-3xl font-bold text-center mb-6">שעות ארוכות. לקוחות שלא מעריכות. הכנסה שתקועה.</motion.h2>
-          <motion.div variants={fadeUp} className="text-right leading-loose space-y-4 text-[#5C4A3A] text-lg px-2">
-            <p>שעה וחצי ציפורניים. 150-160 שקל. לקוחה יוצאת, לקוחה נכנסת. ואת עייפה עוד לפני שהיום נגמר.</p>
-            <p>מה שרוב מניקוריסטיות לא יודעות — הלקוחה שזה עתה יצאה ממך הולכת עכשיו לעוד מקום לעשות גבות. 70-80 שקל שיכלו להגיע ישירות אלייך.</p>
-            <p className="font-bold text-[#1A1A1A]">לא כי היא לא אוהבת אותך. פשוט כי לא הצעת לה.</p>
-            <p className="text-[#8B7355]">ולא הצעת — כי לא ידעת איך. עד עכשיו.</p>
+          <motion.p variants={fadeUp} className="text-center text-[#8B7355] font-semibold mb-2 tracking-wide uppercase text-sm">הבעיה האמיתית</motion.p>
+          <motion.h2 variants={fadeUp} className="text-2xl sm:text-3xl font-bold text-center mb-6">
+            השקר של עולם הביוטי: "כדי להרוויח יותר, את חייבת עוד לקוחות ועוד שעות על הרגליים"
+          </motion.h2>
+          <motion.div variants={fadeUp} className="text-center leading-loose space-y-4 text-[#5C4A3A] text-lg px-2">
+            <p className="font-bold text-[#1A1A1A]">בואי נודה באמת. את קורעת את הגב.</p>
+            <p>את יושבת שעות על גבי שעות מעל הציפורניים של הלקוחות, או נושמת חומרים ומעסה פנים מהבוקר עד הלילה. את מרגישה שהגעת לתקרת זכוכית ושאת לא יכולה להכניס יותר כסף מהזמן הנוכחי שלך.</p>
+            <p className="font-bold text-[#1A1A1A]">המחשבה האוטומטית שלך היא: "אני צריכה עוד לקוחות חדשות". אבל זו טעות שמביאה אותך לשחיקה ולא לעושר.</p>
+            <p className="text-[#8B7355]">בשביל להרוויח עוד כמה אלפי שקלים נקיים בחודש, את לא צריכה לרוץ אחרי לקוחות חדשות באינסטגרם או להוציא כסף על שיווק ממומן. את פשוט צריכה להציע שירות משלים ומהיר ללקוחות שכבר יושבות אצלך על הכיסא.</p>
           </motion.div>
         </motion.div>
       </section>
@@ -356,14 +360,27 @@ export default function EyebrowCoursePage() {
       {/* ─── AGITATE ─── */}
       <section className="bg-[#F5EDE5] py-12 px-5">
         <motion.div className="max-w-3xl mx-auto" initial="hidden" whileInView="visible" viewport={{ once: true }} variants={stagger}>
-          <motion.h2 variants={fadeUp} className="text-2xl sm:text-4xl font-bold text-center mb-6 text-[#1A1A1A]">
-            זה לא שאין לך זמן. זה שאין לך את השירות הנכון.
+          <motion.p variants={fadeUp} className="text-center text-[#8B7355] text-sm font-semibold uppercase tracking-wide mb-2">המנגנון הסודי</motion.p>
+          <motion.h2 variants={fadeUp} className="text-2xl sm:text-4xl font-bold text-center mb-8 text-[#1A1A1A]">
+            למה דווקא עיצוב גבות?
           </motion.h2>
-          <motion.div variants={fadeUp} className="text-right leading-loose space-y-4 text-[#5C4A3A] text-lg px-2">
-            <p>עיצוב גבות לוקח <strong className="text-[#1A1A1A]">15 דקות</strong> בשיטת הקוויק.</p>
-            <p>תוספת של <strong className="text-[#1A1A1A]">70-90 שקל</strong> לכל לקוחה שממילא יושבת אצלך.</p>
-            <p>20 לקוחות בחודש = <strong className="text-[#C49A8A] text-xl">1,400-1,800 שקל נוספים — בלי לקוחה חדשה אחת.</strong></p>
-            <p className="text-[#8B7355]">ו-90% מהלקוחות הקיימות שלך יגידו כן אם רק תציעי.</p>
+          <motion.div variants={stagger} className="space-y-4 mb-8">
+            {[
+              { icon: '💰', title: 'חומרים בגרושים', desc: 'עלות החומרים לטיפול (קצת שעווה, חוט או צבע) היא פחות מ-3 שקלים ללקוחה. המשמעות: 98% מהכסף הולך ישר אלייך לכיס.' },
+              { icon: '⚡', title: 'אפס זמן מבוזבז', desc: 'זה לוקח לך בסך הכל עוד 15-20 דקות בזמן שהלקוחה כבר אצלך בקליניקה. לא עוד תור, לא עוד נסיעה.' },
+              { icon: '🔄', title: 'תדר חזרה של שעון שוויצרי', desc: 'לקוחה לא יכולה להזניח את הגבות שלה. היא תחזור אלייך מדי 3-4 שבועות כמו שעון, בלי שתצטרכי לשלוח אפילו הודעה אחת.' },
+            ].map((item, i) => (
+              <motion.div key={i} variants={fadeUp} className="bg-white rounded-2xl p-5 flex items-start gap-4 shadow-sm border border-[#E8DDD4]">
+                <span className="text-3xl flex-shrink-0">{item.icon}</span>
+                <div className="text-right flex-1">
+                  <h3 className="font-bold text-[#1A1A1A] text-lg mb-1">{item.title}</h3>
+                  <p className="text-[#5C4A3A] text-base leading-relaxed">{item.desc}</p>
+                </div>
+              </motion.div>
+            ))}
+          </motion.div>
+          <motion.div variants={fadeUp} className="text-center text-[#5C4A3A] text-lg leading-loose px-2">
+            <p>אז במקום שהיא תעשה אצלך לק או טיפול פנים, ואז תלך למעצבת גבות אחרת ותשאיר אצלה את הכסף... <strong className="text-[#1A1A1A]">הגיע הזמן שהיא תעשה את הכל במקום אחד, אצלך.</strong></p>
           </motion.div>
         </motion.div>
       </section>
@@ -371,13 +388,13 @@ export default function EyebrowCoursePage() {
       {/* ─── MECHANISM ─── */}
       <section className="bg-white py-12 px-5">
         <motion.div className="max-w-3xl mx-auto" initial="hidden" whileInView="visible" viewport={{ once: true }} variants={stagger}>
-          <motion.p variants={fadeUp} className="text-center text-[#8B7355] text-sm font-semibold uppercase tracking-wide mb-2">החשבון שמשנה הכל</motion.p>
+          <motion.p variants={fadeUp} className="text-center text-[#8B7355] text-sm font-semibold uppercase tracking-wide mb-2">קבלי גישה מיידית</motion.p>
           <motion.h2 variants={fadeUp} className="text-2xl sm:text-4xl font-bold text-center mb-8">
-            כמה שווה גבה אחת ללקוחה הממוצעת שלך?
+            הקורס הדיגיטלי הפרקטי לעיצוב, פיסול ושיקום גבות
           </motion.h2>
-          <motion.div variants={fadeUp} className="text-right text-[#5C4A3A] text-lg leading-loose space-y-5 px-2 mb-10">
-            <p>לקוחה שיושבת אצלך לג'ל מוציאה בממוצע 160 שקל. תוסיפי לה גבות — עוד 70 שקל, 15 דקות בלבד. <strong className="text-[#1A1A1A]">אותה לקוחה שווה לך עכשיו 230 שקל.</strong></p>
-            <p>20 לקוחות בחודש, כל אחת מוסיפה 70 שקל = <strong className="text-[#C49A8A] text-xl">1,400 שקל נוספים בחודש</strong>. בלי לקוחה חדשה אחת. בלי פרסומות. בלי לרדוף אחרי אף אחת.</p>
+          <motion.div variants={fadeUp} className="text-center text-[#5C4A3A] text-lg leading-loose space-y-4 px-2 mb-10">
+            <p>המדריך המלא שלוקח אותך מאפס ניסיון למקצוענית גבות שיודעת לייצר כסף מכל פגישה.</p>
+            <p>שרטוט נכון, התאמה למבנה הפנים, עבודה נקייה עם שעווה, פינצטה וצבע, לצד הכלים השיווקיים שיגרמו ללקוחות שלך לבקש את השירות הזה בעצמן. <strong className="text-[#1A1A1A]">הכל מוקלט שלב אחר שלב, עם גישה פתוחה לכל החיים.</strong></p>
           </motion.div>
           <motion.div variants={fadeUp} className="grid grid-cols-2 sm:grid-cols-4 border-t border-[#E8DDD4] pt-8">
             {[{ n: '10', l: 'שיעורי וידאו' }, { n: '+70-90₪', l: 'לכל טיפול' }, { n: "15 דק'", l: 'לגבה מושלמת' }, { n: '427', l: 'תלמידות' }].map((s, i) => (
@@ -394,7 +411,7 @@ export default function EyebrowCoursePage() {
       <section className="bg-[#F8F0EB] py-8 px-5">
         <motion.div className="max-w-4xl mx-auto" initial="hidden" whileInView="visible" viewport={{ once: true }} variants={stagger}>
           <motion.p variants={fadeUp} className="text-center text-[#8B7355] text-sm uppercase tracking-widest font-semibold mb-2">התוצאות מדברות בעד עצמן</motion.p>
-          <motion.h3 variants={fadeUp} className="text-center text-2xl font-bold mb-5">עבודות של תלמידות הקורס</motion.h3>
+          <motion.h3 variants={fadeUp} className="text-center text-2xl font-bold mb-5">דוגמאות עיצוב גבות</motion.h3>
           <motion.div variants={stagger} className="grid grid-cols-2 sm:grid-cols-3 gap-3">
             {['/brow1.jpg', '/brow2.jpg', '/brow3.jpg', '/brow4.jpg', '/brow5.jpg', '/brow6.jpg'].map((src, i) => (
               <motion.div key={i} variants={fadeUp} className="relative rounded-2xl overflow-hidden shadow-md aspect-square"
@@ -425,8 +442,8 @@ export default function EyebrowCoursePage() {
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-10">
             {[
               { n: '①', title: 'רוכשת', desc: 'גישה מיידית לכל 10 השיעורים ו-3 הבונוסים. מהנייד, מהבית, בלי לצאת לשום מקום.' },
-              { n: '②', title: 'לומדת בקצב שלך', desc: 'שיעורי וידאו קצרים ומדויקים. תרגלי על עצמך או על חברה — ותרגישי בטוחה תוך ימים ספורים.' },
-              { n: '③', title: 'מתחילה להרוויח', desc: 'מציעה גבות ללקוחות שכבר מגיעות אלייך. 70-90₪ לטיפול של 15 דקות — מהיום הראשון.' },
+              { n: '②', title: 'לומדת בקצב שלך', desc: 'שיעורי וידאו קצרים ומדויקים. תרגלי על עצמך או על חברה, ותרגישי בטוחה תוך ימים ספורים.' },
+              { n: '③', title: 'מתחילה להרוויח', desc: 'מציעה גבות ללקוחות שכבר מגיעות אלייך. 70-90₪ לטיפול של 15 דקות, מהיום הראשון.' },
             ].map((step, i) => (
               <motion.div key={i} variants={fadeUp} className="text-center">
                 <div className="text-5xl font-black text-[#C49A8A] mb-4 leading-none">{step.n}</div>
@@ -443,16 +460,16 @@ export default function EyebrowCoursePage() {
         <motion.div className="max-w-2xl mx-auto" initial="hidden" whileInView="visible" viewport={{ once: true }} variants={stagger}>
           <motion.p variants={fadeUp} className="text-center text-[#8B7355] text-sm uppercase tracking-wide font-semibold mb-2">הסיפור שלי</motion.p>
           <motion.h2 variants={fadeUp} className="text-2xl sm:text-4xl font-bold text-center mb-8">גם אני הייתי שם.</motion.h2>
-          <motion.div variants={fadeUp} className="text-right text-[#5C4A3A] text-lg leading-loose space-y-4 mb-6">
+          <motion.div variants={fadeUp} className="text-center text-[#5C4A3A] text-lg leading-loose space-y-4 mb-6">
             <p>התחלתי כמניקוריסטית. שעות ארוכות, מחירים שלא זזים, ותחושה שאני עובדת קשה מבלי לראות את זה בחשבון הבנק.</p>
-            <p>לקוחה אחת שאלה אותי בזמן טיפול: &quot;את עושה גבות?&quot; אמרתי כן — ולא ידעתי בדיוק למה. פשוט הרגשתי שאי אפשר להגיד לא.</p>
+            <p>לקוחה אחת שאלה אותי בזמן טיפול: "את עושה גבות?" אמרתי כן, ולא ידעתי בדיוק למה. פשוט הרגשתי שאי אפשר להגיד לא.</p>
             <p>לקחתי 80 שקל נוספים. 15 דקות. ואז היא שלחה לי עוד שלוש חברות.</p>
-            <p className="font-semibold text-[#1A1A1A]">מאותו רגע הבנתי — הגבות הן לא &quot;שירות נוסף&quot;. הן הדרך לעבוד פחות שעות ולהרוויח יותר, עם אותן לקוחות שכבר יש לך.</p>
+            <p className="font-semibold text-[#1A1A1A]">מאותו רגע הבנתי: הגבות הן לא "שירות נוסף". הן הדרך לעבוד פחות שעות ולהרוויח יותר, עם אותן לקוחות שכבר יש לך.</p>
           </motion.div>
           <motion.div variants={fadeUp} className="text-center py-6 border-t border-[#D4C5B5]">
             <p className="text-[#5C4A3A] text-xl italic leading-relaxed">
-              &quot;לעבוד פחות שעות. להרוויח יותר כסף.<br />
-              <strong className="text-[#1A1A1A] not-italic">עם אותן לקוחות שכבר יש לך.&quot;</strong>
+              "לעבוד פחות שעות. להרוויח יותר כסף.<br />
+              <strong className="text-[#1A1A1A] not-italic">עם אותן לקוחות שכבר יש לך."</strong>
             </p>
             <p className="text-[#C49A8A] font-bold mt-5 text-xl">מאמינה בך, טליה</p>
           </motion.div>
@@ -470,21 +487,21 @@ export default function EyebrowCoursePage() {
                   style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center 15%', transform: 'scale(1.6)', transformOrigin: 'center 20%' }} />
               </div>
             </motion.div>
-            <motion.div variants={fadeUp} className="text-right flex-1">
+            <motion.div variants={fadeUp} className="text-center flex-1">
               <p className="text-[#8B7355] font-semibold text-sm uppercase tracking-wide mb-1">מי אני?</p>
               <h2 className="text-3xl font-extrabold mb-1">היי, אני טליה בוזורגי.</h2>
               <p className="text-[#8B7355] font-semibold mb-4">מומחית עיצוב גבות ומיקרובליידינג | 8 שנות ניסיון</p>
               <div className="text-gray-700 text-lg leading-loose space-y-2">
                 <p>בעלת קליניקה ואקדמיה ללימודי מקצועות היופי.</p>
-                <p>פיתחתי את שיטת הקוויק — עיצוב מהיר, נקי, ובטיחותי.</p>
+                <p>פיתחתי את שיטת הקוויק: עיצוב מהיר, נקי, ובטיחותי.</p>
                 <p><strong className="text-[#C49A8A]">427 בנות</strong> למדו אצלי. הן עובדות היום בביטחון.</p>
               </div>
             </motion.div>
           </div>
           <motion.div variants={fadeUp} className="text-center py-6 border-t border-[#E8DDD4] mb-8">
             <p className="text-[#5C4A3A] text-lg italic leading-relaxed">
-              &quot;השליחות שלי — לעזור לכל מניקוריסטית שאוהבת את המקצוע<br />
-              <strong className="text-[#1A1A1A] not-italic">להפוך לעסק רווחי שמכבד אותה.&quot;</strong>
+              "השליחות שלי: לעזור לכל מניקוריסטית שאוהבת את המקצוע<br />
+              <strong className="text-[#1A1A1A] not-italic">להפוך לעסק רווחי שמכבד אותה."</strong>
             </p>
           </motion.div>
           <motion.div variants={stagger} className="grid grid-cols-2 gap-3">
@@ -502,15 +519,50 @@ export default function EyebrowCoursePage() {
         <motion.div className="max-w-3xl mx-auto" initial="hidden" whileInView="visible" viewport={{ once: true }} variants={stagger}>
           <motion.p variants={fadeUp} className="text-center text-[#8B7355] text-sm font-semibold uppercase tracking-wide mb-2">התוכנית הדיגיטלית</motion.p>
           <motion.h2 variants={fadeUp} className="text-3xl sm:text-5xl font-extrabold text-center mb-2">עיצוב גבות בשיטת הקוויק</motion.h2>
-          <motion.p variants={fadeUp} className="text-center text-[#8B7355] font-semibold mb-4">10 שיעורים שישנו את העסק שלך</motion.p>
-          <motion.div variants={fadeUp} className="w-16 h-1 bg-[#C49A8A] mx-auto rounded-full my-4" />
-          <motion.div variants={fadeUp} className="grid grid-cols-3 gap-2 mb-6">
-            {['/brow1.jpg', '/brow2.jpg', '/brow3.jpg', '/brow4.jpg', '/brow5.jpg', '/brow6.jpg'].map((src, i) => (
-              <div key={i} className="rounded-xl overflow-hidden aspect-square">
-                <img src={src} alt="עיצוב גבות" className="w-full h-full object-cover" />
-              </div>
+          <motion.p variants={fadeUp} className="text-center text-[#8B7355] font-semibold mb-6">מה את מקבלת בפנים?</motion.p>
+
+          {/* מודולים */}
+          <motion.div variants={stagger} className="space-y-4 mb-6">
+            {[
+              {
+                num: 'מודול 1',
+                val: '700 ₪',
+                title: 'אדריכלות ופיצוח מבנה הפנים',
+                desc: 'איך ליצור את המסגרת המושלמת לכל לקוחה בלי לפשל ובלי להוריד יותר מדי. תצאי מהמודול הזה עם עין מקצועית ויד בטוחה.',
+              },
+              {
+                num: 'מודול 2',
+                val: '900 ₪',
+                title: 'טכניקות העבודה של המקצועניות',
+                desc: 'הסרת שיער מדויקת בשעווה ופינצטה, וטכניקות צביעה עמידות שמשדרגות כל גבה. הידע שלוקח שנים לצבור, בשיעורים קצרים וממוקדים.',
+              },
+            ].map((mod, i) => (
+              <motion.div key={i} variants={fadeUp} className="bg-white rounded-2xl p-5 flex items-start gap-4 shadow-sm border border-[#E8DDD4]">
+                <div className="flex-shrink-0 text-center">
+                  <div className="bg-[#C49A8A] text-white text-xs font-bold px-3 py-1 rounded-full mb-1">{mod.num}</div>
+                  <div className="text-[#8B7355] text-xs line-through">שווי {mod.val}</div>
+                </div>
+                <div className="text-right flex-1">
+                  <h3 className="font-bold text-[#1A1A1A] text-lg mb-1">{mod.title}</h3>
+                  <p className="text-[#5C4A3A] text-sm leading-relaxed">{mod.desc}</p>
+                </div>
+              </motion.div>
             ))}
+
+            {/* בונוס מיוחד */}
+            <motion.div variants={fadeUp} className="bg-gradient-to-l from-[#C49A8A] to-[#B5897A] rounded-2xl p-5 flex items-start gap-4 shadow-md">
+              <div className="flex-shrink-0 text-center">
+                <div className="bg-white text-[#C49A8A] text-xs font-bold px-3 py-1 rounded-full mb-1">בונוס מיוחד</div>
+                <div className="text-white/70 text-xs line-through">שווי 500 ₪</div>
+              </div>
+              <div className="text-right flex-1">
+                <h3 className="font-bold text-white text-lg mb-1">נוסחת "על הדרך"</h3>
+                <p className="text-white/90 text-sm leading-relaxed">איך להציע את השירות ללקוחות הציפורניים או הקוסמטיקה הקיימות שלך, כך ש-7 מתוך 10 לקוחות יגידו "יאללה, תעשי לי גם גבות היום".</p>
+              </div>
+            </motion.div>
           </motion.div>
+
+          <motion.div variants={fadeUp} className="w-16 h-1 bg-[#C49A8A] mx-auto rounded-full my-4" />
           <motion.div variants={fadeUp} className="bg-[#C49A8A] rounded-2xl p-5">
             <p className="text-white font-semibold mb-3 text-center text-sm uppercase tracking-wide">מה כלול בקורס</p>
             <div className="flex flex-wrap gap-2 justify-center">
@@ -556,11 +608,11 @@ export default function EyebrowCoursePage() {
         <motion.div className="max-w-3xl mx-auto" initial="hidden" whileInView="visible" viewport={{ once: true }} variants={stagger}>
           <motion.p variants={fadeUp} className="text-center text-[#8B7355] text-sm font-semibold uppercase tracking-wide mb-2">למי זה מתאים</motion.p>
           <motion.h2 variants={fadeUp} className="text-2xl sm:text-4xl font-bold text-center mb-8">זה בשבילך?</motion.h2>
-          <motion.div variants={fadeUp} className="text-right text-[#5C4A3A] text-lg leading-loose space-y-5 px-2">
-            <p>אם את מניקוריסטית עם לקוחות קבועות אבל ההכנסה תקועה באותה נקודה כבר חודשים — זה בדיוק בשבילך. לא צריך לקוחות חדשות. צריך שירות נוסף ללקוחות שכבר מגיעות אלייך.</p>
-            <p>אם ניסית ללמוד גבות בעבר ויצא לא ישר, לא בטוח, לא מקצועי — שיטת הקוויק נבנתה בדיוק בשבילך. תוצאה נכונה כבר מהפעם הראשונה, בלי ניחושים ובלי טעויות.</p>
-            <p>ואם יש לך לקוחות שמסיימות תור ויוצאות ישר לעוד מקום לגבות — כאן תלמדי לעצור את זה. להפוך כל תור קיים למקור הכנסה נוסף, בלי לרדוף אחרי אנשים ובלי לפרסם כל יום.</p>
-            <p className="font-semibold text-[#1A1A1A]">הקורס מתחיל מאפס, בנוי לקצב שלך, ונגמר כשאת מוכנה לגבות 70-90 שקל על 15 דקות עבודה — בביטחון מלא.</p>
+          <motion.div variants={fadeUp} className="text-center text-[#5C4A3A] text-lg leading-loose space-y-5 px-2">
+            <p>אם את מניקוריסטית עם לקוחות קבועות אבל ההכנסה תקועה באותה נקודה כבר חודשים, זה בדיוק בשבילך. לא צריך לקוחות חדשות. צריך שירות נוסף ללקוחות שכבר מגיעות אלייך.</p>
+            <p>אם ניסית ללמוד גבות בעבר ויצא לא ישר, לא בטוח, לא מקצועי, שיטת הקוויק נבנתה בדיוק בשבילך. תוצאה נכונה כבר מהפעם הראשונה, בלי ניחושים ובלי טעויות.</p>
+            <p>ואם יש לך לקוחות שמסיימות תור ויוצאות ישר לעוד מקום לגבות, כאן תלמדי לעצור את זה. להפוך כל תור קיים למקור הכנסה נוסף, בלי לרדוף אחרי אנשים ובלי לפרסם כל יום.</p>
+            <p className="font-semibold text-[#1A1A1A]">הקורס מתחיל מאפס, בנוי לקצב שלך, ונגמר כשאת מוכנה לגבות 70-90 שקל על 15 דקות עבודה, בביטחון מלא.</p>
           </motion.div>
         </motion.div>
       </section>
@@ -570,7 +622,7 @@ export default function EyebrowCoursePage() {
         <motion.div className="max-w-3xl mx-auto relative z-10" initial="hidden" whileInView="visible" viewport={{ once: true }} variants={stagger}>
           <motion.p variants={fadeUp} className="text-center text-[#8B7355] text-xs uppercase tracking-[4px] mb-3">ועוד לא הכל</motion.p>
           <motion.h2 variants={fadeUp} className="text-3xl sm:text-4xl font-extrabold text-center text-[#1A1A1A] mb-2">3 בונוסים מתנה</motion.h2>
-          <motion.p variants={fadeUp} className="text-center text-[#C49A8A] font-semibold text-lg mb-1">שווי 597 שקל — שלך בחינם</motion.p>
+          <motion.p variants={fadeUp} className="text-center text-[#C49A8A] font-semibold text-lg mb-1">שווי 597 שקל, שלך בחינם</motion.p>
           <motion.p variants={fadeUp} className="text-center text-[#8B7355] text-sm mb-8">כשאת רוכשת היום</motion.p>
           <div className="space-y-4">
             {bonuses.map((b, i) => (
@@ -580,7 +632,7 @@ export default function EyebrowCoursePage() {
                 <div className="relative flex-shrink-0 w-20 h-20 self-center overflow-hidden">
                   <img src={b.img} alt={b.name} className="w-full h-full object-cover" />
                 </div>
-                <div className="flex-1 p-4 text-right">
+                <div className="flex-1 p-4 text-center">
                   <span className="text-[#C49A8A] text-xs font-bold tracking-wider">בונוס {i + 1}</span>
                   <h3 className="font-bold text-base text-[#1A1A1A] mt-0.5 mb-1">{b.name}</h3>
                   <p className="text-[#5C4A3A] text-xs leading-relaxed mb-2">{b.desc}</p>
@@ -615,7 +667,7 @@ export default function EyebrowCoursePage() {
             <p className="text-gray-400 line-through text-base mb-1 text-center">שווי מוצהר: 397 שקל</p>
             <p className="text-7xl font-black text-[#1A1A1A] leading-none mb-1 text-center">197₪</p>
             <p className="text-gray-500 text-sm mb-1 text-center">או 2 תשלומים נוחים של 99 שקל</p>
-            <p className="text-[#C49A8A] text-xs font-bold mb-6 text-center">✅ ערובה של 14 יום — לא מרוצה? מקבלת את הכסף חזרה</p>
+            <p className="text-[#C49A8A] text-xs font-bold mb-6 text-center">✅ ערובה של 14 יום, לא מרוצה? מקבלת את הכסף חזרה</p>
             <form onSubmit={e => handleSubmit(e, false)} className="space-y-3">
               <input type="text" required placeholder="שם מלא"
                 value={pricingForm.name} onChange={e => setPricingForm({ ...pricingForm, name: e.target.value })}
@@ -641,15 +693,15 @@ export default function EyebrowCoursePage() {
             <div className="mt-5 bg-gray-50 border border-[#E8DDD4] rounded-xl px-4 py-3 text-center space-y-1">
               <p className="text-[#8B7355] text-xs font-semibold">מה קורה אחרי התשלום?</p>
               <p className="text-gray-500 text-xs leading-relaxed">תועברי לדף סליקה מאובטח. תוך דקה אחת מהרכישה יגיע למייל שלך הקורס עם שם משתמש וסיסמה אישיים.</p>
-              <p className="text-gray-400 text-xs">גישה לצמיתות — בלי הגבלת זמן</p>
+              <p className="text-gray-400 text-xs">גישה לצמיתות, בלי הגבלת זמן</p>
             </div>
           </motion.div>
 
-          <motion.div variants={fadeUp} className="flex items-start gap-4 text-right py-5 mb-4 border-t border-[#E8DDD4]">
+          <motion.div variants={fadeUp} className="flex items-start gap-4 text-center py-5 mb-4 border-t border-[#E8DDD4]">
             <span className="text-4xl flex-shrink-0">🛡️</span>
             <div>
-              <p className="text-[#C49A8A] font-bold mb-1">ערובה של 14 יום — בלי שאלות</p>
-              <p className="text-[#5C4A3A] text-sm leading-relaxed">צפי בכל החומר. תרגלי. אם לא הרגשת שהשתפרת — מחזירים לך את הכסף במלואו, ללא שאלות.</p>
+              <p className="text-[#C49A8A] font-bold mb-1">ערובה של 14 יום, בלי שאלות</p>
+              <p className="text-[#5C4A3A] text-sm leading-relaxed">צפי בכל החומר. תרגלי. אם לא הרגשת שהשתפרת, מחזירים לך את הכסף במלואו, ללא שאלות.</p>
             </div>
           </motion.div>
 
@@ -695,9 +747,9 @@ export default function EyebrowCoursePage() {
       {/* ─── FINAL CTA FORM ─── */}
       <section id="cta-form" className="bg-gradient-to-b from-[#F5EDE5] to-[#EFE5DC] py-14 px-5">
         <motion.div className="max-w-md mx-auto" initial="hidden" whileInView="visible" viewport={{ once: true }} variants={stagger}>
-          <motion.h2 variants={fadeUp} className="text-[#1A1A1A] text-3xl sm:text-4xl font-extrabold text-center mb-2">מוכנה להתחיל?</motion.h2>
+          <motion.h2 variants={fadeUp} className="text-[#1A1A1A] text-3xl sm:text-4xl font-extrabold text-center mb-2">אל תשארי מאחור בזמן שהלקוחות שלך עושות גבות אצל אחרות</motion.h2>
           <motion.p variants={fadeUp} className="text-[#5C4A3A] text-center mb-6 text-lg">
-            427 מניקוריסטיות כבר בפנים. הבאה יכולה להיות את.
+            לחצי עכשיו, קבלי גישה מיידית לקורס ותתחילי להגדיל את ההכנסה מכל לקוחה כבר מהשבוע.
           </motion.p>
           <motion.form variants={fadeUp} onSubmit={e => handleSubmit(e, false)}
             className="bg-white rounded-3xl p-8 shadow-2xl space-y-4 border border-[#E8DDD4]">
@@ -719,7 +771,7 @@ export default function EyebrowCoursePage() {
             <motion.button type="submit" disabled={loading}
               className="w-full bg-[#C49A8A] text-white py-4 rounded-2xl font-bold text-xl hover:bg-[#B5897A] border-2 border-[#C49A8A] transition-all duration-300 disabled:opacity-60"
               whileHover={{ scale: loading ? 1 : 1.02 }} whileTap={{ scale: loading ? 1 : 0.97 }}>
-              {loading ? 'מעבירה לתשלום...' : 'אני רוצה להצטרף לקורס →'}
+              {loading ? 'מעבירה לתשלום...' : 'אני רוצה גישה מיידית לקורס ולהגדיל את הרווחים →'}
             </motion.button>
             <div className="bg-gray-50 border border-[#E8DDD4] rounded-xl px-4 py-3 text-center space-y-1">
               <p className="text-gray-500 text-xs leading-relaxed">🔒 תשלום מאובטח | גישה מיידית | ערובה 14 יום</p>
