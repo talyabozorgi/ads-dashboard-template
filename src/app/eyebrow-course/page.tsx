@@ -285,7 +285,7 @@ export default function EyebrowCoursePage() {
           <motion.p variants={fadeUp} className="text-[#5C4A3A] text-lg mb-6 leading-relaxed">
             הנוסחה המהירה להפיכת הלקוחות שכבר יושבות אצלך
             <br />
-            <span className="font-semibold text-[#1A1A1A]">למנוי חודשי קבוע לעיצוב ושיקום גבות, מהבית, בקורס דיגיטלי קצר.</span>
+            <span className="font-semibold text-[#1A1A1A]">למנוי חודשי קבוע לעיצוב ושיקום גבות – מהבית, בקורס דיגיטלי קצר.</span>
           </motion.p>
 
           <motion.div variants={fadeUp} className="inline-flex flex-col items-center gap-2 bg-white border-2 border-[#C49A8A]/40 rounded-2xl px-8 py-4 mb-6 shadow-md">
@@ -394,7 +394,7 @@ export default function EyebrowCoursePage() {
           </motion.h2>
           <motion.div variants={fadeUp} className="text-center text-[#5C4A3A] text-lg leading-loose space-y-4 px-2 mb-10">
             <p>המדריך המלא שלוקח אותך מאפס ניסיון למקצוענית גבות שיודעת לייצר כסף מכל פגישה.</p>
-            <p>שרטוט נכון, התאמה למבנה הפנים, עבודה נקייה עם שעווה, פינצטה וצבע, לצד הכלים השיווקיים שיגרמו ללקוחות שלך לבקש את השירות הזה בעצמן. <strong className="text-[#1A1A1A]">הכל מוקלט שלב אחר שלב, עם גישה פתוחה לכל החיים.</strong></p>
+            <p>שרטוט נכון, התאמה למבנה הפנים, עבודה נקייה עם שעווה, פינצטה וצבע – לצד הכלים השיווקיים שיגרמו ללקוחות שלך לבקש את השירות הזה בעצמן. <strong className="text-[#1A1A1A]">הכל מוקלט שלב אחר שלב, עם גישה פתוחה לכל החיים.</strong></p>
           </motion.div>
           <motion.div variants={fadeUp} className="grid grid-cols-2 sm:grid-cols-4 border-t border-[#E8DDD4] pt-8">
             {[{ n: '10', l: 'שיעורי וידאו' }, { n: '+70-90₪', l: 'לכל טיפול' }, { n: "15 דק'", l: 'לגבה מושלמת' }, { n: '427', l: 'תלמידות' }].map((s, i) => (
@@ -464,7 +464,7 @@ export default function EyebrowCoursePage() {
             <p>התחלתי כמניקוריסטית. שעות ארוכות, מחירים שלא זזים, ותחושה שאני עובדת קשה מבלי לראות את זה בחשבון הבנק.</p>
             <p>לקוחה אחת שאלה אותי בזמן טיפול: "את עושה גבות?" אמרתי כן, ולא ידעתי בדיוק למה. פשוט הרגשתי שאי אפשר להגיד לא.</p>
             <p>לקחתי 80 שקל נוספים. 15 דקות. ואז היא שלחה לי עוד שלוש חברות.</p>
-            <p className="font-semibold text-[#1A1A1A]">מאותו רגע הבנתי: הגבות הן לא "שירות נוסף". הן הדרך לעבוד פחות שעות ולהרוויח יותר, עם אותן לקוחות שכבר יש לך.</p>
+            <p className="font-semibold text-[#1A1A1A]">מאותו רגע הבנתי: הגבות הן לא "שירות נוסף". הן המפתח להפוך כל תור קיים לעוד 70-90 שקל, בלי לרדוף אחרי אף לקוחה חדשה.</p>
           </motion.div>
           <motion.div variants={fadeUp} className="text-center py-6 border-t border-[#D4C5B5]">
             <p className="text-[#5C4A3A] text-xl italic leading-relaxed">
@@ -520,6 +520,24 @@ export default function EyebrowCoursePage() {
           <motion.p variants={fadeUp} className="text-center text-[#8B7355] text-sm font-semibold uppercase tracking-wide mb-2">התוכנית הדיגיטלית</motion.p>
           <motion.h2 variants={fadeUp} className="text-3xl sm:text-5xl font-extrabold text-center mb-2">עיצוב גבות בשיטת הקוויק</motion.h2>
           <motion.p variants={fadeUp} className="text-center text-[#8B7355] font-semibold mb-6">מה את מקבלת בפנים?</motion.p>
+
+          {/* כרטיס ערך */}
+          <motion.div variants={fadeUp} className="bg-[#1A1A1A] rounded-2xl p-5 mb-6">
+            <p className="text-[#C49A8A] text-xs uppercase tracking-widest text-center mb-4">מה שמקבלת בקורס</p>
+            <div className="grid grid-cols-3 gap-2 mb-4">
+              {[{ n: '10', l: 'שיעורי וידאו' }, { n: '3', l: 'בונוסים מתנה' }, { n: '∞', l: 'גישה לצמיתות' }].map((s, i) => (
+                <div key={i} className="text-center bg-white/5 rounded-xl py-3">
+                  <p className="text-3xl font-black text-white">{s.n}</p>
+                  <p className="text-[#C49A8A] text-xs mt-0.5">{s.l}</p>
+                </div>
+              ))}
+            </div>
+            <div className="flex items-center justify-center gap-4 border-t border-white/10 pt-4 flex-wrap">
+              <p className="text-gray-500 line-through text-sm">שווי: 2,100 ₪</p>
+              <p className="text-white font-black text-3xl">197 ₪</p>
+              <span className="bg-[#C49A8A] text-white text-xs px-3 py-1 rounded-full font-bold">חסכון של 91%</span>
+            </div>
+          </motion.div>
 
           {/* מודולים */}
           <motion.div variants={stagger} className="space-y-4 mb-6">
