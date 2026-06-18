@@ -246,9 +246,9 @@ export default function MicrobladingWorkshopPage() {
             className="relative rounded-3xl overflow-hidden shadow-2xl mx-auto mb-8"
             style={{ aspectRatio: '9/16', maxWidth: '360px' }}>
             <iframe
-              src="https://drive.google.com/file/d/1dJhT8Bgp4ZcYkmyT-XfKMjyABJmH3yij/preview"
+              src="https://www.youtube.com/embed/LY8wX394o68?rel=0&modestbranding=1"
               className="absolute inset-0 w-full h-full"
-              allow="autoplay"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
               allowFullScreen
             />
           </motion.div>
