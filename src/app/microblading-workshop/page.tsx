@@ -247,7 +247,14 @@ export default function MicrobladingWorkshopPage() {
             style={{ aspectRatio: '9/16', maxWidth: '360px' }}>
             <iframe
               src="https://www.youtube.com/embed/LY8wX394o68?rel=0&modestbranding=1"
-              className="absolute inset-0 w-full h-full"
+              style={{
+                position: 'absolute',
+                top: '-50px',
+                left: 0,
+                width: '100%',
+                height: 'calc(100% + 100px)',
+                border: 'none',
+              }}
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
               allowFullScreen
             />
