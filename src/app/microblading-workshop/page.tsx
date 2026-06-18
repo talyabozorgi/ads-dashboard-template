@@ -395,32 +395,41 @@ export default function MicrobladingWorkshopPage() {
       </section>
 
       {/* ─── RESULTS CHECKLIST ─── */}
-      <section className="py-12 px-5" style={{ background: C.bgAlt }}>
+      <section className="py-14 px-5" style={{ background: C.bgAlt }}>
         <motion.div className="max-w-2xl mx-auto"
           initial="hidden" whileInView="visible" viewport={{ once: true }} variants={stagger}>
+          <motion.p variants={fadeUp} className="text-sm font-bold uppercase text-center mb-2"
+            style={{ color: C.accent }}>
+            מה את לוקחת הביתה
+          </motion.p>
           <motion.h2 variants={fadeUp}
-            className="text-2xl sm:text-3xl font-extrabold mb-8 text-right"
+            className="text-2xl sm:text-3xl font-extrabold mb-10 text-center"
             style={{ color: C.text }}>
             בסיום ההכשרה תוכלי:
           </motion.h2>
-          <motion.div variants={stagger} className="space-y-3">
+          <motion.div variants={stagger} className="grid sm:grid-cols-2 gap-4">
             {[
-              'לבצע עבודות מקצועיות ומדויקות',
-              'להבין לעומק — התאמת מבנה גבה לכל לקוחה',
-              'לעבוד בביטחון מול לקוחות אמיתיות',
-              'להפסיק לפחד מכל טיפול חדש',
-              'לבנות שם מקצועי בתחום',
-              'להפוך את הידע להכנסה — עיקרית או נוספת',
-              'לקבל ליווי אישי גם אחרי סיום הלימודים',
+              { text: 'לבצע עבודות מקצועיות ומדויקות', icon: '✦' },
+              { text: 'להבין לעומק — התאמת מבנה גבה לכל לקוחה', icon: '✦' },
+              { text: 'לעבוד בביטחון מול לקוחות אמיתיות', icon: '✦' },
+              { text: 'להפסיק לפחד מכל טיפול חדש', icon: '✦' },
+              { text: 'לבנות שם מקצועי בתחום', icon: '✦' },
+              { text: 'להפוך את הידע להכנסה — עיקרית או נוספת', icon: '✦' },
+              { text: 'לקבל ליווי אישי גם אחרי סיום הלימודים', icon: '✦' },
             ].map((item, i) => (
               <motion.div key={i} variants={fadeUp}
-                className="flex items-center gap-4 rounded-2xl px-5 py-4 shadow-sm"
+                className="flex items-start gap-3 rounded-2xl p-5"
                 style={{
                   background: C.white,
                   border: `1px solid ${C.border}`,
+                  boxShadow: '0 2px 12px rgba(196,149,106,0.08)',
                 }}>
-                <span className="text-xl flex-shrink-0" style={{ color: C.accent }}>✔️</span>
-                <span className="font-semibold text-right" style={{ color: C.text }}>{item}</span>
+                <div className="flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center mt-0.5"
+                  style={{ background: C.accentLight }}>
+                  <span className="text-sm font-black" style={{ color: C.cta }}>✓</span>
+                </div>
+                <span className="font-semibold text-right leading-relaxed pt-1"
+                  style={{ color: C.text }}>{item.text}</span>
               </motion.div>
             ))}
           </motion.div>
