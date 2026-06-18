@@ -243,8 +243,8 @@ export default function MicrobladingWorkshopPage() {
 
           {/* VSL VIDEO */}
           <motion.div variants={fadeUp}
-            className="relative rounded-3xl overflow-hidden shadow-2xl mx-auto mb-8 max-w-2xl"
-            style={{ aspectRatio: '16/9' }}>
+            className="relative rounded-3xl overflow-hidden shadow-2xl mx-auto mb-8"
+            style={{ aspectRatio: '9/16', maxWidth: '360px' }}>
             <iframe
               src="https://drive.google.com/file/d/1dJhT8Bgp4ZcYkmyT-XfKMjyABJmH3yij/preview"
               className="absolute inset-0 w-full h-full"
