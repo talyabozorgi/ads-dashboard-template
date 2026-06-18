@@ -34,40 +34,6 @@ declare global {
   interface Window { fbq?: (...args: unknown[]) => void; }
 }
 
-const BEGINNERS = [
-  {
-    name: 'Master Brows 3D',
-    sub: 'קורס מיקרובליידינג מלא',
-    details: '5 מפגשים | 3 שיטות מתקדמות | ערכה כלולה',
-    priceBasic: '8,900 ₪',
-    pricePremium: '10,500 ₪ (כולל ערכת פיגמנטים)',
-  },
-  {
-    name: 'Zero To Brow Artist',
-    sub: 'קורס משולב — מיקרובליידינג + עיצוב גבות',
-    details: '7 שיעורים | הכל מאפס ועד מקצוע מלא',
-    priceBasic: '10,500 ₪',
-    pricePremium: '12,000 ₪ (כולל ערכת פיגמנטים)',
-  },
-];
-
-const REFRESHERS = [
-  {
-    name: 'השתלמות מיקרובליידינג',
-    sub: 'Master Brows 3D — יום מרוכז 6 שעות',
-    details: 'עיוני + מעשי | עבודה על מודליסטית | חיזוק ביטחון',
-    price: '2,300 ₪',
-    priceObserver: '1,500 ₪ (מסלול צפייה)',
-  },
-  {
-    name: 'השתלמות עיצוב גבות',
-    sub: 'יום מרוכז 3 שעות',
-    details: 'כל הטכניקות + עבודה מעשית על מודליסטית',
-    price: '1,200 ₪',
-    priceObserver: '',
-  },
-];
-
 const TESTIMONIALS = [
   {
     quote: 'הייתי מניקוריסטית שעבדה מסביב לשעון. אחרי הקורס אצל טליה — הורדתי את העבודה בציפורניים לחצי, מסיימת כל יום ב-15:00, ומכניסה 30,000 ₪ בחודש מעיצוב גבות ומיקרובליידינג.',
@@ -278,11 +244,13 @@ export default function MicrobladingWorkshopPage() {
           {/* VSL VIDEO */}
           <motion.div variants={fadeUp}
             className="relative rounded-3xl overflow-hidden shadow-2xl mx-auto mb-8 max-w-2xl"
-            style={{ background: '#1a0f0a', aspectRatio: '16/9' }}>
-            {/* החליפי בקוד הטמעת הסרטון שלך */}
-            <div className="absolute inset-0 flex items-center justify-center">
-              <p className="text-white/30 text-sm">[ סרטון VSL — יש להטמיע כאן ]</p>
-            </div>
+            style={{ aspectRatio: '16/9' }}>
+            <iframe
+              src="https://drive.google.com/file/d/1dJhT8Bgp4ZcYkmyT-XfKMjyABJmH3yij/preview"
+              className="absolute inset-0 w-full h-full"
+              allow="autoplay"
+              allowFullScreen
+            />
           </motion.div>
 
           <motion.button variants={fadeUp} onClick={scrollToForm}
@@ -502,95 +470,6 @@ export default function MicrobladingWorkshopPage() {
           whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.97 }}>
           אני רוצה מקום בקורס הקרוב ⬇️
         </motion.button>
-      </section>
-
-      {/* ─── COURSES MENU ─── */}
-      <section className="py-14 px-5" style={{ background: C.white }}>
-        <motion.div className="max-w-3xl mx-auto"
-          initial="hidden" whileInView="visible" viewport={{ once: true }} variants={stagger}>
-          <motion.h2 variants={fadeUp}
-            className="text-2xl sm:text-3xl font-extrabold text-center mb-10"
-            style={{ color: C.text }}>
-            המסלולים — מה מתאים לך?
-          </motion.h2>
-          <div className="grid sm:grid-cols-2 gap-8">
-
-            {/* Track 1: Beginners */}
-            <motion.div variants={fadeUp}>
-              <div className="text-center mb-5">
-                <span className="text-sm font-bold uppercase px-4 py-2 rounded-full"
-                  style={{ background: C.accentLight, color: C.cta }}>
-                  למתחילות
-                </span>
-              </div>
-              <div className="space-y-4">
-                {BEGINNERS.map((c, i) => (
-                  <div key={i} className="rounded-2xl p-5 shadow-sm"
-                    style={{
-                      background: C.bgAlt,
-                      borderTop: `4px solid ${C.accent}`,
-                      borderRight: `1px solid ${C.border}`,
-                      borderBottom: `1px solid ${C.border}`,
-                      borderLeft: `1px solid ${C.border}`,
-                    }}>
-                    <p className="font-extrabold text-lg mb-1 text-right" style={{ color: C.text }}>
-                      {c.name}
-                    </p>
-                    <p className="text-sm mb-2 text-right font-semibold" style={{ color: C.cta }}>
-                      {c.sub}
-                    </p>
-                    <p className="text-sm mb-3 text-right" style={{ color: C.textSec }}>
-                      {c.details}
-                    </p>
-                    <div className="text-right text-sm space-y-1">
-                      <p style={{ color: C.textSec }}>{c.priceBasic} <span className="text-xs">(בסיסי)</span></p>
-                      <p className="font-bold" style={{ color: C.accent }}>{c.pricePremium}</p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </motion.div>
-
-            {/* Track 2: Refresher */}
-            <motion.div variants={fadeUp}>
-              <div className="text-center mb-5">
-                <span className="text-sm font-bold uppercase px-4 py-2 rounded-full"
-                  style={{ background: '#F7E0E5', color: C.stickyText }}>
-                  למי שכבר למדה
-                </span>
-              </div>
-              <div className="space-y-4">
-                {REFRESHERS.map((c, i) => (
-                  <div key={i} className="rounded-2xl p-5 shadow-sm"
-                    style={{
-                      background: '#FFF0F5',
-                      borderTop: `4px solid ${C.cta}`,
-                      borderRight: `1px solid ${C.border}`,
-                      borderBottom: `1px solid ${C.border}`,
-                      borderLeft: `1px solid ${C.border}`,
-                    }}>
-                    <p className="font-extrabold text-lg mb-1 text-right" style={{ color: C.text }}>
-                      {c.name}
-                    </p>
-                    <p className="text-sm mb-2 text-right font-semibold" style={{ color: C.cta }}>
-                      {c.sub}
-                    </p>
-                    <p className="text-sm mb-3 text-right" style={{ color: C.textSec }}>
-                      {c.details}
-                    </p>
-                    <div className="text-right text-sm space-y-1">
-                      <p className="font-bold" style={{ color: C.accent }}>{c.price}</p>
-                      {c.priceObserver && (
-                        <p style={{ color: C.textSec }}>{c.priceObserver}</p>
-                      )}
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </motion.div>
-
-          </div>
-        </motion.div>
       </section>
 
       {/* ─── URGENCY ─── */}
