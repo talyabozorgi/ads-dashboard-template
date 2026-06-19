@@ -486,8 +486,40 @@ export default function MicrobladingWorkshopPage() {
         </motion.div>
       </section>
 
+      {/* ─── GALLERY: COURSE IN ACTION ─── */}
+      <section className="py-14 px-5" style={{ background: C.bgAlt }}>
+        <motion.div className="max-w-3xl mx-auto"
+          initial="hidden" whileInView="visible" viewport={{ once: true }} variants={stagger}>
+          <motion.p variants={fadeUp} className="text-sm font-bold uppercase text-center mb-2"
+            style={{ color: C.accent }}>
+            ככה זה נראה אצלנו
+          </motion.p>
+          <motion.h2 variants={fadeUp}
+            className="text-2xl sm:text-3xl font-extrabold text-center mb-8"
+            style={{ color: C.text }}>
+            ליווי צמוד — מתחילה ועד שלמה
+          </motion.h2>
+          <motion.div variants={stagger} className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+            {[
+              '/course-photos/מיקרו-6.jpeg',
+              '/course-photos/מיקרו-7.jpeg',
+              '/course-photos/מיקרו-8.jpeg',
+              '/course-photos/3.jpeg',
+              '/course-photos/7.jpeg',
+            ].map((src, i) => (
+              <motion.div key={i} variants={fadeUp}
+                className="rounded-2xl overflow-hidden shadow-md"
+                style={{ aspectRatio: '4/5', border: `1px solid ${C.border}` }}>
+                <img src={src} alt={`תמונה מהקורס ${i + 1}`}
+                  style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center' }} />
+              </motion.div>
+            ))}
+          </motion.div>
+        </motion.div>
+      </section>
+
       {/* ─── MID-PAGE CTA ─── */}
-      <section className="py-8 px-5 text-center" style={{ background: C.bgAlt }}>
+      <section className="py-8 px-5 text-center" style={{ background: C.white }}>
         <motion.button onClick={scrollToForm}
           className="inline-flex items-center gap-2 text-white font-black text-xl px-10 py-5 rounded-2xl shadow-lg"
           style={{ background: C.cta }}
