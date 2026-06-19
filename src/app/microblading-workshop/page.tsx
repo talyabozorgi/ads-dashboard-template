@@ -518,6 +518,39 @@ export default function MicrobladingWorkshopPage() {
         </motion.div>
       </section>
 
+      {/* ─── GALLERY: GRADUATES ─── */}
+      <section className="py-14 px-5" style={{ background: C.white }}>
+        <motion.div className="max-w-3xl mx-auto"
+          initial="hidden" whileInView="visible" viewport={{ once: true }} variants={stagger}>
+          <motion.p variants={fadeUp} className="text-sm font-bold uppercase text-center mb-2"
+            style={{ color: C.accent }}>
+            הבוגרות שלנו
+          </motion.p>
+          <motion.h2 variants={fadeUp}
+            className="text-2xl sm:text-3xl font-extrabold text-center mb-8"
+            style={{ color: C.text }}>
+            יצאו עם תעודה — ועם ביטחון
+          </motion.h2>
+          <motion.div variants={stagger} className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+            {[
+              '/student-photos/4.jpeg',
+              '/student-photos/5.jpeg',
+              '/student-photos/6.jpeg',
+              '/student-photos/מיקרו-9.jpeg',
+              '/student-photos/מיקרו-10.jpeg',
+              '/student-photos/מיקרו-11.jpeg',
+            ].map((src, i) => (
+              <motion.div key={i} variants={fadeUp}
+                className="rounded-2xl overflow-hidden shadow-md"
+                style={{ aspectRatio: '4/5', border: `1px solid ${C.border}` }}>
+                <img src={src} alt={`בוגרת ${i + 1}`}
+                  style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'top' }} />
+              </motion.div>
+            ))}
+          </motion.div>
+        </motion.div>
+      </section>
+
       {/* ─── MID-PAGE CTA ─── */}
       <section className="py-8 px-5 text-center" style={{ background: C.white }}>
         <motion.button onClick={scrollToForm}
