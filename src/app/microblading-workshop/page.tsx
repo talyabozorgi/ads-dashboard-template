@@ -508,10 +508,10 @@ export default function MicrobladingWorkshopPage() {
               '/course-photos/7.jpeg',
             ].map((src, i) => (
               <motion.div key={i} variants={fadeUp}
-                className="rounded-2xl overflow-hidden shadow-md"
-                style={{ aspectRatio: '4/5', border: `1px solid ${C.border}` }}>
+                className="relative rounded-2xl overflow-hidden shadow-md aspect-square"
+                whileHover={{ scale: 1.03 }} transition={{ duration: 0.2 }}>
                 <img src={src} alt={`תמונה מהקורס ${i + 1}`}
-                  style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center' }} />
+                  className="w-full h-full object-cover" />
               </motion.div>
             ))}
           </motion.div>
@@ -541,10 +541,10 @@ export default function MicrobladingWorkshopPage() {
               '/student-photos/מיקרו-11.jpeg',
             ].map((src, i) => (
               <motion.div key={i} variants={fadeUp}
-                className="rounded-2xl overflow-hidden shadow-md"
-                style={{ aspectRatio: '4/5', border: `1px solid ${C.border}` }}>
+                className="relative rounded-2xl overflow-hidden shadow-md aspect-square"
+                whileHover={{ scale: 1.03 }} transition={{ duration: 0.2 }}>
                 <img src={src} alt={`בוגרת ${i + 1}`}
-                  style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'top' }} />
+                  className="w-full h-full object-cover object-top" />
               </motion.div>
             ))}
           </motion.div>
