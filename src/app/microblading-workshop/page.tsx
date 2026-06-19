@@ -367,37 +367,41 @@ export default function MicrobladingWorkshopPage() {
       </section>
 
       {/* ─── DIFFERENTIATOR ─── */}
-      <section className="py-12 px-5" style={{ background: C.white }}>
+      <section className="py-14 px-5" style={{ background: C.white }}>
         <motion.div className="max-w-2xl mx-auto"
           initial="hidden" whileInView="visible" viewport={{ once: true }} variants={stagger}>
+          <motion.p variants={fadeUp} className="text-sm font-bold uppercase text-center mb-2"
+            style={{ color: C.accent }}>
+            למה אצל טליה זה שונה
+          </motion.p>
           <motion.h2 variants={fadeUp}
-            className="text-2xl sm:text-3xl font-extrabold mb-4 text-right"
+            className="text-2xl sm:text-3xl font-extrabold mb-3 text-center"
             style={{ color: C.text }}>
             מה שמיוחד בשיטת הלימוד שלי
           </motion.h2>
-          <motion.p variants={fadeUp} className="text-lg mb-8 leading-relaxed text-right"
+          <motion.p variants={fadeUp} className="text-base mb-10 leading-relaxed text-center"
             style={{ color: C.textSec }}>
             ברוב המקומות מלמדים אותך איך לבצע טיפול.
-            אצלי המטרה הרבה יותר גדולה מזה —
-            אני רוצה שתצאי מההכשרה כשאת{' '}
-            <strong style={{ color: C.text }}>באמת יודעת לעבוד.</strong>
+            אצלי המטרה גדולה יותר —
+            שתצאי כשאת <strong style={{ color: C.cta }}>באמת יודעת לעבוד.</strong>
           </motion.p>
           <motion.div variants={stagger} className="space-y-3">
             {[
-              'קבוצות קטנות ואינטימיות של עד 2–3 תלמידות בלבד',
-              'יחס אישי ותיקונים בזמן אמת',
-              'ליווי צמוד לאורך כל הדרך — וגם אחרי שהקורס מסתיים',
-              'לא רק טכניקה — גם שיווק, תמחור והתנהלות מול לקוחות',
-              'שיעור נוסף אחרי חודש וחצי — לחזק את הביטחון על לקוחה אמיתית (שיעור שלא קיים בשום מקום אחר בארץ)',
+              { emoji: '👥', text: 'קבוצות קטנות ואינטימיות של עד 2–3 תלמידות בלבד' },
+              { emoji: '🤝', text: 'יחס אישי ותיקונים בזמן אמת — לא סרטון, לא PDF' },
+              { emoji: '📲', text: 'ליווי צמוד לאורך כל הדרך — וגם אחרי שהקורס מסתיים' },
+              { emoji: '💼', text: 'לא רק טכניקה — גם שיווק, תמחור והתנהלות מול לקוחות' },
+              { emoji: '⭐', text: 'שיעור נוסף אחרי חודש וחצי — לחזק את הביטחון על לקוחה אמיתית (שיעור שלא קיים בשום מקום אחר בארץ)' },
             ].map((item, i) => (
               <motion.div key={i} variants={fadeUp}
                 className="flex items-center gap-4 rounded-2xl px-5 py-4"
                 style={{
                   background: C.bgAlt,
                   border: `1px solid ${C.border}`,
+                  boxShadow: '0 2px 10px rgba(196,149,106,0.07)',
                 }}>
-                <span className="text-xl flex-shrink-0" style={{ color: C.accent }}>✦</span>
-                <span className="font-semibold text-right" style={{ color: C.text }}>{item}</span>
+                <span className="text-2xl flex-shrink-0">{item.emoji}</span>
+                <span className="font-semibold text-right leading-snug" style={{ color: C.text }}>{item.text}</span>
               </motion.div>
             ))}
           </motion.div>
@@ -417,29 +421,25 @@ export default function MicrobladingWorkshopPage() {
             style={{ color: C.text }}>
             בסיום ההכשרה תוכלי:
           </motion.h2>
-          <motion.div variants={stagger} className="grid sm:grid-cols-2 gap-4">
+          <motion.div variants={stagger} className="grid sm:grid-cols-2 gap-3">
             {[
-              { text: 'לבצע עבודות מקצועיות ומדויקות', icon: '✦' },
-              { text: 'להבין לעומק — התאמת מבנה גבה לכל לקוחה', icon: '✦' },
-              { text: 'לעבוד בביטחון מול לקוחות אמיתיות', icon: '✦' },
-              { text: 'להפסיק לפחד מכל טיפול חדש', icon: '✦' },
-              { text: 'לבנות שם מקצועי בתחום', icon: '✦' },
-              { text: 'להפוך את הידע להכנסה — עיקרית או נוספת', icon: '✦' },
-              { text: 'לקבל ליווי אישי גם אחרי סיום הלימודים', icon: '✦' },
+              { emoji: '✂️', text: 'לבצע עבודות מקצועיות ומדויקות' },
+              { emoji: '🎯', text: 'להתאים מבנה גבה לכל לקוחה — בלי לנחש' },
+              { emoji: '💪', text: 'לעבוד בביטחון מול לקוחות אמיתיות' },
+              { emoji: '😌', text: 'להפסיק לפחד מכל טיפול חדש' },
+              { emoji: '🌟', text: 'לבנות שם מקצועי בתחום' },
+              { emoji: '💰', text: 'להפוך את הידע להכנסה — עיקרית או נוספת' },
+              { emoji: '🤍', text: 'לקבל ליווי אישי גם אחרי סיום הלימודים' },
             ].map((item, i) => (
               <motion.div key={i} variants={fadeUp}
-                className="flex items-start gap-3 rounded-2xl p-5"
+                className="flex items-center gap-4 rounded-2xl px-5 py-4"
                 style={{
                   background: C.white,
                   border: `1px solid ${C.border}`,
                   boxShadow: '0 2px 12px rgba(196,149,106,0.08)',
                 }}>
-                <div className="flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center mt-0.5"
-                  style={{ background: C.accentLight }}>
-                  <span className="text-sm font-black" style={{ color: C.cta }}>✓</span>
-                </div>
-                <span className="font-semibold text-right leading-relaxed pt-1"
-                  style={{ color: C.text }}>{item.text}</span>
+                <span className="text-2xl flex-shrink-0">{item.emoji}</span>
+                <span className="font-semibold text-right leading-snug" style={{ color: C.text }}>{item.text}</span>
               </motion.div>
             ))}
           </motion.div>
