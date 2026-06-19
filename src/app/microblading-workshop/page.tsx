@@ -321,9 +321,19 @@ export default function MicrobladingWorkshopPage() {
           <div className="flex flex-col sm:flex-row items-center gap-8">
             {/* Photo — replace src with actual image path */}
             <motion.div variants={fadeUp} className="flex-shrink-0">
-              <div className="w-44 h-44 rounded-full overflow-hidden shadow-xl border-4 flex items-center justify-center text-5xl"
-                style={{ borderColor: C.accent, background: C.accentLight }}>
-                📸
+              <div className="w-44 h-44 rounded-full overflow-hidden shadow-xl border-4"
+                style={{ borderColor: C.accent }}>
+                <img
+                  src="/talya-profile.png"
+                  alt="טליה בוזורגי"
+                  style={{
+                    width: '100%',
+                    height: '100%',
+                    objectFit: 'cover',
+                    objectPosition: 'top center',
+                    transform: 'scale(1.4) translateY(8%)',
+                  }}
+                />
               </div>
             </motion.div>
             <motion.div variants={fadeUp} className="text-right flex-1">
