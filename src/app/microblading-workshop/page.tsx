@@ -137,98 +137,96 @@ export default function MicrobladingWorkshopPage() {
     setSubmitted(true);
   };
 
-  const LeadForm = () => (
-    submitted ? (
-      <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }}
-        className="rounded-3xl p-10 text-center shadow-xl"
-        style={{ background: C.white, border: `1px solid ${C.border}` }}>
-        <p className="text-5xl mb-4">🙏</p>
-        <p className="text-2xl font-extrabold mb-2" style={{ color: C.text }}>קיבלתי!</p>
-        <p className="mb-1" style={{ color: C.textSec }}>אחזור אליך תוך 24 שעות.</p>
-        <p className="font-bold mt-4 text-lg" style={{ color: C.accent }}>מאמינה בך, טליה ✨</p>
-      </motion.div>
-    ) : (
-      <motion.form variants={fadeUp} onSubmit={handleSubmit}
-        className="rounded-3xl p-8 shadow-xl space-y-4"
-        style={{ background: C.white, border: `1px solid ${C.border}` }}>
+  const renderLeadForm = () => submitted ? (
+    <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }}
+      className="rounded-3xl p-10 text-center shadow-xl"
+      style={{ background: C.white, border: `1px solid ${C.border}` }}>
+      <p className="text-5xl mb-4">🙏</p>
+      <p className="text-2xl font-extrabold mb-2" style={{ color: C.text }}>קיבלתי!</p>
+      <p className="mb-1" style={{ color: C.textSec }}>אחזור אליך תוך 24 שעות.</p>
+      <p className="font-bold mt-4 text-lg" style={{ color: C.accent }}>מאמינה בך, טליה ✨</p>
+    </motion.div>
+  ) : (
+    <form onSubmit={handleSubmit}
+      className="rounded-3xl p-8 shadow-xl space-y-4"
+      style={{ background: C.white, border: `1px solid ${C.border}` }}>
 
-        {/* Path selector */}
-        <div>
-          <label className="block text-sm font-bold mb-2 text-right" style={{ color: C.textSec }}>
-            מה מתאים לי?
-          </label>
-          <div className="grid grid-cols-2 gap-2">
-            {[
-              { val: 'new', label: 'עדיין לא למדתי' },
-              { val: 'advanced', label: 'כבר למדתי' },
-            ].map(opt => (
-              <button key={opt.val} type="button"
-                onClick={() => setForm(f => ({ ...f, path: opt.val }))}
-                className="py-3 rounded-xl text-sm font-bold border-2 transition-all"
-                style={{
-                  background: form.path === opt.val ? C.cta : C.white,
-                  color: form.path === opt.val ? C.white : C.textSec,
-                  borderColor: form.path === opt.val ? C.cta : C.border,
-                }}>
-                {opt.label}
-              </button>
-            ))}
-          </div>
+      {/* Path selector */}
+      <div>
+        <label className="block text-sm font-bold mb-2 text-right" style={{ color: C.textSec }}>
+          מה מתאים לי?
+        </label>
+        <div className="grid grid-cols-2 gap-2">
+          {[
+            { val: 'new', label: 'עדיין לא למדתי' },
+            { val: 'advanced', label: 'כבר למדתי' },
+          ].map(opt => (
+            <button key={opt.val} type="button"
+              onClick={() => setForm(f => ({ ...f, path: opt.val }))}
+              className="py-3 rounded-xl text-sm font-bold border-2 transition-all"
+              style={{
+                background: form.path === opt.val ? C.cta : C.white,
+                color: form.path === opt.val ? C.white : C.textSec,
+                borderColor: form.path === opt.val ? C.cta : C.border,
+              }}>
+              {opt.label}
+            </button>
+          ))}
         </div>
+      </div>
 
-        {/* Name */}
-        <div>
-          <label className="block text-sm font-semibold mb-1 text-right" style={{ color: C.textSec }}>
-            שם מלא
-          </label>
-          <input type="text" required placeholder="הכניסי את שמך"
-            value={form.name} onChange={e => setForm({ ...form, name: e.target.value })}
-            className="w-full rounded-xl px-4 py-3 text-right text-base focus:outline-none"
-            style={{ border: `1px solid ${C.border}`, color: C.text, background: C.bg }}
-          />
-        </div>
+      {/* Name */}
+      <div>
+        <label className="block text-sm font-semibold mb-1 text-right" style={{ color: C.textSec }}>
+          שם מלא
+        </label>
+        <input type="text" required placeholder="הכניסי את שמך"
+          value={form.name} onChange={e => setForm({ ...form, name: e.target.value })}
+          className="w-full rounded-xl px-4 py-3 text-right text-base focus:outline-none"
+          style={{ border: `1px solid ${C.border}`, color: C.text, background: C.bg }}
+        />
+      </div>
 
-        {/* Phone */}
-        <div>
-          <label className="block text-sm font-semibold mb-1 text-right" style={{ color: C.textSec }}>
-            טלפון נייד
-          </label>
-          <input type="tel" required placeholder="050-0000000"
-            value={form.phone} onChange={e => setForm({ ...form, phone: e.target.value })}
-            className="w-full rounded-xl px-4 py-3 text-base focus:outline-none"
-            style={{ border: `1px solid ${C.border}`, color: C.text, background: C.bg }}
-            dir="ltr"
-          />
-        </div>
+      {/* Phone */}
+      <div>
+        <label className="block text-sm font-semibold mb-1 text-right" style={{ color: C.textSec }}>
+          טלפון נייד
+        </label>
+        <input type="tel" required placeholder="050-0000000"
+          value={form.phone} onChange={e => setForm({ ...form, phone: e.target.value })}
+          className="w-full rounded-xl px-4 py-3 text-base focus:outline-none"
+          style={{ border: `1px solid ${C.border}`, color: C.text, background: C.bg }}
+          dir="ltr"
+        />
+      </div>
 
-        {/* Consent */}
-        <div className="flex items-start gap-3">
-          <label htmlFor="consent" className="text-xs leading-relaxed cursor-pointer flex-1 text-right"
-            style={{ color: C.textSec }}>
-            אני מאשרת קבלת עדכונים, מבצעים ותוכן מקצועי מטליה בוזורגי
-          </label>
-          <input type="checkbox" id="consent" required
-            checked={form.consent}
-            onChange={e => setForm({ ...form, consent: e.target.checked })}
-            className="mt-1 w-5 h-5 flex-shrink-0 cursor-pointer rounded"
-            style={{ accentColor: C.cta }}
-          />
-        </div>
+      {/* Consent */}
+      <div className="flex items-start gap-3">
+        <label htmlFor="consent" className="text-xs leading-relaxed cursor-pointer flex-1 text-right"
+          style={{ color: C.textSec }}>
+          אני מאשרת קבלת עדכונים, מבצעים ותוכן מקצועי מטליה בוזורגי
+        </label>
+        <input type="checkbox" id="consent" required
+          checked={form.consent}
+          onChange={e => setForm({ ...form, consent: e.target.checked })}
+          className="mt-1 w-5 h-5 flex-shrink-0 cursor-pointer rounded"
+          style={{ accentColor: C.cta }}
+        />
+      </div>
 
-        <motion.button type="submit"
-          className="w-full text-white py-4 rounded-2xl font-black text-xl shadow-lg"
-          style={{ background: form.consent ? C.cta : '#ccc' }}
-          whileHover={form.consent ? { scale: 1.02 } : {}}
-          whileTap={form.consent ? { scale: 0.97 } : {}}
-          disabled={!form.consent}>
-          שמרי לי מקום לקורס 17.7 ←
-        </motion.button>
+      <motion.button type="submit"
+        className="w-full text-white py-4 rounded-2xl font-black text-xl shadow-lg"
+        style={{ background: form.consent ? C.cta : '#ccc' }}
+        whileHover={form.consent ? { scale: 1.02 } : {}}
+        whileTap={form.consent ? { scale: 0.97 } : {}}
+        disabled={!form.consent}>
+        השאירי פרטים ואחזור אלייך ←
+      </motion.button>
 
-        <p className="text-xs text-center" style={{ color: C.textSec }}>
-          * הפרטים נשמרים בסודיות מלאה
-        </p>
-      </motion.form>
-    )
+      <p className="text-xs text-center" style={{ color: C.textSec }}>
+        * הפרטים נשמרים בסודיות מלאה
+      </p>
+    </form>
   );
 
   return (
@@ -243,7 +241,7 @@ export default function MicrobladingWorkshopPage() {
       {/* ─── STICKY TOP BAR ─── */}
       <div className="sticky top-0 z-50 text-center py-3 px-4 text-sm font-bold"
         style={{ background: C.stickyBg, color: C.stickyText }}>
-        הקורס הבא מתחיל 17.7 | קבוצות של עד 3 תלמידות בלבד — מקומות אחרונים
+        קבוצות קטנות של עד 3 תלמידות בלבד — מקומות אחרונים
       </div>
 
       {/* ─── HERO ─── */}
@@ -327,7 +325,7 @@ export default function MicrobladingWorkshopPage() {
             style={{ background: C.cta }}
             whileHover={{ scale: 1.02, backgroundColor: C.ctaHover }}
             whileTap={{ scale: 0.97 }}>
-            אני רוצה מקום בקורס הקרוב ⬇️
+            אני רוצה להשאיר פרטים ⬇️
           </motion.button>
         </motion.div>
       </section>
@@ -670,7 +668,7 @@ export default function MicrobladingWorkshopPage() {
           <motion.h3 variants={fadeUp}
             className="text-2xl sm:text-3xl font-extrabold mb-3"
             style={{ color: C.text }}>
-            הקורס הבא מתחיל 17.7
+            מקומות אחרונים בקורס הקרוב
           </motion.h3>
           <motion.p variants={fadeUp} className="text-lg mb-4" style={{ color: C.textSec }}>
             נשארו מקומות אחרונים — קבוצות של עד 3 תלמידות בלבד.
@@ -699,7 +697,7 @@ export default function MicrobladingWorkshopPage() {
             style={{ color: C.textSec }}>
             איזה מסלול מתאים לך — בלי התחייבות
           </motion.p>
-          <LeadForm />
+          {renderLeadForm()}
         </motion.div>
       </section>
 
@@ -713,7 +711,7 @@ export default function MicrobladingWorkshopPage() {
         <button onClick={scrollToForm}
           className="w-full max-w-lg mx-auto flex items-center justify-center gap-2 text-white py-4 rounded-2xl font-black text-xl shadow-2xl"
           style={{ background: C.cta, display: 'flex' }}>
-          שמרי לי מקום לקורס 17.7 ✨
+          השאירי פרטים ואחזור אלייך ✨
         </button>
       </motion.div>
 
