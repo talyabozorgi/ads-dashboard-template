@@ -36,15 +36,15 @@ declare global {
 
 const TESTIMONIALS = [
   {
-    quote: 'הייתי מניקוריסטית שעבדה מסביב לשעון. אחרי הקורס אצל טליה — הורדתי את העבודה בציפורניים לחצי, מסיימת כל יום ב-15:00, ומכניסה 30,000 ₪ בחודש מעיצוב גבות ומיקרובליידינג.',
-    highlight: '30,000 ₪ בחודש | עובדת עד 15:00',
+    quote: 'הורדתי את העבודה בציפורניים לחצי — ועכשיו אני מכניסה 30,000 ₪ בחודש מגבות ומיקרו.',
+    highlight: '30,000 ₪ בחודש',
   },
   {
-    quote: 'הגעתי בגיל 16, בלי שום ניסיון קודם. טליה לימדה אותי לא רק את הטכניקה — אלא גם איך לקבל לקוחות, איך לשדר ביטחון ואיך לעבוד נכון. היום יש לי 2 מטופלות כמעט כל יום.',
+    quote: 'הגעתי בגיל 16 בלי ניסיון. היום יש לי 2 מטופלות כמעט כל יום.',
     highlight: '2 מטופלות כל יום — בגיל 16',
   },
   {
-    quote: 'הגעתי אחרי שסיימתי קורס יקר במקום אחר. הייתה לי תעודה — אבל לא עבדתי אפילו על לקוחה אחת. אחרי ההשתלמות אצל טליה חזרתי לעבוד. הפעם עם ביטחון אמיתי.',
+    quote: 'הייתה לי תעודה ממקום אחר אבל לא עבדתי. אחרי טליה — חזרתי לעבוד בביטחון.',
     highlight: 'חזרה לעבוד אחרי ההשתלמות',
   },
 ];
@@ -290,7 +290,7 @@ export default function MicrobladingWorkshopPage() {
           {/* VSL VIDEO */}
           <motion.p variants={fadeUp} className="text-sm font-bold mb-3 animate-pulse"
             style={{ color: C.cta }}>
-            ▶ לחצי לצפייה — 2 דקות שיכולות לשנות את הכיוון שלך
+            ▶ לחצי לצפייה — 4 דקות שיכולות לשנות את הכיוון שלך
           </motion.p>
           <motion.div variants={fadeUp}
             className="relative rounded-3xl overflow-hidden shadow-2xl mx-auto mb-8"
@@ -321,46 +321,18 @@ export default function MicrobladingWorkshopPage() {
       </section>
 
       {/* ─── EMPATHY ─── */}
-      <section className="py-12 px-5" style={{ background: C.white }}>
-        <motion.div className="max-w-2xl mx-auto"
+      <section className="py-10 px-5" style={{ background: C.white }}>
+        <motion.div className="max-w-xl mx-auto text-right"
           initial="hidden" whileInView="visible" viewport={{ once: true }} variants={stagger}>
-          <motion.h2 variants={fadeUp}
-            className="text-2xl sm:text-3xl font-extrabold mb-6 text-right"
-            style={{ color: C.cta }}>
-            אני מבינה בדיוק איך את מרגישה...
-          </motion.h2>
-          <div className="space-y-4 text-lg leading-relaxed text-right" style={{ color: C.textSec }}>
-            <motion.p variants={fadeUp}>
-              אולי את חולמת להיכנס לתחום הגבות והמיקרובליידינג,
-              אבל מפחדת לעשות את הצעד הראשון.
-            </motion.p>
-            <motion.p variants={fadeUp}>
-              ואולי כבר למדת בעבר, השקעת זמן וכסף, קיבלת תעודה —
-              אבל כשמגיעה לקוחה אמיתית, הביטחון פתאום נעלם.
-            </motion.p>
-            <motion.p variants={fadeUp}>
-              את חוששת שהעבודה לא תצא מספיק מדויקת.
-              מפחדת שהגבות לא יהיו סימטריות.
-              חוששת להתמודד עם מקרים מורכבים לבד.
-            </motion.p>
-            <motion.div variants={fadeUp}
-              className="rounded-2xl p-5 my-4"
-              style={{
-                background: C.bgAlt,
-                borderRight: `4px solid ${C.accent}`,
-                borderTop: `1px solid ${C.border}`,
-                borderBottom: `1px solid ${C.border}`,
-                borderLeft: `1px solid ${C.border}`,
-              }}>
-              <p className="font-bold text-lg mb-2" style={{ color: C.text }}>
-                האמת? את ממש לא היחידה.
-              </p>
-              <p style={{ color: C.textSec }}>
-                אני פוגשת המון נשים מוכשרות שהבעיה שלהן היא לא היכולת —
-                הבעיה היא שאף אחד לא נתן להן את הביטחון, הליווי והכלים לצאת לעבוד.
-              </p>
-            </motion.div>
-          </div>
+          <motion.p variants={fadeUp} className="text-lg leading-relaxed mb-4" style={{ color: C.textSec }}>
+            חלמת להיכנס לתחום — או כבר למדת בעבר, אבל עדיין לא עובדת בביטחון.
+          </motion.p>
+          <motion.div variants={fadeUp} className="rounded-2xl p-5"
+            style={{ background: C.bgAlt, borderRight: `4px solid ${C.accent}` }}>
+            <p className="font-bold" style={{ color: C.text }}>
+              הבעיה היא לא היכולת שלך — אף אחד לא נתן לך את הביטחון והליווי הנכון.
+            </p>
+          </motion.div>
         </motion.div>
       </section>
 
@@ -390,27 +362,15 @@ export default function MicrobladingWorkshopPage() {
               <p className="text-sm font-bold uppercase mb-1" style={{ color: C.accent }}>
                 המורה שלך
               </p>
-              <h2 className="text-3xl font-extrabold mb-1" style={{ color: C.text }}>
-                נעים מאוד, אני טליה בוזורגי
+              <h2 className="text-2xl font-extrabold mb-1" style={{ color: C.text }}>
+                טליה בוזורגי
               </h2>
-              <p className="font-semibold mb-5" style={{ color: C.cta }}>
-                בעלת קליניקה ואקדמיה למיקרובליידינג ועיצוב גבות
+              <p className="font-semibold mb-3" style={{ color: C.cta }}>
+                בעלת קליניקה ואקדמיה למיקרובליידינג
               </p>
-              <div className="space-y-3 text-lg leading-relaxed" style={{ color: C.textSec }}>
-                <p>
-                  גם אני לא תמיד הייתי במקום שאני נמצאת בו היום.
-                  אני זוכרת את החששות, את הלחץ, את הרצון שהכול ייצא מושלם.
-                </p>
-                <p>
-                  עם השנים פיתחתי שיטת עבודה שמאפשרת לעבוד בצורה מדויקת, מקצועית ובטוחה —
-                  שיטה שלא מתמקדת רק בטכניקה, אלא גם בביטחון, בתרגול נכון ובבניית
-                  היכולת לעבוד מול לקוחות אמיתיות.
-                </p>
-                <p className="font-semibold" style={{ color: C.text }}>
-                  היום אני מלווה נשים שרוצות להיכנס לתחום, להתפתח בו —
-                  או לחזור לעבוד בו בביטחון מלא.
-                </p>
-              </div>
+              <p className="text-base leading-relaxed" style={{ color: C.textSec }}>
+                מלווה נשים להיכנס לתחום ולעבוד בביטחון מלא — עם שיטה מעשית שעובדת.
+              </p>
             </motion.div>
           </div>
         </motion.div>
@@ -429,19 +389,13 @@ export default function MicrobladingWorkshopPage() {
             style={{ color: C.text }}>
             מה שמיוחד בשיטת הלימוד שלי
           </motion.h2>
-          <motion.p variants={fadeUp} className="text-base mb-10 leading-relaxed text-center"
-            style={{ color: C.textSec }}>
-            ברוב המקומות מלמדים אותך איך לבצע טיפול.
-            אצלי המטרה גדולה יותר —
-            שתצאי כשאת <strong style={{ color: C.cta }}>באמת יודעת לעבוד.</strong>
-          </motion.p>
           <motion.div variants={stagger} className="space-y-3">
             {[
-              { emoji: '👥', text: 'קבוצות קטנות ואינטימיות של עד 2–3 תלמידות בלבד' },
-              { emoji: '🤝', text: 'יחס אישי ותיקונים בזמן אמת — לא סרטון, לא PDF' },
-              { emoji: '📲', text: 'ליווי צמוד לאורך כל הדרך — וגם אחרי שהקורס מסתיים' },
-              { emoji: '💼', text: 'לא רק טכניקה — גם שיווק, תמחור והתנהלות מול לקוחות' },
-              { emoji: '⭐', text: 'שיעור נוסף אחרי חודש וחצי — לחזק את הביטחון על לקוחה אמיתית (שיעור שלא קיים בשום מקום אחר בארץ)' },
+              { emoji: '👥', text: 'עד 3 תלמידות בלבד — יחס אישי אמיתי' },
+              { emoji: '🤝', text: 'תיקונים בזמן אמת — לא סרטון, לא PDF' },
+              { emoji: '📲', text: 'ליווי גם אחרי שהקורס מסתיים' },
+              { emoji: '💼', text: 'שיווק, תמחור והתנהלות מול לקוחות — לא רק טכניקה' },
+              { emoji: '⭐', text: 'שיעור חיזוק על לקוחה אמיתית אחרי חודש וחצי' },
             ].map((item, i) => (
               <motion.div key={i} variants={fadeUp}
                 className="flex items-center gap-4 rounded-2xl px-5 py-4"
@@ -540,14 +494,10 @@ export default function MicrobladingWorkshopPage() {
       <section className="py-14 px-5" style={{ background: C.bgAlt }}>
         <motion.div className="max-w-3xl mx-auto"
           initial="hidden" whileInView="visible" viewport={{ once: true }} variants={stagger}>
-          <motion.p variants={fadeUp} className="text-sm font-bold uppercase text-center mb-2"
-            style={{ color: C.accent }}>
-            ככה זה נראה אצלנו
-          </motion.p>
           <motion.h2 variants={fadeUp}
-            className="text-2xl sm:text-3xl font-extrabold text-center mb-8"
+            className="text-xl font-extrabold text-center mb-6"
             style={{ color: C.text }}>
-            ליווי צמוד — מתחילה ועד שלמה
+            ככה זה נראה אצלנו
           </motion.h2>
           <motion.div variants={stagger} className="grid grid-cols-2 sm:grid-cols-3 gap-3">
             {[
@@ -572,14 +522,10 @@ export default function MicrobladingWorkshopPage() {
       <section className="py-14 px-5" style={{ background: C.white }}>
         <motion.div className="max-w-3xl mx-auto"
           initial="hidden" whileInView="visible" viewport={{ once: true }} variants={stagger}>
-          <motion.p variants={fadeUp} className="text-sm font-bold uppercase text-center mb-2"
-            style={{ color: C.accent }}>
-            הבוגרות שלנו
-          </motion.p>
           <motion.h2 variants={fadeUp}
-            className="text-2xl sm:text-3xl font-extrabold text-center mb-8"
+            className="text-xl font-extrabold text-center mb-6"
             style={{ color: C.text }}>
-            יצאו עם תעודה — ועם ביטחון
+            הבוגרות שלנו
           </motion.h2>
           <motion.div variants={stagger} className="grid grid-cols-2 sm:grid-cols-3 gap-3">
             {[
@@ -605,19 +551,11 @@ export default function MicrobladingWorkshopPage() {
       <section className="py-14 px-5" style={{ background: C.bgAlt }}>
         <motion.div className="max-w-3xl mx-auto"
           initial="hidden" whileInView="visible" viewport={{ once: true }} variants={stagger}>
-          <motion.p variants={fadeUp} className="text-sm font-bold uppercase text-center mb-2"
-            style={{ color: C.accent }}>
-            התוצאות מדברות בעד עצמן
-          </motion.p>
           <motion.h2 variants={fadeUp}
-            className="text-2xl sm:text-3xl font-extrabold text-center mb-3"
+            className="text-xl font-extrabold text-center mb-6"
             style={{ color: C.text }}>
-            לפני ואחרי — עבודות מיקרובליידינג
+            לפני ואחרי — עבודות התלמידות
           </motion.h2>
-          <motion.p variants={fadeUp} className="text-center mb-8"
-            style={{ color: C.textSec }}>
-            עבודות שיצאו מהתלמידות שלנו — כחלק מהאימון המעשי בקורס
-          </motion.p>
           <motion.div variants={stagger} className="grid grid-cols-2 sm:grid-cols-3 gap-3">
             {[
               '/before-after-photos/ba-1.jpeg',
@@ -646,31 +584,18 @@ export default function MicrobladingWorkshopPage() {
           initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.97 }}>
-          אני רוצה מקום בקורס הקרוב ⬇️
+          להשאיר פרטים ⬇️
         </motion.button>
       </section>
 
       {/* ─── URGENCY ─── */}
-      <section className="py-12 px-5 text-center"
+      <section className="py-8 px-5 text-center"
         style={{ background: `linear-gradient(to bottom, ${C.bgAlt}, #F7E0E5)` }}>
-        <motion.div className="max-w-2xl mx-auto"
-          initial="hidden" whileInView="visible" viewport={{ once: true }} variants={stagger}>
-          <motion.h3 variants={fadeUp}
-            className="text-2xl sm:text-3xl font-extrabold mb-3"
-            style={{ color: C.text }}>
-            מקומות אחרונים בקורס הקרוב
-          </motion.h3>
-          <motion.p variants={fadeUp} className="text-lg mb-4" style={{ color: C.textSec }}>
-            נשארו מקומות אחרונים — קבוצות של עד 3 תלמידות בלבד.
-          </motion.p>
-          <motion.p variants={fadeUp}
-            className="text-base max-w-lg mx-auto leading-relaxed"
-            style={{ color: C.text }}>
-            המטרה שלי פשוטה: לא רק לתת לך תעודה — לתת לך את הידע, הביטחון והליווי
-            שיעזרו לך{' '}
-            <strong style={{ color: C.cta }}>להתחיל לעבוד באמת.</strong>
-          </motion.p>
-        </motion.div>
+        <motion.p variants={fadeUp}
+          initial="hidden" whileInView="visible" viewport={{ once: true }}
+          className="text-lg font-bold" style={{ color: C.cta }}>
+          מקומות אחרונים — קבוצות של עד 3 תלמידות בלבד
+        </motion.p>
       </section>
 
       {/* ─── MAIN CTA FORM ─── */}
