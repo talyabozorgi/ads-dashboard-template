@@ -287,29 +287,11 @@ export default function MicrobladingWorkshopPage() {
             </span>
           </motion.div>
 
-          {/* COUNTDOWN TIMER */}
-          <motion.div variants={fadeUp} className="mb-8">
-            <p className="text-sm font-semibold mb-3" style={{ color: C.textSec }}>
-              הקורס מתחיל בעוד:
-            </p>
-            <div className="flex justify-center gap-3">
-              {[
-                { val: countdown.days, label: 'ימים' },
-                { val: countdown.hours, label: 'שעות' },
-                { val: countdown.mins, label: 'דקות' },
-                { val: countdown.secs, label: 'שניות' },
-              ].map(({ val, label }) => (
-                <div key={label} className="flex flex-col items-center rounded-2xl px-4 py-3 min-w-[64px]"
-                  style={{ background: C.white, border: `1px solid ${C.border}`, boxShadow: '0 2px 12px rgba(196,149,106,0.12)' }}>
-                  <span className="text-3xl font-black tabular-nums leading-none"
-                    style={{ color: C.cta }}>{String(val).padStart(2, '0')}</span>
-                  <span className="text-xs mt-1 font-medium" style={{ color: C.textSec }}>{label}</span>
-                </div>
-              ))}
-            </div>
-          </motion.div>
-
           {/* VSL VIDEO */}
+          <motion.p variants={fadeUp} className="text-sm font-bold mb-3 animate-pulse"
+            style={{ color: C.cta }}>
+            ▶ לחצי לצפייה — 2 דקות שיכולות לשנות את הכיוון שלך
+          </motion.p>
           <motion.div variants={fadeUp}
             className="relative rounded-3xl overflow-hidden shadow-2xl mx-auto mb-8"
             style={{ aspectRatio: '9/16', maxWidth: '360px' }}>
