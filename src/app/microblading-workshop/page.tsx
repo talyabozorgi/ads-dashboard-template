@@ -255,17 +255,25 @@ export default function MicrobladingWorkshopPage() {
           </motion.p>
 
           <motion.h1 variants={fadeUp}
-            className="text-3xl sm:text-5xl font-extrabold leading-tight mb-5"
+            className="text-3xl sm:text-5xl font-extrabold leading-tight mb-4"
             style={{ color: C.text }}>
             הפכי למקצוענית מבוקשת<br />
-            <span style={{ color: C.cta }}>בתחום הגבות והמיקרובליידינג</span>
+            <span style={{ color: C.cta }}>בתחום המיקרובליידינג</span>
           </motion.h1>
 
-          <motion.p variants={fadeUp} className="text-lg mb-6 leading-relaxed max-w-xl mx-auto"
+          <motion.p variants={fadeUp} className="text-xl mb-5 leading-relaxed max-w-xl mx-auto font-medium"
             style={{ color: C.textSec }}>
-            בעזרת שיטת הלימוד הייחודית של טליה בוזורגי — מקצועיות, תרגול מעשי וליווי אישי —
-            כדי שתוכלי לעבוד בביטחון אמיתי מול כל לקוחה.
+            עם ליווי אישי, תרגול מעשי וביטחון אמיתי לעבוד מול לקוחות —
+            כבר מההתחלה.
           </motion.p>
+
+          {/* PRIVATE badge */}
+          <motion.div variants={fadeUp} className="flex justify-center mb-6">
+            <span className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full font-bold text-sm"
+              style={{ background: C.cta, color: C.white }}>
+              👤 קורס פרטני בלבד — עד 3 תלמידות בקבוצה
+            </span>
+          </motion.div>
 
           <motion.div variants={fadeUp}
             className="flex flex-col sm:flex-row justify-center gap-3 mb-6 text-sm font-semibold">
