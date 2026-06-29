@@ -36,16 +36,25 @@ declare global {
 
 const TESTIMONIALS = [
   {
+    name: 'שירה מ.',
+    photo: '/testimonial-photos/t1.png',
     quote: 'הייתי מניקוריסטית שעבדה מסביב לשעון. אחרי הקורס אצל טליה, הורדתי את העבודה בציפורניים לחצי, מסיימת כל יום ב-15:00, ומכניסה 30,000 ₪ בחודש מעיצוב גבות ומיקרובליידינג.',
     highlight: '30,000 ₪ בחודש | עובדת עד 15:00',
+    stars: 5,
   },
   {
+    name: 'נועה ק.',
+    photo: '/testimonial-photos/t2.png',
     quote: 'הגעתי בגיל 16, בלי שום ניסיון קודם. טליה לימדה אותי לא רק את הטכניקה, אלא גם איך לקבל לקוחות, איך לשדר ביטחון ואיך לעבוד נכון. היום יש לי 2 מטופלות כמעט כל יום.',
     highlight: '2 מטופלות כל יום, בגיל 16',
+    stars: 5,
   },
   {
+    name: 'מיכל ד.',
+    photo: '/testimonial-photos/t3.png',
     quote: 'הגעתי אחרי שסיימתי קורס יקר במקום אחר. הייתה לי תעודה, אבל לא עבדתי אפילו על לקוחה אחת. אחרי ההשתלמות אצל טליה חזרתי לעבוד. הפעם עם ביטחון אמיתי.',
     highlight: 'חזרה לעבוד אחרי ההשתלמות',
+    stars: 5,
   },
 ];
 
@@ -318,6 +327,43 @@ export default function MicrobladingWorkshopPage() {
         </motion.div>
       </section>
 
+      {/* ─── WHY NOW ─── */}
+      <section className="py-12 px-5" style={{ background: C.bgAlt }}>
+        <motion.div className="max-w-2xl mx-auto"
+          initial="hidden" whileInView="visible" viewport={{ once: true }} variants={stagger}>
+          <motion.p variants={fadeUp} className="text-sm font-bold uppercase text-center mb-2"
+            style={{ color: C.accent }}>
+            למה דווקא עכשיו
+          </motion.p>
+          <motion.h2 variants={fadeUp}
+            className="text-2xl sm:text-3xl font-extrabold text-center mb-8"
+            style={{ color: C.text }}>
+            המיקרובליידינג הוא אחד התחומים<br />
+            <span style={{ color: C.cta }}>הכי מבוקשים היום בישראל</span>
+          </motion.h2>
+          <motion.div variants={stagger} className="grid sm:grid-cols-2 gap-4">
+            {[
+              { emoji: '💸', title: '600-1,200 ₪ לטיפול', text: 'שעה עד שעתיים עבודה — הכנסה שלא תמצאי בשום מקום אחר' },
+              { emoji: '📅', title: 'עבודה בשעות שנוחות לך', text: 'מהבית, מקליניקה, בין הילדים, בין עבודות אחרות' },
+              { emoji: '📈', title: 'הביקוש לא נעצר', text: 'כל לקוחה חוזרת כל 12-18 חודש. לקוחה אחת שווה אלפי שקלים לאורך זמן' },
+              { emoji: '🎓', title: 'לא צריך ניסיון קודם', text: 'מתחילות מאפס ויוצאות עובדות. זה לא קורה בכל תחום' },
+            ].map((item, i) => (
+              <motion.div key={i} variants={fadeUp}
+                className="rounded-2xl p-5"
+                style={{
+                  background: C.white,
+                  border: `1px solid ${C.border}`,
+                  boxShadow: '0 2px 12px rgba(196,149,106,0.08)',
+                }}>
+                <div className="text-3xl mb-2">{item.emoji}</div>
+                <p className="font-extrabold text-base mb-1 text-right" style={{ color: C.text }}>{item.title}</p>
+                <p className="text-sm leading-relaxed text-right" style={{ color: C.textSec }}>{item.text}</p>
+              </motion.div>
+            ))}
+          </motion.div>
+        </motion.div>
+      </section>
+
       {/* ─── EMPATHY ─── */}
       <section className="py-12 px-5" style={{ background: C.white }}>
         <motion.div className="max-w-2xl mx-auto"
@@ -510,18 +556,29 @@ export default function MicrobladingWorkshopPage() {
           <div className="space-y-5">
             {TESTIMONIALS.map((t, i) => (
               <motion.div key={i} variants={fadeUp}
-                className="rounded-2xl p-6 shadow-sm"
+                className="rounded-2xl p-6 shadow-md"
                 style={{
-                  background: C.bg,
-                  borderTop: `1px solid ${C.border}`,
-                  borderBottom: `1px solid ${C.border}`,
-                  borderLeft: `1px solid ${C.border}`,
+                  background: C.white,
+                  border: `1px solid ${C.border}`,
                   borderRight: `4px solid ${C.accent}`,
+                  boxShadow: '0 4px 20px rgba(196,149,106,0.1)',
                 }}>
-                <p className="text-right leading-relaxed mb-4 text-lg"
+                {/* Header: photo + name + stars */}
+                <div className="flex items-center gap-3 mb-4">
+                  <img src={t.photo} alt={t.name}
+                    className="w-14 h-14 rounded-full object-cover flex-shrink-0"
+                    style={{ border: `2px solid ${C.accentLight}` }} />
+                  <div className="text-right flex-1">
+                    <p className="font-bold text-base" style={{ color: C.text }}>{t.name}</p>
+                    <p className="text-lg" style={{ color: C.accent }}>{'★'.repeat(t.stars)}</p>
+                  </div>
+                </div>
+                {/* Quote */}
+                <p className="text-right leading-relaxed mb-4 text-base"
                   style={{ color: C.textSec }}>
                   &ldquo;{t.quote}&rdquo;
                 </p>
+                {/* Highlight badge */}
                 <div className="text-right">
                   <span className="text-sm font-bold px-3 py-1.5 rounded-full"
                     style={{ background: C.accentLight, color: C.cta }}>
