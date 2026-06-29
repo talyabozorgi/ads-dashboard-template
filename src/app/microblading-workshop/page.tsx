@@ -79,19 +79,17 @@ export default function MicrobladingWorkshopPage() {
   const [popupForm, setPopupForm] = useState({ name: '', phone: '', sent: false });
   const countdown = useCountdown();
 
-  // Exit intent, show once per session, only after 8 seconds on page
+  // Exit intent — fires only when cursor moves toward browser bar (top of screen)
   useEffect(() => {
     if (sessionStorage.getItem('popup_shown')) return;
-    let ready = false;
-    const timer = setTimeout(() => { ready = true; }, 8000);
     const onLeave = (e: MouseEvent) => {
-      if (ready && e.clientY < 10 && !sessionStorage.getItem('popup_shown')) {
+      if (e.clientY < 10 && !sessionStorage.getItem('popup_shown')) {
         setPopup(true);
         sessionStorage.setItem('popup_shown', '1');
       }
     };
     document.addEventListener('mouseleave', onLeave);
-    return () => { clearTimeout(timer); document.removeEventListener('mouseleave', onLeave); };
+    return () => document.removeEventListener('mouseleave', onLeave);
   }, []);
 
   const handlePopupSubmit = async (e: React.FormEvent) => {
