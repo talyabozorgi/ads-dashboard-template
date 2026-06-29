@@ -144,6 +144,27 @@ export default function MicrobladingWorkshopPage() {
     setSubmitted(true);
   };
 
+  const FaqItem = ({ q, a }: { q: string; a: string }) => {
+    const [open, setOpen] = useState(false);
+    return (
+      <div className="rounded-2xl overflow-hidden" style={{ border: `1px solid ${C.border}` }}>
+        <button onClick={() => setOpen(o => !o)}
+          className="w-full flex items-center justify-between gap-3 px-5 py-4 text-right font-bold text-base"
+          style={{ background: open ? C.bgAlt : C.white, color: C.text }}>
+          <span>{q}</span>
+          <span className="text-xl flex-shrink-0 transition-transform"
+            style={{ color: C.accent, transform: open ? 'rotate(45deg)' : 'none' }}>+</span>
+        </button>
+        {open && (
+          <div className="px-5 pb-4 text-right text-base leading-relaxed"
+            style={{ background: C.bgAlt, color: C.textSec }}>
+            {a}
+          </div>
+        )}
+      </div>
+    );
+  };
+
   const renderLeadForm = () => submitted ? (
     <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }}
       className="rounded-3xl p-10 text-center shadow-xl"
@@ -701,7 +722,7 @@ export default function MicrobladingWorkshopPage() {
           initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.97 }}>
-          אני רוצה מקום בקורס הקרוב ⬇️
+          אני רוצה להשאיר פרטים ⬇️
         </motion.button>
       </section>
 
@@ -725,6 +746,44 @@ export default function MicrobladingWorkshopPage() {
             שיעזרו לך{' '}
             <strong style={{ color: C.cta }}>להתחיל לעבוד באמת.</strong>
           </motion.p>
+        </motion.div>
+      </section>
+
+      {/* ─── FAQ ─── */}
+      <section className="py-14 px-5" style={{ background: C.white }}>
+        <motion.div className="max-w-2xl mx-auto"
+          initial="hidden" whileInView="visible" viewport={{ once: true }} variants={stagger}>
+          <motion.h2 variants={fadeUp}
+            className="text-2xl sm:text-3xl font-extrabold text-center mb-8"
+            style={{ color: C.text }}>
+            שאלות נפוצות
+          </motion.h2>
+          <motion.div variants={stagger} className="space-y-3">
+            {[
+              {
+                q: 'כמה זמן לוקח הקורס?',
+                a: 'הקורס נפרס על פני מספר מפגשים בהתאם למסלול שתבחרי. בקורס המלא מדובר על 5-7 שיעורים, בהשתלמות על יום מרוכז אחד. הכל מתואם אישית מראש.',
+              },
+              {
+                q: 'מה אני צריכה להביא?',
+                a: 'כלום. כל הציוד, הכלים והחומרים כלולים. את מגיעה רק עם עצמך ועם הרצון ללמוד.',
+              },
+              {
+                q: 'מה קורה אחרי שהקורס נגמר?',
+                a: 'הליווי לא נגמר עם הקורס. יש שיעור חיזוק על לקוחה אמיתית אחרי חודש וחצי, וקבוצת תמיכה שאפשר לשאול בה שאלות גם לאחר מכן.',
+              },
+              {
+                q: 'האם אני מתאימה גם אם אין לי ניסיון בכלל?',
+                a: 'כן לחלוטין. רוב התלמידות מגיעות בלי שום רקע. הקורס בנוי ממש מאפס ומותאם לקצב האישי שלך.',
+              },
+              {
+                q: 'מה ההבדל בין המסלול למתחילות לבין ההשתלמות?',
+                a: 'מתחילות לומדות את הכל מהיסוד — טכניקה, עיצוב, עבודה עם לקוחות. ההשתלמות מיועדת למי שכבר למדה בעבר ורוצה לחדד, לחזק ביטחון ולחזור לעבוד.',
+              },
+            ].map((item, i) => (
+              <FaqItem key={i} q={item.q} a={item.a} />
+            ))}
+          </motion.div>
         </motion.div>
       </section>
 
