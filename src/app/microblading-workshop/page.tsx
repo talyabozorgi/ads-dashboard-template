@@ -639,7 +639,7 @@ export default function MicrobladingWorkshopPage() {
           <motion.div variants={stagger} className="grid grid-cols-2 sm:grid-cols-3 gap-3">
             {[
               '/student-photos/4.jpeg',
-              '/student-photos/5.jpeg',
+              '/student-photos/5-cropped.jpeg',
               '/student-photos/6.jpeg',
               '/student-photos/מיקרו-9.jpeg',
               '/student-photos/מיקרו-10.jpeg',
