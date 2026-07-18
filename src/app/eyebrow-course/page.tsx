@@ -285,7 +285,7 @@ export default function EyebrowCoursePage() {
           <motion.p variants={fadeUp} className="text-[#5C4A3A] text-lg mb-6 leading-relaxed">
             הנוסחה המהירה להפיכת הלקוחות שכבר יושבות אצלך
             <br />
-            <span className="font-semibold text-[#1A1A1A]">למנוי חודשי קבוע לעיצוב ושיקום גבות – מהבית, בקורס דיגיטלי קצר.</span>
+            <span className="font-semibold text-[#1A1A1A]">למנוי חודשי קבוע לעיצוב ושיקום גבות – קורס דיגיטלי מקיף ופרקטי שיתן לך את כל הכלים להפוך למעצבת גבות מקצועית.</span>
           </motion.p>
 
           <motion.div variants={fadeUp} className="inline-flex flex-col items-center gap-2 bg-white border-2 border-[#C49A8A]/40 rounded-2xl px-8 py-4 mb-6 shadow-md">
