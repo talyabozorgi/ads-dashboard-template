@@ -108,12 +108,16 @@ function SocialProofNotification() {
   const [visible, setVisible] = useState(false);
   const [name, setName] = useState('');
   const indexRef = useRef(0);
+  const countRef = useRef(0);
+  const MAX_SHOWS = 3;
   useEffect(() => {
     let timeout: ReturnType<typeof setTimeout>;
     const schedule = (delay: number) => {
+      if (countRef.current >= MAX_SHOWS) return;
       timeout = setTimeout(() => {
         setName(recentBuyers[indexRef.current % recentBuyers.length]);
         indexRef.current += 1;
+        countRef.current += 1;
         setVisible(true);
         setTimeout(() => setVisible(false), 3500 + Math.random() * 1000);
         schedule(18000 + Math.random() * 22000);
