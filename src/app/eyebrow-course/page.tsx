@@ -277,11 +277,10 @@ export default function EyebrowCoursePage() {
             427 קוסמטיקאיות ומניקוריסטיות כבר למדו את השיטה
           </motion.p>
           <motion.h1 variants={fadeUp} className="text-[#1A1A1A] text-3xl sm:text-5xl font-extrabold leading-tight mb-5">
-            קוסמטיקאית, מניקוריסטית או מאפרת?
+            איך גם את יכולה להוסיף
             <br />
-            <span className="text-[#C49A8A]">הוסיפי 2,500-4,000 ₪ לרווח הנקי </span>
-            בכל חודש
-            <span className="underline underline-offset-4 decoration-[#C49A8A] whitespace-nowrap"> בלי אף לקוחה חדשה</span>
+            <span className="text-[#C49A8A]">עוד 2,500-4,000 ₪ בחודש</span>
+            <span className="underline underline-offset-4 decoration-[#C49A8A] whitespace-nowrap"> — בלי אף לקוחה חדשה</span>
           </motion.h1>
           <motion.p variants={fadeUp} className="text-[#5C4A3A] text-lg mb-6 leading-relaxed">
             הנוסחה המהירה להפיכת הלקוחות שכבר יושבות אצלך
