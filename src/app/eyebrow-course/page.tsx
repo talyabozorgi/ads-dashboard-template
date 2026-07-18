@@ -277,7 +277,7 @@ export default function EyebrowCoursePage() {
             427 קוסמטיקאיות ומניקוריסטיות כבר למדו את השיטה
           </motion.p>
           <motion.h1 variants={fadeUp} className="text-[#1A1A1A] text-3xl sm:text-5xl font-extrabold leading-tight mb-5">
-            איך גם את יכולה להוסיף
+            איך גם את יכולה להוסיף בעסק הקיים שלך
             <br />
             <span className="text-[#C49A8A]">עוד 2,500-4,000 ₪ בחודש</span>
             <span className="underline underline-offset-4 decoration-[#C49A8A] whitespace-nowrap"> — בלי אף לקוחה חדשה</span>
