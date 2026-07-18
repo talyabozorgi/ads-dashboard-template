@@ -284,7 +284,7 @@ export default function EyebrowCoursePage() {
             איך גם את יכולה להוסיף בעסק הקיים שלך
             <br />
             <span className="text-[#C49A8A]">עוד 2,500-4,000 ₪ בחודש</span>
-            <span className="underline underline-offset-4 decoration-[#C49A8A] whitespace-nowrap"> — בלי אף לקוחה חדשה</span>
+            <span className="underline underline-offset-4 decoration-[#C49A8A] whitespace-nowrap"> -בלי אף לקוחה חדשה</span>
           </motion.h1>
           <motion.p variants={fadeUp} className="text-[#5C4A3A] text-lg mb-6 leading-relaxed">
             הנוסחה המהירה להפיכת הלקוחות שכבר יושבות אצלך
@@ -473,10 +473,13 @@ export default function EyebrowCoursePage() {
       <section className="bg-[#F5EDE5] py-12 px-5">
         <motion.div className="max-w-2xl mx-auto" initial="hidden" whileInView="visible" viewport={{ once: true }} variants={stagger}>
           <motion.h2 variants={fadeUp} className="text-2xl sm:text-4xl font-bold text-center mb-8">גם אני הייתי שם.</motion.h2>
-          <motion.div variants={fadeUp} className="text-center text-[#5C4A3A] text-lg leading-loose space-y-4 mb-6">
-            <p>התחלתי כמניקוריסטית. שעות ארוכות, מחירים שלא זזים, ותחושה שאני עובדת קשה מבלי לראות את זה בחשבון הבנק.</p>
-            <p>אחרי שלקוחות רבות שאלו אותי אם אני עושה גבות — הבנתי שזה הדרך לעוד שעות על הרגליים ולמלא יומן.</p>
-            <p className="font-semibold text-[#1A1A1A]">מאותו רגע הבנתי: כל פעם שלקוחה יוצאת ושואלת אותי אם אני מכירה מעצבת גבות — זה לא סתם שאלה. זה טיפול חובה שכל לקוחה צריכה. וכל פעם שלא הצעתי — הפסדתי עוד 100 שקל מהתור.</p>
+          <motion.div variants={fadeUp} className="text-center text-[#5C4A3A] text-lg leading-relaxed space-y-3 mb-6 px-2">
+            <p>התחלתי כמניקוריסטית.</p>
+            <p>שעות ארוכות, מחירים שלא זזים, ותחושה שאני עובדת קשה מבלי לראות את זה בחשבון הבנק.</p>
+            <p>אחרי שלקוחות רבות שאלו אותי אם אני עושה גבות - הבנתי שזה הדרך לעוד שעות על הרגליים ולמלא יומן.</p>
+            <p className="font-semibold text-[#1A1A1A]">מאותו רגע הבנתי: כל פעם שלקוחה יוצאת ושואלת אותי אם אני מכירה מעצבת גבות - זה לא סתם שאלה.</p>
+            <p className="font-semibold text-[#1A1A1A]">זה טיפול חובה שכל לקוחה צריכה.</p>
+            <p className="font-semibold text-[#1A1A1A]">וכל פעם שלא הצעתי - הפסדתי עוד 100 שקל מהתור.</p>
           </motion.div>
           <motion.div variants={fadeUp} className="text-center py-6 border-t border-[#D4C5B5]">
             <p className="text-[#5C4A3A] text-xl italic leading-relaxed">
