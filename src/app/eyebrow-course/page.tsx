@@ -618,6 +618,36 @@ export default function EyebrowCoursePage() {
         </motion.div>
       </section>
 
+      {/* ─── BONUSES ─── */}
+      <section className="bg-[#EFE5DC] py-12 px-5 relative overflow-hidden">
+        <motion.div className="max-w-3xl mx-auto relative z-10" initial="hidden" whileInView="visible" viewport={{ once: true }} variants={stagger}>
+          <motion.p variants={fadeUp} className="text-center text-[#8B7355] text-xs uppercase tracking-[4px] mb-3">ועוד לא הכל</motion.p>
+          <motion.h2 variants={fadeUp} className="text-3xl sm:text-4xl font-extrabold text-center text-[#1A1A1A] mb-2">3 בונוסים מתנה</motion.h2>
+          <motion.p variants={fadeUp} className="text-center text-[#C49A8A] font-semibold text-lg mb-1">שווי 597 שקל, שלך בחינם</motion.p>
+          <motion.p variants={fadeUp} className="text-center text-[#8B7355] text-sm mb-8">כשאת רוכשת היום</motion.p>
+          <div className="space-y-4">
+            {bonuses.map((b, i) => (
+              <motion.div key={i} variants={fadeUp}
+                className="relative border border-[#D4C5B5] rounded-2xl overflow-hidden flex items-stretch bg-white shadow-sm"
+                whileHover={{ scale: 1.01 }} transition={{ duration: 0.2 }}>
+                <div className="relative flex-shrink-0 w-20 h-20 self-center overflow-hidden">
+                  <img src={b.img} alt={b.name} className="w-full h-full object-cover" loading="lazy" />
+                </div>
+                <div className="flex-1 p-4 text-center">
+                  <span className="text-[#C49A8A] text-xs font-bold tracking-wider">בונוס {i + 1}</span>
+                  <h3 className="font-bold text-base text-[#1A1A1A] mt-0.5 mb-1">{b.name}</h3>
+                  <p className="text-[#5C4A3A] text-xs leading-relaxed mb-2">{b.desc}</p>
+                  <div className="flex items-center justify-end gap-2">
+                    <span className="bg-green-100 text-green-700 text-xs font-bold px-2 py-0.5 rounded-full">חינם</span>
+                    <span className="text-[#8B7355] line-through text-xs">{b.val}</span>
+                  </div>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </motion.div>
+      </section>
+
       {/* ─── TESTIMONIALS ─── */}
       <section className="bg-[#FDFAF7] py-12 px-5">
         <motion.div className="max-w-2xl mx-auto" initial="hidden" whileInView="visible" viewport={{ once: true }} variants={stagger}>
@@ -658,36 +688,6 @@ export default function EyebrowCoursePage() {
             <p>ואם יש לך לקוחות שמסיימות תור ויוצאות ישר לעוד מקום לגבות, כאן תלמדי לעצור את זה. להפוך כל תור קיים למקור הכנסה נוסף, בלי לרדוף אחרי אנשים ובלי לפרסם כל יום.</p>
             <p className="font-semibold text-[#1A1A1A]">הקורס מתחיל מאפס, בנוי לקצב שלך, ונגמר כשאת מוכנה לגבות 80-120 שקל על 15 דקות עבודה, בביטחון מלא.</p>
           </motion.div>
-        </motion.div>
-      </section>
-
-      {/* ─── BONUSES ─── */}
-      <section className="bg-[#EFE5DC] py-12 px-5 relative overflow-hidden">
-        <motion.div className="max-w-3xl mx-auto relative z-10" initial="hidden" whileInView="visible" viewport={{ once: true }} variants={stagger}>
-          <motion.p variants={fadeUp} className="text-center text-[#8B7355] text-xs uppercase tracking-[4px] mb-3">ועוד לא הכל</motion.p>
-          <motion.h2 variants={fadeUp} className="text-3xl sm:text-4xl font-extrabold text-center text-[#1A1A1A] mb-2">3 בונוסים מתנה</motion.h2>
-          <motion.p variants={fadeUp} className="text-center text-[#C49A8A] font-semibold text-lg mb-1">שווי 597 שקל, שלך בחינם</motion.p>
-          <motion.p variants={fadeUp} className="text-center text-[#8B7355] text-sm mb-8">כשאת רוכשת היום</motion.p>
-          <div className="space-y-4">
-            {bonuses.map((b, i) => (
-              <motion.div key={i} variants={fadeUp}
-                className="relative border border-[#D4C5B5] rounded-2xl overflow-hidden flex items-stretch bg-white shadow-sm"
-                whileHover={{ scale: 1.01 }} transition={{ duration: 0.2 }}>
-                <div className="relative flex-shrink-0 w-20 h-20 self-center overflow-hidden">
-                  <img src={b.img} alt={b.name} className="w-full h-full object-cover" loading="lazy" />
-                </div>
-                <div className="flex-1 p-4 text-center">
-                  <span className="text-[#C49A8A] text-xs font-bold tracking-wider">בונוס {i + 1}</span>
-                  <h3 className="font-bold text-base text-[#1A1A1A] mt-0.5 mb-1">{b.name}</h3>
-                  <p className="text-[#5C4A3A] text-xs leading-relaxed mb-2">{b.desc}</p>
-                  <div className="flex items-center justify-end gap-2">
-                    <span className="bg-green-100 text-green-700 text-xs font-bold px-2 py-0.5 rounded-full">חינם</span>
-                    <span className="text-[#8B7355] line-through text-xs">{b.val}</span>
-                  </div>
-                </div>
-              </motion.div>
-            ))}
-          </div>
         </motion.div>
       </section>
 
