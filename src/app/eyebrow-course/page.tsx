@@ -67,7 +67,7 @@ const faqs = [
   { q: 'האם צריך ניסיון קודם?', a: 'לא. הקורס מתחיל מאפס ומלמד הכל מהבסיס. מתאים גם למי שלא נגעה בגבה בחיים.' },
   { q: 'מתי יגיע הקורס?', a: 'תוך דקה אחת מהרכישה יגיע למייל שלך עם שם משתמש וסיסמה אישיים.' },
   { q: 'האם הגישה פגה?', a: 'לא. הקורס זמין לצמיתות, בלי הגבלת זמן. חוזרים כמה פעמים שרוצים.' },
-  { q: 'האם יש החזר כספי?', a: 'כן! ערובה של 14 יום - אם צפית בכל החומר ולא הצלחת ליישם, מחזירים לך את הכסף ללא שאלות.' },
+  { q: 'האם יש החזר כספי?', a: 'כן! אחריות של 14 יום - אם צפית בכל החומר ולא הצלחת ליישם, מחזירים לך את הכסף ללא שאלות.' },
   { q: 'כמה מהר הקורס מחזיר את עצמו?', a: 'טיפול עיצוב גבות מוסיף 80-120₪ ללקוחה. אחרי 2-3 טיפולים בלבד - הקורס כיסה את עצמו. כל השאר? רווח טהור.' },
 ];
 
@@ -264,7 +264,7 @@ export default function EyebrowCoursePage() {
           className="w-full max-w-lg mx-auto flex flex-col items-center justify-center bg-[#C49A8A] text-white py-3 rounded-2xl font-black shadow-xl hover:bg-[#B5897A] transition-colors"
           style={{ display: 'flex' }}>
           <span className="text-xl">הצטרפי עכשיו ב-197₪ בלבד →</span>
-          <span className="text-xs font-normal opacity-80 mt-0.5">✅ ערובה 14 יום | גישה מיידית לצמיתות</span>
+          <span className="text-xs font-normal opacity-80 mt-0.5">✅ אחריות 14 יום | גישה מיידית לצמיתות</span>
         </button>
       </motion.div>
 
@@ -317,7 +317,7 @@ export default function EyebrowCoursePage() {
               className="w-full bg-[#C49A8A] text-white py-4 rounded-2xl font-bold text-xl hover:bg-[#B5897A] transition-colors disabled:opacity-60">
               {loading ? 'מעבירה לתשלום...' : 'אני רוצה להצטרף לקורס →'}
             </button>
-            <p className="text-xs text-gray-400 text-center">🔒 תשלום מאובטח | גישה מיידית | ערובה 14 יום</p>
+            <p className="text-xs text-gray-400 text-center">🔒 תשלום מאובטח | גישה מיידית | אחריות 14 יום</p>
           </motion.form>
         </motion.div>
       </section>
@@ -329,7 +329,7 @@ export default function EyebrowCoursePage() {
           {[
             { icon: '👩‍🎓', value: '427', label: 'תלמידות בוגרות' },
             { icon: '⭐', value: '4.9 / 5', label: 'דירוג ממוצע' },
-            { icon: '🛡️', value: 'ערובה 14 יום', label: 'לא מרוצה? מחזירים' },
+            { icon: '🛡️', value: 'אחריות 14 יום', label: 'לא מרוצה? מחזירים' },
             { icon: '🔒', value: 'תשלום מאובטח', label: 'גישה מיידית לצמיתות' },
           ].map((item, i) => (
             <motion.div key={i} variants={fadeUp} className="flex items-center gap-2">
@@ -586,7 +586,7 @@ export default function EyebrowCoursePage() {
           <motion.div variants={fadeUp} className="bg-[#C49A8A] rounded-2xl p-5">
             <p className="text-white font-semibold mb-3 text-center text-sm uppercase tracking-wide">מה כלול בקורס</p>
             <div className="flex flex-wrap gap-2 justify-center">
-              {['10 שיעורי וידאו', 'גישה לצמיתות', '3 בונוסים', 'תעודת סיום', 'תמיכה', 'ערובה 14 יום'].map((t) => (
+              {['10 שיעורי וידאו', 'גישה לצמיתות', '3 בונוסים', 'תעודת סיום', 'תמיכה', 'אחריות 14 יום'].map((t) => (
                 <span key={t} className="bg-white/20 text-white text-sm px-3 py-1 rounded-full border border-white/30">✅ {t}</span>
               ))}
             </div>
@@ -687,7 +687,7 @@ export default function EyebrowCoursePage() {
             <p className="text-gray-400 line-through text-base mb-1 text-center">שווי מוצהר: 397 שקל</p>
             <p className="text-7xl font-black text-[#1A1A1A] leading-none mb-1 text-center">197₪</p>
             <p className="text-gray-500 text-sm mb-1 text-center">או 2 תשלומים נוחים של 99 שקל</p>
-            <p className="text-[#C49A8A] text-xs font-bold mb-6 text-center">✅ ערובה של 14 יום, לא מרוצה? מקבלת את הכסף חזרה</p>
+            <p className="text-[#C49A8A] text-xs font-bold mb-6 text-center">✅ אחריות של 14 יום, לא מרוצה? מקבלת את הכסף חזרה</p>
             <form onSubmit={e => handleSubmit(e, false)} className="space-y-3">
               <input type="text" required placeholder="שם מלא"
                 value={pricingForm.name} onChange={e => setPricingForm({ ...pricingForm, name: e.target.value })}
@@ -720,7 +720,7 @@ export default function EyebrowCoursePage() {
           <motion.div variants={fadeUp} className="flex items-start gap-4 text-center py-5 mb-4 border-t border-[#E8DDD4]">
             <span className="text-4xl flex-shrink-0">🛡️</span>
             <div>
-              <p className="text-[#C49A8A] font-bold mb-1">ערובה של 14 יום, בלי שאלות</p>
+              <p className="text-[#C49A8A] font-bold mb-1">אחריות של 14 יום, בלי שאלות</p>
               <p className="text-[#5C4A3A] text-sm leading-relaxed">צפי בכל החומר. תרגלי. אם לא הרגשת שהשתפרת, מחזירים לך את הכסף במלואו, ללא שאלות.</p>
             </div>
           </motion.div>
@@ -809,7 +809,7 @@ export default function EyebrowCoursePage() {
               {loading ? 'מעבירה לתשלום...' : 'אני רוצה גישה מיידית לקורס ולהגדיל את הרווחים →'}
             </motion.button>
             <div className="bg-gray-50 border border-[#E8DDD4] rounded-xl px-4 py-3 text-center space-y-1">
-              <p className="text-gray-500 text-xs leading-relaxed">🔒 תשלום מאובטח | גישה מיידית | ערובה 14 יום</p>
+              <p className="text-gray-500 text-xs leading-relaxed">🔒 תשלום מאובטח | גישה מיידית | אחריות 14 יום</p>
             </div>
           </motion.form>
           <motion.p variants={fadeUp} className="text-[#C49A8A] text-center mt-8 font-semibold text-xl">מאמינה בך, טליה</motion.p>
