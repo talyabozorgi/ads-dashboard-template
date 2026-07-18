@@ -253,7 +253,7 @@ export default function EyebrowCoursePage() {
       </a>
 
       {/* ─── URGENT TOP BAR ─── */}
-      <div className="bg-[#FDF5F0] border-b border-[#E8DDD4] text-[#C49A8A] text-center py-2 px-4 text-sm font-bold">
+      <div className="bg-white border-b border-[#E8DDD4] text-[#C49A8A] text-center py-2 px-4 text-sm font-bold">
         ⏱️ מחיר השקה נגמר בעוד: {pad(countdown.m)}:{pad(countdown.s)}, אחרי זה המחיר עולה ל-397₪
       </div>
 
