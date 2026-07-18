@@ -107,13 +107,13 @@ const recentBuyers = ['שירה מתל אביב', 'מיכל מחיפה', 'רונ
 function SocialProofNotification() {
   const [visible, setVisible] = useState(false);
   const [name, setName] = useState('');
-  const [index, setIndex] = useState(0);
+  const indexRef = useRef(0);
   useEffect(() => {
     let timeout: ReturnType<typeof setTimeout>;
     const schedule = (delay: number) => {
       timeout = setTimeout(() => {
-        setName(recentBuyers[index % recentBuyers.length]);
-        setIndex(i => i + 1);
+        setName(recentBuyers[indexRef.current % recentBuyers.length]);
+        indexRef.current += 1;
         setVisible(true);
         setTimeout(() => setVisible(false), 3500 + Math.random() * 1000);
         schedule(18000 + Math.random() * 22000);
@@ -121,7 +121,7 @@ function SocialProofNotification() {
     };
     schedule(7000 + Math.random() * 6000);
     return () => clearTimeout(timeout);
-  }, [index]);
+  }, []);
 
   return (
     <AnimatePresence>
@@ -261,9 +261,10 @@ export default function EyebrowCoursePage() {
       <motion.div className="fixed bottom-0 left-0 right-0 z-50 px-4 pb-4 pt-3 bg-white/95 backdrop-blur border-t border-[#E8DDD4]"
         initial={{ y: 100, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 1.5, duration: 0.4 }}>
         <button onClick={scrollToForm}
-          className="w-full max-w-lg mx-auto flex items-center justify-center gap-3 bg-[#C49A8A] text-white py-4 rounded-2xl font-black text-xl shadow-xl hover:bg-[#B5897A] transition-colors"
+          className="w-full max-w-lg mx-auto flex flex-col items-center justify-center bg-[#C49A8A] text-white py-3 rounded-2xl font-black shadow-xl hover:bg-[#B5897A] transition-colors"
           style={{ display: 'flex' }}>
-          <span>אני רוצה להרוויח יותר מכל לקוחה ✋</span>
+          <span className="text-xl">הצטרפי עכשיו ב-197₪ בלבד →</span>
+          <span className="text-xs font-normal opacity-80 mt-0.5">✅ ערובה 14 יום | גישה מיידית לצמיתות</span>
         </button>
       </motion.div>
 
@@ -309,6 +310,8 @@ export default function EyebrowCoursePage() {
             <p className="font-bold text-[#1A1A1A] text-lg mb-1">מלאי פרטים ותתחילי עכשיו</p>
             <input type="text" required placeholder="שם מלא" value={form.name} onChange={e => setForm({ ...form, name: e.target.value })}
               className="w-full border border-[#E8DDD4] rounded-xl px-4 py-3 text-right focus:border-[#C49A8A] focus:outline-none text-base" />
+            <input type="tel" required placeholder="מספר טלפון" value={form.phone} onChange={e => setForm({ ...form, phone: e.target.value })}
+              className="w-full border border-[#E8DDD4] rounded-xl px-4 py-3 focus:border-[#C49A8A] focus:outline-none text-base" dir="ltr" />
             <input type="email" required placeholder="כתובת מייל" value={form.email} onChange={e => setForm({ ...form, email: e.target.value })}
               className="w-full border border-[#E8DDD4] rounded-xl px-4 py-3 focus:border-[#C49A8A] focus:outline-none text-base" dir="ltr" />
             <button type="submit" disabled={loading}
@@ -416,7 +419,7 @@ export default function EyebrowCoursePage() {
             {['/brow1.jpg', '/brow2.jpg', '/brow3.jpg', '/brow4.jpg', '/brow5.jpg', '/brow6.jpg'].map((src, i) => (
               <motion.div key={i} variants={fadeUp} className="relative rounded-2xl overflow-hidden shadow-md aspect-square"
                 whileHover={{ scale: 1.03 }} transition={{ duration: 0.2 }}>
-                <img src={src} alt="עיצוב גבות" className="w-full h-full object-cover" />
+                <img src={src} alt="עיצוב גבות" className="w-full h-full object-cover" loading="lazy" />
               </motion.div>
             ))}
           </motion.div>
@@ -483,7 +486,7 @@ export default function EyebrowCoursePage() {
             <motion.div variants={fadeUp} className="flex-shrink-0 relative">
               <div className="absolute inset-0 rounded-full bg-[#C49A8A]/20 blur-2xl scale-110" />
               <div className="relative w-52 h-52 rounded-full border-4 border-[#C49A8A] shadow-2xl overflow-hidden">
-                <img src="/talya-pro.jpg" alt="טליה בוזורגי"
+                <img src="/talya-pro.jpg" alt="טליה בוזורגי" loading="lazy"
                   style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center 15%', transform: 'scale(1.6)', transformOrigin: 'center 20%' }} />
               </div>
             </motion.div>
@@ -507,7 +510,7 @@ export default function EyebrowCoursePage() {
           <motion.div variants={stagger} className="grid grid-cols-2 gap-3">
             {['/kurs1.jpg', '/kurs2.jpg', '/kurs3.jpg', '/kurs4.jpg'].map((src, i) => (
               <motion.div key={i} variants={fadeUp} className="rounded-2xl overflow-hidden aspect-[3/4] shadow-md">
-                <img src={src} alt="מהקורס" className="w-full h-full object-cover" />
+                <img src={src} alt="מהקורס" className="w-full h-full object-cover" loading="lazy" />
               </motion.div>
             ))}
           </motion.div>
@@ -648,7 +651,7 @@ export default function EyebrowCoursePage() {
                 className="relative border border-[#D4C5B5] rounded-2xl overflow-hidden flex items-stretch bg-white shadow-sm"
                 whileHover={{ scale: 1.01 }} transition={{ duration: 0.2 }}>
                 <div className="relative flex-shrink-0 w-20 h-20 self-center overflow-hidden">
-                  <img src={b.img} alt={b.name} className="w-full h-full object-cover" />
+                  <img src={b.img} alt={b.name} className="w-full h-full object-cover" loading="lazy" />
                 </div>
                 <div className="flex-1 p-4 text-center">
                   <span className="text-[#C49A8A] text-xs font-bold tracking-wider">בונוס {i + 1}</span>
@@ -671,7 +674,7 @@ export default function EyebrowCoursePage() {
           <motion.p variants={fadeUp} className="text-[#8B7355] text-sm font-semibold uppercase tracking-wide mb-2">בסיום הקורס</motion.p>
           <motion.h2 variants={fadeUp} className="text-2xl font-extrabold mb-5">תעודת סיום קורס עיצוב גבות</motion.h2>
           <motion.div variants={fadeUp} className="rounded-2xl overflow-hidden shadow-xl border border-[#E8DDD4]">
-            <img src="/cert-eyebrow.png" alt="תעודת סיום קורס עיצוב גבות" className="w-full h-auto" />
+            <img src="/cert-eyebrow.png" alt="תעודת סיום קורס עיצוב גבות" className="w-full h-auto" loading="lazy" />
           </motion.div>
         </motion.div>
       </section>
@@ -750,12 +753,27 @@ export default function EyebrowCoursePage() {
               <motion.div key={i} variants={fadeUp}>
                 <button onClick={() => setOpenFaq(openFaq === i ? null : i)}
                   className="w-full flex items-center justify-between px-2 py-5 text-right font-semibold text-[#1A1A1A] hover:text-[#C49A8A] transition-colors">
-                  <span className="text-[#C49A8A] text-2xl font-light ml-2">{openFaq === i ? '−' : '+'}</span>
+                  <motion.span
+                    className="text-[#C49A8A] text-2xl font-light ml-2"
+                    animate={{ rotate: openFaq === i ? 45 : 0 }}
+                    transition={{ duration: 0.2 }}
+                  >+</motion.span>
                   <span className="flex-1">{f.q}</span>
                 </button>
-                {openFaq === i && (
-                  <div className="px-2 pb-5 text-gray-600 leading-relaxed">{f.a}</div>
-                )}
+                <AnimatePresence>
+                  {openFaq === i && (
+                    <motion.div
+                      key={`faq-${i}`}
+                      initial={{ height: 0, opacity: 0 }}
+                      animate={{ height: 'auto', opacity: 1 }}
+                      exit={{ height: 0, opacity: 0 }}
+                      transition={{ duration: 0.25, ease: 'easeInOut' }}
+                      className="overflow-hidden"
+                    >
+                      <div className="px-2 pb-5 text-gray-600 leading-relaxed">{f.a}</div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
               </motion.div>
             ))}
           </div>
