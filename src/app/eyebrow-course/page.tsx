@@ -405,7 +405,7 @@ export default function EyebrowCoursePage() {
           <motion.div variants={stagger} className="grid grid-cols-2 gap-3 pt-8 border-t border-[#E8DDD4]">
             {[
               { emoji: '🎬', n: '10', l: 'שיעורי וידאו' },
-              { emoji: '💰', n: '70-90₪+', l: 'לכל טיפול' },
+              { emoji: '💰', n: '80-120₪', l: 'לכל טיפול' },
               { emoji: '⚡', n: "15 דק'", l: 'לגבה מושלמת' },
               { emoji: '✨', n: '427', l: 'תלמידות שמרוויחות כפול' },
             ].map((s, i) => (
@@ -457,7 +457,7 @@ export default function EyebrowCoursePage() {
             {[
               { n: '①', title: 'רוכשת', desc: 'גישה מיידית לכל 10 השיעורים ו-3 הבונוסים. מהנייד, מהבית, בלי לצאת לשום מקום.' },
               { n: '②', title: 'לומדת בקצב שלך', desc: 'שיעורי וידאו קצרים ומדויקים. תרגלי על עצמך או על חברה, ותרגישי בטוחה תוך ימים ספורים.' },
-              { n: '③', title: 'מתחילה להרוויח', desc: 'מציעה גבות ללקוחות שכבר מגיעות אלייך. 70-90₪ לטיפול של 15 דקות, מהיום הראשון.' },
+              { n: '③', title: 'מתחילה להרוויח', desc: 'מציעה גבות ללקוחות שכבר מגיעות אלייך. 80-120₪ לטיפול של 15 דקות, מהיום הראשון.' },
             ].map((step, i) => (
               <motion.div key={i} variants={fadeUp} className="text-center">
                 <div className="text-5xl font-black text-[#C49A8A] mb-4 leading-none">{step.n}</div>
@@ -535,20 +535,33 @@ export default function EyebrowCoursePage() {
           <motion.p variants={fadeUp} className="text-center text-[#8B7355] font-semibold mb-6">מה את מקבלת בפנים?</motion.p>
 
           {/* כרטיס ערך */}
-          <motion.div variants={fadeUp} className="bg-[#1A1A1A] rounded-2xl p-5 mb-6">
-            <p className="text-[#C49A8A] text-xs uppercase tracking-widest text-center mb-4">מה שמקבלת בקורס</p>
-            <div className="grid grid-cols-3 gap-2 mb-4">
-              {[{ n: '10', l: 'שיעורי וידאו' }, { n: '3', l: 'בונוסים מתנה' }, { n: '∞', l: 'גישה לצמיתות' }].map((s, i) => (
-                <div key={i} className="text-center bg-white/5 rounded-xl py-3">
-                  <p className="text-3xl font-black text-white">{s.n}</p>
-                  <p className="text-[#C49A8A] text-xs mt-0.5">{s.l}</p>
+          <motion.div variants={fadeUp} className="relative rounded-3xl overflow-hidden mb-6 shadow-2xl">
+            {/* רקע gradient */}
+            <div className="absolute inset-0 bg-gradient-to-br from-[#1A1A1A] via-[#2A1F1A] to-[#1A1A1A]" />
+            <div className="absolute inset-0 opacity-10" style={{ backgroundImage: 'radial-gradient(circle at 20% 50%, #C49A8A 0%, transparent 60%), radial-gradient(circle at 80% 20%, #C49A8A 0%, transparent 50%)' }} />
+            <div className="relative p-7">
+              <p className="text-[#C49A8A] text-xs uppercase tracking-[4px] text-center mb-6 font-semibold">מה שמקבלת בקורס</p>
+              <div className="grid grid-cols-3 gap-3 mb-7">
+                {[
+                  { n: '10', l: 'שיעורי וידאו', icon: '🎬' },
+                  { n: '3', l: 'בונוסים מתנה', icon: '🎁' },
+                  { n: '∞', l: 'גישה לצמיתות', icon: '♾️' },
+                ].map((s, i) => (
+                  <div key={i} className="text-center bg-white/8 backdrop-blur rounded-2xl py-4 px-2 border border-white/10">
+                    <span className="text-2xl mb-1 block">{s.icon}</span>
+                    <p className="text-4xl font-black text-white leading-none">{s.n}</p>
+                    <p className="text-[#C49A8A] text-xs mt-1.5 leading-tight font-medium">{s.l}</p>
+                  </div>
+                ))}
+              </div>
+              <div className="border-t border-white/10 pt-5 flex flex-col items-center gap-2">
+                <p className="text-gray-500 line-through text-sm">שווי: 2,100 ₪</p>
+                <div className="flex items-center gap-3">
+                  <p className="text-white font-black text-5xl">197₪</p>
+                  <span className="bg-[#C49A8A] text-white text-sm px-4 py-1.5 rounded-full font-bold">חסכון 91%</span>
                 </div>
-              ))}
-            </div>
-            <div className="flex items-center justify-center gap-4 border-t border-white/10 pt-4 flex-wrap">
-              <p className="text-gray-500 line-through text-sm">שווי: 2,100 ₪</p>
-              <p className="text-white font-black text-3xl">197 ₪</p>
-              <span className="bg-[#C49A8A] text-white text-xs px-3 py-1 rounded-full font-bold">חסכון של 91%</span>
+                <p className="text-gray-500 text-xs mt-1">או 2 תשלומים של 99₪</p>
+              </div>
             </div>
           </motion.div>
 
@@ -643,7 +656,7 @@ export default function EyebrowCoursePage() {
             <p>אם את מניקוריסטית עם לקוחות קבועות אבל ההכנסה תקועה באותה נקודה כבר חודשים, זה בדיוק בשבילך. לא צריך לקוחות חדשות. צריך שירות נוסף ללקוחות שכבר מגיעות אלייך.</p>
             <p>אם ניסית ללמוד גבות בעבר ויצא לא ישר, לא בטוח, לא מקצועי, שיטת הקוויק נבנתה בדיוק בשבילך. תוצאה נכונה כבר מהפעם הראשונה, בלי ניחושים ובלי טעויות.</p>
             <p>ואם יש לך לקוחות שמסיימות תור ויוצאות ישר לעוד מקום לגבות, כאן תלמדי לעצור את זה. להפוך כל תור קיים למקור הכנסה נוסף, בלי לרדוף אחרי אנשים ובלי לפרסם כל יום.</p>
-            <p className="font-semibold text-[#1A1A1A]">הקורס מתחיל מאפס, בנוי לקצב שלך, ונגמר כשאת מוכנה לגבות 70-90 שקל על 15 דקות עבודה, בביטחון מלא.</p>
+            <p className="font-semibold text-[#1A1A1A]">הקורס מתחיל מאפס, בנוי לקצב שלך, ונגמר כשאת מוכנה לגבות 80-120 שקל על 15 דקות עבודה, בביטחון מלא.</p>
           </motion.div>
         </motion.div>
       </section>
