@@ -371,7 +371,7 @@ export default function EyebrowCoursePage() {
             {[
               { icon: '💰', title: 'חומרים בגרושים', desc: 'עלות החומרים לטיפול (קצת שעווה, חוט או צבע) היא פחות מ-3 שקלים ללקוחה. המשמעות: 98% מהכסף הולך ישר אלייך לכיס.' },
               { icon: '⚡', title: 'אפס זמן מבוזבז', desc: 'זה לוקח לך בסך הכל עוד 15-20 דקות בזמן שהלקוחה כבר אצלך בקליניקה. לא עוד תור, לא עוד נסיעה.' },
-              { icon: '🔄', title: 'תדר חזרה של שעון שוויצרי', desc: 'לקוחה לא יכולה להזניח את הגבות שלה. היא תחזור אלייך מדי 3-4 שבועות כמו שעון, בלי שתצטרכי לשלוח אפילו הודעה אחת.' },
+              { icon: '🔄', title: 'טיפול קבוע אחת לחודש', desc: 'לקוחה לא יכולה להזניח את הגבות שלה. היא תחזור אלייך כל חודש, בלי שתצטרכי לשלוח אפילו הודעה אחת.' },
             ].map((item, i) => (
               <motion.div key={i} variants={fadeUp} className="bg-white rounded-2xl p-5 flex items-start gap-4 shadow-sm border border-[#E8DDD4]">
                 <span className="text-3xl flex-shrink-0">{item.icon}</span>
@@ -383,7 +383,7 @@ export default function EyebrowCoursePage() {
             ))}
           </motion.div>
           <motion.div variants={fadeUp} className="text-center text-[#5C4A3A] text-lg leading-loose px-2">
-            <p>אז במקום שהיא תעשה אצלך לק או טיפול פנים, ואז תלך למעצבת גבות אחרת ותשאיר אצלה את הכסף... <strong className="text-[#1A1A1A]">הגיע הזמן שהיא תעשה את הכל במקום אחד, אצלך.</strong></p>
+            <p>אז במקום שהיא תעשה אצלך טיפול, ואז תלך למעצבת גבות אחרת ותשאיר אצלה את הכסף... <strong className="text-[#1A1A1A]">הגיע הזמן שהיא תעשה את הכל במקום אחד, אצלך.</strong></p>
           </motion.div>
         </motion.div>
       </section>
