@@ -398,12 +398,18 @@ export default function EyebrowCoursePage() {
             <p>המדריך המלא שלוקח אותך מאפס ניסיון למקצוענית גבות שיודעת לייצר כסף מכל פגישה.</p>
             <p>שרטוט נכון, התאמה למבנה הפנים, עבודה נקייה עם שעווה, פינצטה וצבע – לצד הכלים השיווקיים שיגרמו ללקוחות שלך לבקש את השירות הזה בעצמן. <strong className="text-[#1A1A1A]">הכל מוקלט שלב אחר שלב, עם גישה פתוחה לכל החיים.</strong></p>
           </motion.div>
-          <motion.div variants={fadeUp} className="grid grid-cols-2 sm:grid-cols-4 border-t border-[#E8DDD4] pt-8">
-            {[{ n: '10', l: 'שיעורי וידאו' }, { n: '+70-90₪', l: 'לכל טיפול' }, { n: "15 דק'", l: 'לגבה מושלמת' }, { n: '427', l: 'תלמידות' }].map((s, i) => (
-              <div key={i} className="text-center py-4 px-2">
-                <p className="text-3xl font-black text-[#C49A8A]">{s.n}</p>
-                <p className="text-[#5C4A3A] text-xs mt-1 leading-tight">{s.l}</p>
-              </div>
+          <motion.div variants={stagger} className="grid grid-cols-2 gap-3 pt-8 border-t border-[#E8DDD4]">
+            {[
+              { n: '10', l: 'שיעורי וידאו' },
+              { n: '70-90₪+', l: 'לכל טיפול' },
+              { n: "15 דק'", l: 'לגבה מושלמת' },
+              { n: '427', l: 'תלמידות בוגרות' },
+            ].map((s, i) => (
+              <motion.div key={i} variants={fadeUp}
+                className={`rounded-2xl p-6 text-center ${i % 2 === 0 ? 'bg-[#1A1A1A]' : 'bg-[#C49A8A]'}`}>
+                <p className="text-5xl font-black text-white leading-none mb-2">{s.n}</p>
+                <p className={`font-semibold text-sm ${i % 2 === 0 ? 'text-[#C49A8A]' : 'text-white/90'}`}>{s.l}</p>
+              </motion.div>
             ))}
           </motion.div>
         </motion.div>
