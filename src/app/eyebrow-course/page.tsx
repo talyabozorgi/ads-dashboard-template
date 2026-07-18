@@ -404,15 +404,17 @@ export default function EyebrowCoursePage() {
           </motion.div>
           <motion.div variants={stagger} className="grid grid-cols-2 gap-3 pt-8 border-t border-[#E8DDD4]">
             {[
-              { n: '10', l: 'שיעורי וידאו' },
-              { n: '70-90₪+', l: 'לכל טיפול' },
-              { n: "15 דק'", l: 'לגבה מושלמת' },
-              { n: '427', l: 'תלמידות בוגרות' },
+              { emoji: '🎬', n: '10', l: 'שיעורי וידאו' },
+              { emoji: '💰', n: '70-90₪+', l: 'לכל טיפול' },
+              { emoji: '⚡', n: "15 דק'", l: 'לגבה מושלמת' },
+              { emoji: '✨', n: '427', l: 'תלמידות שמרוויחות כפול' },
             ].map((s, i) => (
               <motion.div key={i} variants={fadeUp}
-                className={`rounded-2xl p-6 text-center ${i % 2 === 0 ? 'bg-[#1A1A1A]' : 'bg-[#C49A8A]'}`}>
-                <p className="text-5xl font-black text-white leading-none mb-2">{s.n}</p>
-                <p className={`font-semibold text-sm ${i % 2 === 0 ? 'text-[#C49A8A]' : 'text-white/90'}`}>{s.l}</p>
+                whileHover={{ scale: 1.03 }} transition={{ duration: 0.2 }}
+                className={`rounded-2xl p-5 text-center flex flex-col items-center justify-center gap-1 ${i % 2 === 0 ? 'bg-[#1A1A1A]' : 'bg-[#C49A8A]'}`}>
+                <span className="text-3xl">{s.emoji}</span>
+                <p className="text-4xl font-black text-white leading-none">{s.n}</p>
+                <p className={`font-semibold text-xs leading-snug ${i % 2 === 0 ? 'text-[#C49A8A]' : 'text-white/90'}`}>{s.l}</p>
               </motion.div>
             ))}
           </motion.div>
