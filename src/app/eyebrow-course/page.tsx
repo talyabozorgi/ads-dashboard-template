@@ -351,7 +351,7 @@ export default function EyebrowCoursePage() {
       <section className="bg-[#FDFAF7] py-12 px-5">
         <motion.div className="max-w-3xl mx-auto" initial="hidden" whileInView="visible" viewport={{ once: true }} variants={stagger}>
           <motion.h2 variants={fadeUp} className="text-2xl sm:text-3xl font-bold text-center mb-6">
-            השקר של עולם הביוטי: "כדי להרוויח יותר, את חייבת עוד לקוחות ועוד שעות על הרגליים"
+            השקר של עולם הביוטי: "כדי להרוויח יותר, את חייבת עוד לקוחות ויומן מלא"
           </motion.h2>
           <motion.div variants={fadeUp} className="text-center leading-loose space-y-4 text-[#5C4A3A] text-lg px-2">
             <p className="font-bold text-[#1A1A1A]">בואי נודה באמת. את קורעת את הגב.</p>
