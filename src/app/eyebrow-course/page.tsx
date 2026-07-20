@@ -648,29 +648,11 @@ export default function EyebrowCoursePage() {
       {/* ─── TESTIMONIALS ─── */}
       <section className="bg-[#FDFAF7] py-12 px-5">
         <motion.div className="max-w-2xl mx-auto" initial="hidden" whileInView="visible" viewport={{ once: true }} variants={stagger}>
-          <motion.p variants={fadeUp} className="text-center text-[#8B7355] text-sm uppercase tracking-wide font-semibold mb-2">עדויות</motion.p>
           <motion.h2 variants={fadeUp} className="text-3xl font-extrabold text-center mb-2">מה הן כותבות אחרי הקורס</motion.h2>
-          <motion.div variants={fadeUp} className="w-16 h-1 bg-[#C49A8A] mx-auto rounded-full mt-3 mb-10" />
-          <div className="space-y-5">
-            {testimonials.map((t, i) => (
-              <motion.div key={i} variants={fadeUp} className="flex justify-end items-end gap-2">
-                <div className="relative max-w-xs sm:max-w-sm bg-[#DCF8C6] px-4 py-3 shadow-sm"
-                  style={{ borderRadius: '18px 18px 4px 18px' }}>
-                  <p className="text-[#1A1A1A] text-sm leading-relaxed text-right">{t.quote}</p>
-                  <p className="text-gray-400 text-xs mt-1 text-left">{t.time} ✓✓</p>
-                </div>
-                <div className="flex flex-col items-center gap-1 flex-shrink-0 order-first">
-                  <div className="w-10 h-10 rounded-full bg-[#C49A8A] border-2 border-white flex items-center justify-center font-bold text-white shadow">
-                    {t.name[0]}
-                  </div>
-                  <span className="text-[10px] text-gray-600">{t.name}</span>
-                </div>
-              </motion.div>
-            ))}
-          </div>
-          <motion.p variants={fadeUp} className="text-center text-[#8B7355] mt-10 text-base">
-            הודעות אמיתיות מתלמידות. לא פרסומת. תוצאות.
-          </motion.p>
+          <motion.div variants={fadeUp} className="w-16 h-1 bg-[#C49A8A] mx-auto rounded-full mt-3 mb-8" />
+          <motion.div variants={fadeUp}>
+            <img src="/testimonials.png" alt="המלצות תלמידות על הקורס" className="w-full rounded-2xl shadow-lg" loading="lazy" />
+          </motion.div>
         </motion.div>
       </section>
 
