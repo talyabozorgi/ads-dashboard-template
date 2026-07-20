@@ -573,50 +573,44 @@ export default function EyebrowCoursePage() {
             </div>
           </motion.div>
 
-          {/* מודולים */}
-          <motion.div variants={stagger} className="space-y-4 mb-6">
-            {[
-              {
-                num: 'מודול 1',
-                val: '700 ₪',
-                title: 'אדריכלות ופיצוח מבנה הפנים',
-                desc: 'איך ליצור את המסגרת המושלמת לכל לקוחה בלי לפשל ובלי להוריד יותר מדי. תצאי מהמודול הזה עם עין מקצועית ויד בטוחה.',
-              },
-              {
-                num: 'מודול 2',
-                val: '900 ₪',
-                title: 'טכניקות העבודה של המקצועניות',
-                desc: 'הסרת שיער מדויקת בשעווה ופינצטה, וטכניקות צביעה עמידות שמשדרגות כל גבה. הידע שלוקח שנים לצבור, בשיעורים קצרים וממוקדים.',
-              },
-            ].map((mod, i) => (
-              <motion.div key={i} variants={fadeUp} className="bg-white rounded-2xl p-5 flex items-start gap-4 shadow-sm border border-[#E8DDD4]">
-                <div className="flex-shrink-0 text-center">
-                  <div className="bg-[#C49A8A] text-white text-xs font-bold px-3 py-1 rounded-full mb-1">{mod.num}</div>
-                  <div className="text-[#8B7355] text-xs line-through">שווי {mod.val}</div>
-                </div>
-                <div className="text-right flex-1">
-                  <h3 className="font-bold text-[#1A1A1A] text-lg mb-1">{mod.title}</h3>
-                  <p className="text-[#5C4A3A] text-sm leading-relaxed">{mod.desc}</p>
-                </div>
-              </motion.div>
-            ))}
-
-            {/* בונוס מיוחד */}
-            <motion.div variants={fadeUp} className="bg-gradient-to-l from-[#C49A8A] to-[#B5897A] rounded-2xl p-5 flex items-start gap-4 shadow-md">
-              <div className="flex-shrink-0 text-center">
-                <div className="bg-white text-[#C49A8A] text-xs font-bold px-3 py-1 rounded-full mb-1">בונוס מיוחד</div>
-                <div className="text-white/70 text-xs line-through">שווי 500 ₪</div>
-              </div>
-              <div className="text-right flex-1">
-                <h3 className="font-bold text-white text-lg mb-1">נוסחת "על הדרך"</h3>
-                <p className="text-white/90 text-sm leading-relaxed">איך להציע את השירות ללקוחות הציפורניים או הקוסמטיקה הקיימות שלך, כך ש-7 מתוך 10 לקוחות יגידו "יאללה, תעשי לי גם גבות היום".</p>
-              </div>
+          {/* שיעורי הקורס */}
+          <motion.div variants={fadeUp} className="mb-4">
+            <h3 className="text-xl font-bold text-center text-[#1A1A1A] mb-5">מה תלמדי בקורס?</h3>
+            <motion.div variants={stagger} className="space-y-3">
+              {[
+                'הכרת מבנה הגבה ועבודה נכונה לפי נקודות A-B-C',
+                'התאמת מבנה וצורת הגבה לכל מבנה פנים',
+                'היכרות עם הציוד המקצועי לעיצוב גבות ושימוש נכון בכל כלי',
+                'טכניקות עבודה נכונות עם חוט, פינצטה ומספריים',
+                'היכרות עם סוגי השעוות השונים ואופן העבודה איתם',
+                'צביעת גבות - התאמת הגוון ועבודה נכונה לקבלת תוצאה טבעית ומחמיאה',
+                'שיקום גבות - איך לעבוד נכון עם גבות שדורשות תיקון ולעזור ליצור מראה מלא ומאוזן',
+                'שיעורים מוקלטים של טיפולים מלאים - שלב אחר שלב עם הסברים מפורטים לאורך כל הטיפול',
+              ].map((lesson, i) => (
+                <motion.div key={i} variants={fadeUp}
+                  className="bg-white rounded-2xl px-5 py-4 flex items-center gap-4 shadow-sm border border-[#E8DDD4] text-right">
+                  <div className="flex-shrink-0 w-8 h-8 rounded-full bg-[#C49A8A] flex items-center justify-center text-white font-black text-sm">
+                    {i + 1}
+                  </div>
+                  <p className="text-[#1A1A1A] text-sm leading-relaxed flex-1">{lesson}</p>
+                </motion.div>
+              ))}
             </motion.div>
           </motion.div>
 
-          <motion.div variants={fadeUp} className="w-16 h-1 bg-[#C49A8A] mx-auto rounded-full my-4" />
+          {/* הטבה בלעדית */}
+          <motion.div variants={fadeUp} className="bg-gradient-to-l from-[#1A1A1A] to-[#2A1F1A] rounded-2xl p-5 mb-4 border border-[#C49A8A]/30">
+            <div className="flex items-start gap-3 text-right">
+              <span className="text-2xl flex-shrink-0">🎁</span>
+              <div>
+                <p className="text-[#C49A8A] font-bold text-sm mb-1">הטבה בלעדית לתלמידות הקורס</p>
+                <p className="text-white text-sm leading-relaxed">אפשרות לרכוש ערכת עבודה מקצועית במחיר מוזל - הציוד שתצטרכי להתחיל לעבוד מיד.</p>
+              </div>
+            </div>
+          </motion.div>
+
           <motion.div variants={fadeUp} className="bg-[#C49A8A] rounded-2xl p-5">
-            <p className="text-white font-semibold mb-3 text-center text-sm uppercase tracking-wide">מה כלול בקורס</p>
+            <p className="text-white font-semibold mb-3 text-center text-sm">כלול בקורס</p>
             <div className="flex flex-wrap gap-2 justify-center">
               {['10 שיעורי וידאו', 'גישה לצמיתות', '3 בונוסים', 'תעודת סיום', 'תמיכה', 'אחריות 14 יום'].map((t) => (
                 <span key={t} className="bg-white/20 text-white text-sm px-3 py-1 rounded-full border border-white/30">✅ {t}</span>
