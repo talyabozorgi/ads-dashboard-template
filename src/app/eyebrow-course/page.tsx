@@ -393,9 +393,16 @@ export default function EyebrowCoursePage() {
       {/* ─── MECHANISM ─── */}
       <section className="bg-white py-12 px-5">
         <motion.div className="max-w-3xl mx-auto" initial="hidden" whileInView="visible" viewport={{ once: true }} variants={stagger}>
-          <motion.h2 variants={fadeUp} className="text-2xl sm:text-4xl font-bold text-center mb-8">
-            הקורס הדיגיטלי הפרקטי לעיצוב, פיסול ושיקום גבות
-          </motion.h2>
+          <motion.div variants={fadeUp} className="text-center mb-8">
+            <div className="inline-block relative">
+              <div className="absolute -inset-1 bg-gradient-to-l from-[#C49A8A]/30 via-[#C49A8A]/10 to-[#C49A8A]/30 blur-xl rounded-3xl" />
+              <h2 className="relative text-3xl sm:text-5xl font-extrabold text-[#1A1A1A] leading-tight px-4 py-2">
+                הקורס הדיגיטלי הפרקטי
+                <br />
+                <span className="text-[#C49A8A]">לעיצוב, פיסול ושיקום גבות</span>
+              </h2>
+            </div>
+          </motion.div>
           <motion.div variants={fadeUp} className="text-center text-[#5C4A3A] text-lg leading-loose space-y-4 px-2 mb-10">
             <p>המדריך המלא שלוקח אותך מאפס ניסיון למקצוענית גבות שיודעת לייצר כסף מכל פגישה.</p>
             <p>שרטוט נכון, התאמה למבנה הפנים, עבודה נקייה עם שעווה, פינצטה וצבע – לצד הכלים השיווקיים שיגרמו ללקוחות שלך לבקש את השירות הזה בעצמן. <strong className="text-[#1A1A1A]">הכל מוקלט שלב אחר שלב, עם גישה פתוחה לכל החיים.</strong></p>
