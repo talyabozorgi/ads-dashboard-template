@@ -677,7 +677,7 @@ export default function EyebrowCoursePage() {
       {/* ─── FOR WHO ─── */}
       <section className="bg-[#F5EDE5] py-12 px-5">
         <motion.div className="max-w-3xl mx-auto" initial="hidden" whileInView="visible" viewport={{ once: true }} variants={stagger}>
-          <motion.h2 variants={fadeUp} className="text-2xl sm:text-4xl font-bold text-center mb-8">זה בשבילך?</motion.h2>
+          <motion.h2 variants={fadeUp} className="text-2xl sm:text-4xl font-bold text-center mb-8">האם זה בשבילך?</motion.h2>
           <motion.div variants={fadeUp} className="text-center text-[#5C4A3A] text-lg leading-loose space-y-5 px-2">
             <p>אם את מניקוריסטית עם לקוחות קבועות אבל ההכנסה תקועה באותה נקודה כבר חודשים, זה בדיוק בשבילך. לא צריך לקוחות חדשות. צריך שירות נוסף ללקוחות שכבר מגיעות אלייך.</p>
             <p>אם ניסית ללמוד גבות בעבר ויצא לא ישר, לא בטוח, לא מקצועי, שיטת הקוויק נבנתה בדיוק בשבילך. תוצאה נכונה כבר מהפעם הראשונה, בלי ניחושים ובלי טעויות.</p>
