@@ -477,6 +477,9 @@ export default function EyebrowCoursePage() {
       <section className="bg-[#F5EDE5] py-12 px-5">
         <motion.div className="max-w-2xl mx-auto" initial="hidden" whileInView="visible" viewport={{ once: true }} variants={stagger}>
           <motion.h2 variants={fadeUp} className="text-2xl sm:text-4xl font-bold text-center mb-8">גם אני הייתי שם.</motion.h2>
+          <motion.div variants={fadeUp} className="flex justify-center mb-8">
+            <img src="/talya-frustrated.png" alt="טליה" className="w-64 sm:w-80 rounded-2xl shadow-lg object-cover" loading="lazy" />
+          </motion.div>
           <motion.div variants={fadeUp} className="text-center text-[#5C4A3A] text-lg leading-relaxed space-y-3 mb-6 px-2">
             <p>התחלתי כמניקוריסטית.</p>
             <p>שעות ארוכות, מחירים שלא זזים, ותחושה שאני עובדת קשה מבלי לראות את זה בחשבון הבנק.</p>
