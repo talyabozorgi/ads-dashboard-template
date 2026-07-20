@@ -480,7 +480,7 @@ export default function EyebrowCoursePage() {
           <motion.div variants={fadeUp} className="text-center text-[#5C4A3A] text-lg leading-relaxed space-y-3 mb-6 px-2">
             <p>התחלתי כמניקוריסטית.</p>
             <p>שעות ארוכות, מחירים שלא זזים, ותחושה שאני עובדת קשה מבלי לראות את זה בחשבון הבנק.</p>
-            <p>אחרי שלקוחות רבות שאלו אותי אם אני עושה גבות - הבנתי שזה הדרך ויומן מלא.</p>
+            <p>אחרי שלקוחות רבות שאלו אותי אם אני עושה גבות - הבנתי שזה הדרך להכפלת הכנסה.</p>
             <p className="font-semibold text-[#1A1A1A]">מאותו רגע הבנתי: כל פעם שלקוחה יוצאת ושואלת אותי אם אני מכירה מעצבת גבות - זה לא סתם שאלה.</p>
             <p className="font-semibold text-[#1A1A1A]">זה טיפול חובה שכל לקוחה צריכה.</p>
             <p className="font-semibold text-[#1A1A1A]">וכל פעם שלא הצעתי - הפסדתי עוד 100 שקל מהתור.</p>
