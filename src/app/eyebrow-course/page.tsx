@@ -359,18 +359,94 @@ export default function EyebrowCoursePage() {
       </section>
 
       {/* ─── PROBLEM ─── */}
-      <section className="bg-[#FDFAF7] py-12 px-5">
-        <motion.div className="max-w-3xl mx-auto" initial="hidden" whileInView="visible" viewport={{ once: true }} variants={stagger}>
-          <motion.h2 variants={fadeUp} className="text-2xl sm:text-3xl font-bold text-center mb-6">
-            השקר של עולם הביוטי: "כדי להרוויח יותר, את חייבת עוד לקוחות ויומן מלא"
-          </motion.h2>
-          <motion.div variants={fadeUp} className="text-center leading-loose space-y-4 text-[#5C4A3A] text-lg px-2">
-            <p className="font-bold text-[#1A1A1A]">בואי נודה באמת. את קורעת את הגב.</p>
-            <p>את עובדת שעות על גבי שעות, לקוחה אחרי לקוחה, מהבוקר עד הלילה.</p>
-            <p>את מרגישה שהגעת לתקרת זכוכית ושאת לא יכולה להכניס יותר כסף מהזמן הנוכחי שלך.</p>
-            <p className="font-bold text-[#1A1A1A]">המחשבה האוטומטית שלך היא: "אני צריכה עוד לקוחות חדשות". אבל זו טעות שמביאה אותך לשחיקה ולא להגדלת הכנסה אמיתית.</p>
-            <p className="text-[#8B7355]">בשביל להרוויח עוד כמה אלפי שקלים נקיים בחודש, את לא צריכה לרוץ אחרי לקוחות חדשות באינסטגרם או להוציא כסף על שיווק ממומן. את פשוט צריכה להציע שירות משלים ומהיר ללקוחות שכבר יושבות אצלך על הכיסא.</p>
+      <section className="bg-[#FDFAF7] py-14 px-5">
+        <motion.div className="max-w-2xl mx-auto" initial="hidden" whileInView="visible" viewport={{ once: true }} variants={stagger}>
+
+          {/* כותרת */}
+          <motion.div variants={fadeUp} className="text-center mb-10">
+            <p className="text-[#C49A8A] text-xs uppercase tracking-widest font-semibold mb-3">הבעיה האמיתית</p>
+            <h2 className="text-2xl sm:text-4xl font-extrabold text-[#1A1A1A] leading-tight">
+              ה&ldquo;שקר&rdquo; של עולם הביוטי:
+              <br />
+              <span className="text-[#C49A8A]">כדי להרוויח יותר, את חייבת עוד לקוחות ויומן מלא.</span>
+            </h2>
           </motion.div>
+
+          {/* תיאור הבעיה */}
+          <motion.div variants={fadeUp} className="space-y-4 text-[#5C4A3A] text-lg leading-relaxed mb-8">
+            <p className="font-bold text-[#1A1A1A] text-xl">בואי נודה באמת.</p>
+            <p>את קורעת את הגב.</p>
+            <p>
+              עובדת שעות על גבי שעות,<br />
+              לקוחה אחרי לקוחה,<br />
+              מהבוקר עד הערב.
+            </p>
+            <p>ואז מגיע הרגע שבו את מסתכלת על היומן ואומרת לעצמך:</p>
+          </motion.div>
+
+          {/* מחשבה פנימית */}
+          <motion.div variants={fadeUp} className="bg-[#F5EDE5] border-r-4 border-[#C49A8A] rounded-2xl px-6 py-5 mb-8 text-right">
+            <p className="text-[#1A1A1A] text-lg font-semibold leading-relaxed italic">
+              &ldquo;איך אני אמורה להכניס יותר כסף?<br />
+              אני כבר לא יכולה לעבוד יותר שעות ממה שאני עובדת.&rdquo;
+            </p>
+          </motion.div>
+
+          <motion.div variants={fadeUp} className="space-y-4 text-[#5C4A3A] text-lg leading-relaxed mb-8">
+            <p className="font-bold text-[#1A1A1A]">הגעת לתקרת הזכוכית.</p>
+            <p>כי בעסק שמבוסס רק על הזמן שלך, יש גבול לכמה כסף את יכולה להכניס.</p>
+            <p>והמחשבה האוטומטית היא:</p>
+          </motion.div>
+
+          {/* ציטוט טעות */}
+          <motion.div variants={fadeUp} className="bg-[#F5EDE5] border-r-4 border-[#C49A8A] rounded-2xl px-6 py-5 mb-8">
+            <p className="text-[#1A1A1A] text-lg font-semibold italic">&ldquo;אני צריכה עוד לקוחות חדשות.&rdquo;</p>
+          </motion.div>
+
+          <motion.div variants={fadeUp} className="space-y-4 text-[#5C4A3A] text-lg leading-relaxed mb-8">
+            <p className="font-bold text-[#C49A8A] text-xl">אבל כאן בדיוק נמצאת הטעות.</p>
+            <p>
+              את לא בהכרח צריכה עוד לקוחות.<br />
+              <strong className="text-[#1A1A1A]">את צריכה להרוויח יותר מהלקוחות שכבר בחרו בך.</strong>
+            </p>
+            <p>תחשבי על זה רגע:</p>
+            <p>
+              אם כבר יש לך לקוחה שמגיעה אלייך, סומכת עלייך ומשלמת לך —<br />
+              <strong className="text-[#1A1A1A]">למה שהביקור שלה יסתיים בשירות אחד בלבד?</strong>
+            </p>
+            <p>
+              במקום לרדוף אחרי עוד ועוד לקוחות, את יכולה להוסיף שירות נוסף, מבוקש ורווחי לעסק שכבר בנית.
+            </p>
+            <p className="font-bold text-[#1A1A1A]">וכאן נכנס עיצוב הגבות.</p>
+            <p>
+              שירות שאפשר לשלב בעסק הביוטי שלך, להציע ללקוחות שכבר מגיעות אלייך, ולהגדיל את ההכנסה החודשית שלך —{' '}
+              <span className="text-[#C49A8A] font-black underline underline-offset-4 decoration-2">בלי</span>{' '}
+              להגדיל את כמות הלקוחות שאת צריכה להביא.
+            </p>
+          </motion.div>
+
+          {/* קופסת מתמטיקה */}
+          <motion.div variants={fadeUp} className="bg-[#1A1A1A] rounded-2xl px-6 py-6 text-right">
+            <p className="text-[#C49A8A] text-xs uppercase tracking-widest font-semibold mb-4 text-center">בואי נעשה חשבון פשוט</p>
+            <div className="space-y-3">
+              <div className="flex items-center justify-between bg-white/8 rounded-xl px-4 py-3">
+                <span className="text-[#C49A8A] font-black text-lg">= 2,500 ₪ בחודש</span>
+                <span className="text-white text-sm text-right">לקוחה אחת ביום × 125 ₪ × 20 ימי עבודה</span>
+              </div>
+              <div className="text-center text-[#8B7355] text-sm font-semibold">או</div>
+              <div className="flex items-center justify-between bg-white/8 rounded-xl px-4 py-3">
+                <span className="text-[#C49A8A] font-black text-lg">= 4,000 ₪ בחודש</span>
+                <span className="text-white text-sm text-right">2 לקוחות ביום × 100 ₪ × 20 ימים</span>
+              </div>
+            </div>
+            <p className="text-[#8B7355] text-sm text-center mt-4 leading-relaxed">
+              וזה{' '}
+              <span className="text-[#C49A8A] font-bold underline underline-offset-2">בלי</span>{' '}
+              לדבר בכלל על מאות לקוחות חדשות.<br />
+              רק שירות נוסף ללקוחות שכבר נמצאות אצלך.
+            </p>
+          </motion.div>
+
         </motion.div>
       </section>
 
