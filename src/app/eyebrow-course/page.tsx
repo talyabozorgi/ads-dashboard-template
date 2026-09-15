@@ -148,8 +148,8 @@ function SocialProofNotification() {
 }
 
 export default function EyebrowCoursePage() {
-  const [form, setForm] = useState({ name: '', email: '', phone: '' });
-  const [pricingForm, setPricingForm] = useState({ name: '', email: '', phone: '' });
+  const [form, setForm] = useState({ firstName: '', lastName: '', email: '' });
+  const [pricingForm, setPricingForm] = useState({ firstName: '', lastName: '', email: '' });
   const [openFaq, setOpenFaq] = useState<number | null>(null);
   const [loading, setLoading] = useState(false);
   const [showExitPopup, setShowExitPopup] = useState(false);
@@ -190,30 +190,28 @@ export default function EyebrowCoursePage() {
 
   const scrollToForm = () => document.getElementById('cta-form')?.scrollIntoView({ behavior: 'smooth' });
 
-  function getPurchaseUrl() {
-    return utmRef.current ? `${BASE_PURCHASE_URL}?${utmRef.current}` : BASE_PURCHASE_URL;
-  }
-
   const handleSubmit = async (e: React.FormEvent, isHero = false) => {
     e.preventDefault();
     setLoading(true);
     const data = isHero ? form : pricingForm;
+    const fullName = `${data.firstName} ${data.lastName}`.trim();
     track('Lead', { content_name: 'eyebrow_course', currency: 'ILS', value: 197 });
     track('InitiateCheckout', { content_name: 'eyebrow_course', currency: 'ILS', value: 197 });
     const params = new URLSearchParams(window.location.search);
-    localStorage.setItem('pending_buyer', JSON.stringify({
-      ...data,
-      utm_source: params.get('utm_source') || '',
-      utm_campaign: params.get('utm_campaign') || '',
-      utm_content: params.get('utm_content') || '',
-    }));
     try {
       await fetch('/api/subscribe', {
         method: 'POST', headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ...data, utm_source: params.get('utm_source') || '', utm_campaign: params.get('utm_campaign') || '' }),
+        body: JSON.stringify({ name: fullName, email: data.email, utm_source: params.get('utm_source') || '', utm_campaign: params.get('utm_campaign') || '' }),
       });
     } catch {}
-    window.location.href = getPurchaseUrl();
+    const url = new URL(BASE_PURCHASE_URL);
+    if (utmRef.current) {
+      utmRef.current.split('&').forEach(pair => {
+        const [k, v] = pair.split('=');
+        if (k && v) url.searchParams.set(k, decodeURIComponent(v));
+      });
+    }
+    window.location.href = url.toString();
   };
 
   const pad = (n: number) => String(n).padStart(2, '0');
@@ -281,7 +279,7 @@ export default function EyebrowCoursePage() {
             427 קוסמטיקאיות ומניקוריסטיות כבר למדו את השיטה
           </motion.p>
           <motion.h1 variants={fadeUp} className="text-[#1A1A1A] text-3xl sm:text-5xl font-extrabold leading-tight mb-5">
-            איך גם את יכולה להוסיף בעסק הקיים שלך
+            איך גם את יכולה להוסיף בעסק שלך
             <br />
             <span className="text-[#C49A8A]">עוד 2,500-4,000 ₪ בחודש</span>
             <span className="underline underline-offset-4 decoration-[#C49A8A] whitespace-nowrap"> -בלי אף לקוחה חדשה</span>
@@ -311,10 +309,10 @@ export default function EyebrowCoursePage() {
           <motion.form variants={fadeUp} onSubmit={e => handleSubmit(e, true)}
             className="bg-white rounded-3xl p-6 shadow-xl border border-[#E8DDD4] max-w-md mx-auto space-y-3">
             <p className="font-bold text-[#1A1A1A] text-lg mb-1">מלאי פרטים ותתחילי עכשיו</p>
-            <input type="text" required placeholder="שם מלא" value={form.name} onChange={e => setForm({ ...form, name: e.target.value })}
+            <input type="text" required placeholder="שם פרטי" value={form.firstName} onChange={e => setForm({ ...form, firstName: e.target.value })}
               className="w-full border border-[#E8DDD4] rounded-xl px-4 py-3 text-right focus:border-[#C49A8A] focus:outline-none text-base" />
-            <input type="tel" required placeholder="מספר טלפון" value={form.phone} onChange={e => setForm({ ...form, phone: e.target.value })}
-              className="w-full border border-[#E8DDD4] rounded-xl px-4 py-3 focus:border-[#C49A8A] focus:outline-none text-base" dir="ltr" />
+            <input type="text" required placeholder="שם משפחה" value={form.lastName} onChange={e => setForm({ ...form, lastName: e.target.value })}
+              className="w-full border border-[#E8DDD4] rounded-xl px-4 py-3 text-right focus:border-[#C49A8A] focus:outline-none text-base" />
             <input type="email" required placeholder="כתובת מייל" value={form.email} onChange={e => setForm({ ...form, email: e.target.value })}
               className="w-full border border-[#E8DDD4] rounded-xl px-4 py-3 focus:border-[#C49A8A] focus:outline-none text-base" dir="ltr" />
             <button type="submit" disabled={loading}
@@ -578,21 +576,21 @@ export default function EyebrowCoursePage() {
             <h3 className="text-xl font-bold text-center text-[#1A1A1A] mb-5">מה תלמדי בקורס?</h3>
             <motion.div variants={stagger} className="space-y-3">
               {[
-                'הכרת מבנה הגבה ועבודה נכונה לפי נקודות A-B-C',
-                'התאמת מבנה וצורת הגבה לכל מבנה פנים',
-                'היכרות עם הציוד המקצועי לעיצוב גבות ושימוש נכון בכל כלי',
-                'טכניקות עבודה נכונות עם חוט, פינצטה ומספריים',
-                'היכרות עם סוגי השעוות השונים ואופן העבודה איתם',
-                'צביעת גבות - התאמת הגוון ועבודה נכונה לקבלת תוצאה טבעית ומחמיאה',
-                'שיקום גבות - איך לעבוד נכון עם גבות שדורשות תיקון ולעזור ליצור מראה מלא ומאוזן',
-                'שיעורים מוקלטים של טיפולים מלאים - שלב אחר שלב עם הסברים מפורטים לאורך כל הטיפול',
+                { icon: '📐', text: 'הכרת מבנה הגבה ועבודה נכונה לפי נקודות A-B-C' },
+                { icon: '👤', text: 'התאמת מבנה וצורת הגבה לכל מבנה פנים' },
+                { icon: '🛠️', text: 'היכרות עם הציוד המקצועי לעיצוב גבות ושימוש נכון בכל כלי' },
+                { icon: '✂️', text: 'טכניקות עבודה נכונות עם חוט, פינצטה ומספריים' },
+                { icon: '🧴', text: 'היכרות עם סוגי השעוות השונים ואופן העבודה איתם' },
+                { icon: '🎨', text: 'צביעת גבות - התאמת הגוון ועבודה נכונה לקבלת תוצאה טבעית ומחמיאה' },
+                { icon: '✨', text: 'שיקום גבות - איך לעבוד נכון עם גבות שדורשות תיקון ולעזור ליצור מראה מלא ומאוזן' },
+                { icon: '🎬', text: 'שיעורים מוקלטים של טיפולים מלאים - שלב אחר שלב עם הסברים מפורטים לאורך כל הטיפול' },
               ].map((lesson, i) => (
                 <motion.div key={i} variants={fadeUp}
                   className="bg-white rounded-2xl px-5 py-4 flex items-center gap-4 shadow-sm border border-[#E8DDD4] text-right">
-                  <div className="flex-shrink-0 w-8 h-8 rounded-full bg-[#C49A8A] flex items-center justify-center text-white font-black text-sm">
-                    {i + 1}
+                  <div className="flex-shrink-0 w-10 h-10 rounded-2xl bg-[#F5EDE8] flex items-center justify-center text-xl">
+                    {lesson.icon}
                   </div>
-                  <p className="text-[#1A1A1A] text-sm leading-relaxed flex-1">{lesson}</p>
+                  <p className="text-[#1A1A1A] text-sm leading-relaxed flex-1">{lesson.text}</p>
                 </motion.div>
               ))}
             </motion.div>
@@ -693,21 +691,15 @@ export default function EyebrowCoursePage() {
             <p className="text-gray-500 text-sm mb-1 text-center">או 2 תשלומים נוחים של 99 שקל</p>
             <p className="text-[#C49A8A] text-xs font-bold mb-6 text-center">✅ אחריות של 14 יום, לא מרוצה? מקבלת את הכסף חזרה</p>
             <form onSubmit={e => handleSubmit(e, false)} className="space-y-3">
-              <input type="text" required placeholder="שם מלא"
-                value={pricingForm.name} onChange={e => setPricingForm({ ...pricingForm, name: e.target.value })}
+              <input type="text" required placeholder="שם פרטי"
+                value={pricingForm.firstName} onChange={e => setPricingForm({ ...pricingForm, firstName: e.target.value })}
                 className="w-full border border-[#E8DDD4] rounded-xl px-4 py-3 text-right text-[#1A1A1A] focus:border-[#C49A8A] focus:outline-none text-base" />
-              <input type="tel" required placeholder="מספר טלפון"
-                value={pricingForm.phone} onChange={e => setPricingForm({ ...pricingForm, phone: e.target.value })}
-                className="w-full border border-[#E8DDD4] rounded-xl px-4 py-3 text-[#1A1A1A] focus:border-[#C49A8A] focus:outline-none text-base" dir="ltr" />
+              <input type="text" required placeholder="שם משפחה"
+                value={pricingForm.lastName} onChange={e => setPricingForm({ ...pricingForm, lastName: e.target.value })}
+                className="w-full border border-[#E8DDD4] rounded-xl px-4 py-3 text-right text-[#1A1A1A] focus:border-[#C49A8A] focus:outline-none text-base" />
               <input type="email" required placeholder="כתובת מייל"
                 value={pricingForm.email} onChange={e => setPricingForm({ ...pricingForm, email: e.target.value })}
                 className="w-full border border-[#E8DDD4] rounded-xl px-4 py-3 text-[#1A1A1A] focus:border-[#C49A8A] focus:outline-none text-base" dir="ltr" />
-              <label className="flex items-start gap-2 cursor-pointer">
-                <input type="checkbox" required className="mt-1 flex-shrink-0 accent-[#C49A8A]" />
-                <span className="text-xs text-gray-500 text-right leading-snug">
-                  אני מאשרת קבלת עדכונים, מבצעים ותכנים שיווקיים למייל מטליה בוזורגי. ניתן לבטל בכל עת.
-                </span>
-              </label>
               <motion.button type="submit" disabled={loading}
                 className="w-full bg-[#C49A8A] text-white py-4 rounded-2xl font-bold text-xl hover:bg-[#B5897A] transition-colors mt-2 disabled:opacity-60"
                 whileHover={{ scale: loading ? 1 : 1.02 }} whileTap={{ scale: loading ? 1 : 0.97 }}>
@@ -791,21 +783,15 @@ export default function EyebrowCoursePage() {
           </motion.p>
           <motion.form variants={fadeUp} onSubmit={e => handleSubmit(e, false)}
             className="bg-white rounded-3xl p-8 shadow-2xl space-y-4 border border-[#E8DDD4]">
-            <input type="text" required placeholder="שם מלא"
-              value={pricingForm.name} onChange={e => setPricingForm({ ...pricingForm, name: e.target.value })}
+            <input type="text" required placeholder="שם פרטי"
+              value={pricingForm.firstName} onChange={e => setPricingForm({ ...pricingForm, firstName: e.target.value })}
               className="w-full border border-[#E8DDD4] rounded-xl px-4 py-3 text-right text-[#1A1A1A] focus:border-[#C49A8A] focus:outline-none text-base" />
-            <input type="tel" required placeholder="מספר טלפון"
-              value={pricingForm.phone} onChange={e => setPricingForm({ ...pricingForm, phone: e.target.value })}
-              className="w-full border border-[#E8DDD4] rounded-xl px-4 py-3 text-[#1A1A1A] focus:border-[#C49A8A] focus:outline-none text-base" dir="ltr" />
+            <input type="text" required placeholder="שם משפחה"
+              value={pricingForm.lastName} onChange={e => setPricingForm({ ...pricingForm, lastName: e.target.value })}
+              className="w-full border border-[#E8DDD4] rounded-xl px-4 py-3 text-right text-[#1A1A1A] focus:border-[#C49A8A] focus:outline-none text-base" />
             <input type="email" required placeholder="כתובת מייל"
               value={pricingForm.email} onChange={e => setPricingForm({ ...pricingForm, email: e.target.value })}
               className="w-full border border-[#E8DDD4] rounded-xl px-4 py-3 text-[#1A1A1A] focus:border-[#C49A8A] focus:outline-none text-base" dir="ltr" />
-            <label className="flex items-start gap-2 cursor-pointer">
-              <input type="checkbox" required className="mt-1 flex-shrink-0 accent-[#C49A8A]" />
-              <span className="text-xs text-gray-500 text-right leading-snug">
-                אני מאשרת קבלת עדכונים ותכנים שיווקיים מטליה בוזורגי. ניתן לבטל בכל עת.
-              </span>
-            </label>
             <motion.button type="submit" disabled={loading}
               className="w-full bg-[#C49A8A] text-white py-4 rounded-2xl font-bold text-xl hover:bg-[#B5897A] border-2 border-[#C49A8A] transition-all duration-300 disabled:opacity-60"
               whileHover={{ scale: loading ? 1 : 1.02 }} whileTap={{ scale: loading ? 1 : 0.97 }}>
