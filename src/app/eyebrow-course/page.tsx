@@ -278,17 +278,30 @@ export default function EyebrowCoursePage() {
           <motion.p variants={fadeUp} className="text-[#8B7355] text-sm font-semibold uppercase tracking-widest mb-3">
             427 קוסמטיקאיות ומניקוריסטיות כבר למדו את השיטה
           </motion.p>
-          <motion.h1 variants={fadeUp} className="text-[#1A1A1A] text-3xl sm:text-5xl font-extrabold leading-tight mb-5">
-            איך גם את יכולה להוסיף בעסק שלך
+          <motion.h1 variants={fadeUp} className="text-[#1A1A1A] text-3xl sm:text-5xl font-extrabold leading-tight mb-4">
+            איך להוסיף{' '}
+            <span className="text-[#C49A8A]">2,500–4,000 ₪ בחודש</span>
             <br />
-            <span className="text-[#C49A8A]">עוד 2,500-4,000 ₪ בחודש</span>
-            <span className="underline underline-offset-4 decoration-[#C49A8A] whitespace-nowrap"> -בלי אף לקוחה חדשה</span>
+            לעסק הביוטי שלך — מהלקוחות שכבר אצלך
           </motion.h1>
-          <motion.p variants={fadeUp} className="text-[#5C4A3A] text-lg mb-6 leading-relaxed">
-            הנוסחה המהירה להפיכת הלקוחות שכבר יושבות אצלך
-            <br />
-            <span className="font-semibold text-[#1A1A1A]">למנוי חודשי קבוע לעיצוב ושיקום גבות – קורס דיגיטלי מקיף ופרקטי שיתן לך את כל הכלים להפוך למעצבת גבות מקצועית.</span>
+          <motion.p variants={fadeUp} className="text-[#5C4A3A] text-xl mb-4 leading-relaxed font-medium">
+            ותמשיכי להגדיל את כמות הלקוחות,{' '}
+            <span className="text-[#C49A8A] font-black underline underline-offset-4 decoration-2">בלי</span>{' '}
+            להוציא עוד כסף על פרסום{' '}
+            <span className="text-[#C49A8A] font-black underline underline-offset-4 decoration-2">ובלי</span>{' '}
+            להוסיף שעות עבודה מטורפות.
           </motion.p>
+          <motion.div variants={fadeUp} className="text-[#5C4A3A] text-base leading-relaxed mb-6 space-y-3">
+            <p>
+              אם כבר יש לך עסק בתחום הביוטי ואת מבלה שעות ביצירת לקוחות,<br />
+              <strong className="text-[#1A1A1A]">למה לא להרוויח יותר מכל לקוחה שכבר בחרה להגיע אלייך?</strong>
+            </p>
+            <div className="bg-[#F5EDE5] border border-[#C49A8A]/40 rounded-2xl px-5 py-4 text-center shadow-sm">
+              <p className="text-[#8B7355] text-xs uppercase tracking-widest font-semibold mb-2">תחשבי על זה</p>
+              <p className="text-[#1A1A1A] font-bold text-base">רק 2 טיפולי גבות ביום × 100 ₪ × 20 ימי עבודה</p>
+              <p className="text-[#C49A8A] font-black text-3xl mt-1">= 4,000 ₪ בחודש</p>
+            </div>
+          </motion.div>
 
           <motion.div variants={fadeUp} className="inline-flex flex-col items-center gap-2 bg-white border-2 border-[#C49A8A]/40 rounded-2xl px-8 py-4 mb-6 shadow-md">
             <p className="text-[#8B7355] text-xs tracking-widest uppercase font-semibold">מחיר השקה: 197₪ במקום 397₪, נגמר בעוד</p>
