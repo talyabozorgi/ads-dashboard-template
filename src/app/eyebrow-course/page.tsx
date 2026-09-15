@@ -308,20 +308,12 @@ export default function EyebrowCoursePage() {
             ציוד יקר.
           </motion.p>
 
-          {/* Hero form */}
-          <motion.form variants={fadeUp} onSubmit={e => handleSubmit(e, true)}
-            className="bg-white rounded-3xl p-6 shadow-xl border border-[#E8DDD4] max-w-md mx-auto space-y-3">
-            <p className="font-bold text-[#1A1A1A] text-lg mb-1">מלאי פרטים ותתחילי עכשיו</p>
-            <input type="text" required placeholder="שמך המלא" value={form.name} onChange={e => setForm({ ...form, name: e.target.value })}
-              className="w-full border border-[#E8DDD4] rounded-xl px-4 py-3 text-right focus:border-[#C49A8A] focus:outline-none text-base" />
-            <input type="email" required placeholder="כתובת מייל" value={form.email} onChange={e => setForm({ ...form, email: e.target.value })}
-              className="w-full border border-[#E8DDD4] rounded-xl px-4 py-3 focus:border-[#C49A8A] focus:outline-none text-base" dir="ltr" />
-            <button type="submit" disabled={loading}
-              className="w-full bg-[#C49A8A] text-white py-4 rounded-2xl font-bold text-xl hover:bg-[#B5897A] transition-colors disabled:opacity-60 shadow-lg">
-              {loading ? 'מעבירה לתשלום...' : 'אני רוצה להתחיל להרוויח יותר עכשיו →'}
+          <motion.div variants={fadeUp} className="flex justify-center">
+            <button onClick={scrollToForm}
+              className="bg-[#C49A8A] text-white px-10 py-4 rounded-2xl font-bold text-xl hover:bg-[#B5897A] transition-colors shadow-lg">
+              אני רוצה להתחיל להרוויח יותר עכשיו →
             </button>
-            <p className="text-xs text-gray-400 text-center">🔒 תשלום מאובטח | גישה מיידית | אחריות 14 יום</p>
-          </motion.form>
+          </motion.div>
         </motion.div>
       </section>
 
