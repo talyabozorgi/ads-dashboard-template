@@ -291,11 +291,12 @@ export default function EyebrowCoursePage() {
             לעסק הביוטי שלך — מהלקוחות שכבר אצלך
           </motion.h1>
           <motion.p variants={fadeUp} className="text-[#5C4A3A] text-xl mb-4 leading-relaxed font-medium">
-            ותמשיכי להגדיל את כמות הלקוחות,{' '}
             <span className="text-[#C49A8A] font-black underline underline-offset-4 decoration-2">בלי</span>{' '}
-            להוציא עוד כסף על פרסום{' '}
+            להוציא עוד כסף על פרסום,{' '}
+            <span className="text-[#C49A8A] font-black underline underline-offset-4 decoration-2">בלי</span>{' '}
+            להוסיף שעות עבודה מטורפות,{' '}
             <span className="text-[#C49A8A] font-black underline underline-offset-4 decoration-2">ובלי</span>{' '}
-            להוסיף שעות עבודה מטורפות.
+            ציוד יקר.
           </motion.p>
           <motion.div variants={fadeUp} className="text-[#5C4A3A] text-base leading-relaxed mb-6 space-y-3">
             <p>
@@ -377,7 +378,7 @@ export default function EyebrowCoursePage() {
           </motion.div>
 
           {/* תיאור הבעיה */}
-          <motion.div variants={fadeUp} className="space-y-4 text-[#5C4A3A] text-lg leading-relaxed mb-8">
+          <motion.div variants={fadeUp} className="space-y-4 text-[#5C4A3A] text-lg leading-relaxed mb-8 text-center">
             <p className="font-bold text-[#1A1A1A] text-xl">בואי נודה באמת.</p>
             <p>את קורעת את הגב.</p>
             <p>
@@ -414,8 +415,8 @@ export default function EyebrowCoursePage() {
               <strong className="text-[#1A1A1A]">את צריכה להרוויח יותר מהלקוחות שכבר בחרו בך.</strong>
             </p>
             <p>תחשבי על זה רגע:</p>
+            <p>אם כבר יש לך עסק בתחום הביוטי, <strong className="text-[#1A1A1A]">למה לא להרוויח יותר מכל לקוחה שכבר בחרה להגיע אלייך?</strong></p>
             <p>
-              אם כבר יש לך לקוחה שמגיעה אלייך, סומכת עלייך ומשלמת לך —<br />
               <strong className="text-[#1A1A1A]">למה שהביקור שלה יסתיים בשירות אחד בלבד?</strong>
             </p>
             <p>
@@ -429,27 +430,6 @@ export default function EyebrowCoursePage() {
             </p>
           </motion.div>
 
-          {/* קופסת מתמטיקה */}
-          <motion.div variants={fadeUp} className="bg-[#1A1A1A] rounded-2xl px-6 py-6 text-right">
-            <p className="text-[#C49A8A] text-xs uppercase tracking-widest font-semibold mb-4 text-center">בואי נעשה חשבון פשוט</p>
-            <div className="space-y-3">
-              <div className="flex items-center justify-between bg-white/8 rounded-xl px-4 py-3">
-                <span className="text-[#C49A8A] font-black text-lg">= 2,500 ₪ בחודש</span>
-                <span className="text-white text-sm text-right">לקוחה אחת ביום × 125 ₪ × 20 ימי עבודה</span>
-              </div>
-              <div className="text-center text-[#8B7355] text-sm font-semibold">או</div>
-              <div className="flex items-center justify-between bg-white/8 rounded-xl px-4 py-3">
-                <span className="text-[#C49A8A] font-black text-lg">= 4,000 ₪ בחודש</span>
-                <span className="text-white text-sm text-right">2 לקוחות ביום × 100 ₪ × 20 ימים</span>
-              </div>
-            </div>
-            <p className="text-[#8B7355] text-sm text-center mt-4 leading-relaxed">
-              וזה{' '}
-              <span className="text-[#C49A8A] font-bold underline underline-offset-2">בלי</span>{' '}
-              לדבר בכלל על מאות לקוחות חדשות.<br />
-              רק שירות נוסף ללקוחות שכבר נמצאות אצלך.
-            </p>
-          </motion.div>
 
         </motion.div>
       </section>
