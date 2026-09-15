@@ -79,23 +79,29 @@ function ExitPopup({ onClose }: { onClose: () => void }) {
       className="fixed inset-0 z-[100] flex items-center justify-center px-4"
       initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
     >
-      <div className="absolute inset-0 bg-black/60" onClick={onClose} />
+      <div className="absolute inset-0 bg-black/70" onClick={onClose} />
       <motion.div
         className="relative bg-white rounded-3xl p-8 max-w-sm w-full text-right shadow-2xl z-10"
         initial={{ scale: 0.8, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 0.8, opacity: 0 }}
       >
         <button onClick={onClose} className="absolute top-4 left-4 text-gray-400 hover:text-gray-600 text-2xl font-light">×</button>
-        <div className="text-4xl mb-3 text-center">⏸️</div>
-        <h3 className="text-2xl font-extrabold text-[#1A1A1A] mb-2 text-center">רגע לפני שעוזבת!</h3>
-        <p className="text-[#5C4A3A] text-base leading-relaxed mb-4 text-center">
-          הלקוחות שלך כבר הולכות למקום אחר לגבות.<br />
-          <strong className="text-[#C49A8A]">כל חודש שמחכה = 1,400₪ שנשארים בכיס של מישהי אחרת.</strong>
-        </p>
+        <div className="text-5xl mb-3 text-center">🛑</div>
+        <h3 className="text-2xl font-extrabold text-[#1A1A1A] mb-3 text-center leading-snug">
+          חכי שנייה.<br />
+          <span className="text-[#C49A8A]">אל תעזבי עם הידיים ריקות.</span>
+        </h3>
+        <div className="bg-[#F5EDE5] rounded-2xl px-4 py-3 mb-4 text-center">
+          <p className="text-[#1A1A1A] text-sm font-semibold leading-relaxed">
+            כל חודש שעובר <span className="text-[#C49A8A] font-black">בלי</span> עיצוב גבות בתפריט —<br />
+            הלקוחות שלך הולכות לשלם לאחרת.<br />
+            <strong className="text-[#1A1A1A]">20 לקוחות × 100 ₪ × 12 חודשים = 24,000 ₪ שנה.</strong>
+          </p>
+        </div>
         <button onClick={scrollToForm}
-          className="w-full bg-[#C49A8A] text-white py-4 rounded-2xl font-bold text-lg hover:bg-[#B5897A] transition-colors mb-3">
-          אני נשארת ורוכשת עכשיו
+          className="w-full bg-[#C49A8A] text-white py-4 rounded-2xl font-bold text-lg hover:bg-[#B5897A] transition-colors mb-3 shadow-lg">
+          אני רוצה את ה-197 ₪ האלה להחזיר לי 4,000 ₪ בחודש
         </button>
-        <button onClick={onClose} className="w-full text-gray-400 text-sm py-2 hover:text-gray-600">לא, אני אפספס את ההזדמנות</button>
+        <button onClick={onClose} className="w-full text-gray-400 text-xs py-2 hover:text-gray-500">לא, אני מעדיפה להמשיך לפספס</button>
       </motion.div>
     </motion.div>
   );
@@ -148,8 +154,8 @@ function SocialProofNotification() {
 }
 
 export default function EyebrowCoursePage() {
-  const [form, setForm] = useState({ firstName: '', lastName: '', email: '' });
-  const [pricingForm, setPricingForm] = useState({ firstName: '', lastName: '', email: '' });
+  const [form, setForm] = useState({ name: '', email: '' });
+  const [pricingForm, setPricingForm] = useState({ name: '', email: '' });
   const [openFaq, setOpenFaq] = useState<number | null>(null);
   const [loading, setLoading] = useState(false);
   const [showExitPopup, setShowExitPopup] = useState(false);
@@ -194,7 +200,7 @@ export default function EyebrowCoursePage() {
     e.preventDefault();
     setLoading(true);
     const data = isHero ? form : pricingForm;
-    const fullName = `${data.firstName} ${data.lastName}`.trim();
+    const fullName = data.name;
     track('Lead', { content_name: 'eyebrow_course', currency: 'ILS', value: 197 });
     track('InitiateCheckout', { content_name: 'eyebrow_course', currency: 'ILS', value: 197 });
     const params = new URLSearchParams(window.location.search);
@@ -265,8 +271,8 @@ export default function EyebrowCoursePage() {
         <button onClick={scrollToForm}
           className="w-full max-w-lg mx-auto flex flex-col items-center justify-center bg-[#C49A8A] text-white py-3 rounded-2xl font-black shadow-xl hover:bg-[#B5897A] transition-colors"
           style={{ display: 'flex' }}>
-          <span className="text-xl">הצטרפי עכשיו ב-197₪ בלבד →</span>
-          <span className="text-xs font-normal opacity-80 mt-0.5">✅ אחריות 14 יום | גישה מיידית לצמיתות</span>
+          <span className="text-xl">הצטרפי ל-427 תלמידות — 197₪ בלבד →</span>
+          <span className="text-xs font-normal opacity-80 mt-0.5">✅ אחריות 14 יום | גישה מיידית | מחיר עולה בקרוב</span>
         </button>
       </motion.div>
 
@@ -322,15 +328,13 @@ export default function EyebrowCoursePage() {
           <motion.form variants={fadeUp} onSubmit={e => handleSubmit(e, true)}
             className="bg-white rounded-3xl p-6 shadow-xl border border-[#E8DDD4] max-w-md mx-auto space-y-3">
             <p className="font-bold text-[#1A1A1A] text-lg mb-1">מלאי פרטים ותתחילי עכשיו</p>
-            <input type="text" required placeholder="שם פרטי" value={form.firstName} onChange={e => setForm({ ...form, firstName: e.target.value })}
-              className="w-full border border-[#E8DDD4] rounded-xl px-4 py-3 text-right focus:border-[#C49A8A] focus:outline-none text-base" />
-            <input type="text" required placeholder="שם משפחה" value={form.lastName} onChange={e => setForm({ ...form, lastName: e.target.value })}
+            <input type="text" required placeholder="שמך המלא" value={form.name} onChange={e => setForm({ ...form, name: e.target.value })}
               className="w-full border border-[#E8DDD4] rounded-xl px-4 py-3 text-right focus:border-[#C49A8A] focus:outline-none text-base" />
             <input type="email" required placeholder="כתובת מייל" value={form.email} onChange={e => setForm({ ...form, email: e.target.value })}
               className="w-full border border-[#E8DDD4] rounded-xl px-4 py-3 focus:border-[#C49A8A] focus:outline-none text-base" dir="ltr" />
             <button type="submit" disabled={loading}
-              className="w-full bg-[#C49A8A] text-white py-4 rounded-2xl font-bold text-xl hover:bg-[#B5897A] transition-colors disabled:opacity-60">
-              {loading ? 'מעבירה לתשלום...' : 'אני רוצה להצטרף לקורס →'}
+              className="w-full bg-[#C49A8A] text-white py-4 rounded-2xl font-bold text-xl hover:bg-[#B5897A] transition-colors disabled:opacity-60 shadow-lg">
+              {loading ? 'מעבירה לתשלום...' : 'אני רוצה להתחיל להרוויח יותר עכשיו →'}
             </button>
             <p className="text-xs text-gray-400 text-center">🔒 תשלום מאובטח | גישה מיידית | אחריות 14 יום</p>
           </motion.form>
@@ -739,10 +743,31 @@ export default function EyebrowCoursePage() {
       {/* ─── TESTIMONIALS ─── */}
       <section className="bg-[#FDFAF7] py-12 px-5">
         <motion.div className="max-w-2xl mx-auto" initial="hidden" whileInView="visible" viewport={{ once: true }} variants={stagger}>
+          <motion.p variants={fadeUp} className="text-[#C49A8A] text-xs uppercase tracking-widest font-semibold text-center mb-2">427 תלמידות לא טועות</motion.p>
           <motion.h2 variants={fadeUp} className="text-3xl font-extrabold text-center mb-2">מה הן כותבות אחרי הקורס</motion.h2>
           <motion.div variants={fadeUp} className="w-16 h-1 bg-[#C49A8A] mx-auto rounded-full mt-3 mb-8" />
+          <motion.div variants={stagger} className="space-y-4 mb-8">
+            {testimonials.map((t, i) => (
+              <motion.div key={i} variants={fadeUp}
+                className="bg-white rounded-2xl shadow-sm border border-[#E8DDD4] px-5 py-4">
+                <div className="flex items-center gap-3 mb-3">
+                  <div className="w-9 h-9 rounded-full bg-[#C49A8A] flex items-center justify-center text-white font-black text-sm flex-shrink-0">
+                    {t.name[0]}
+                  </div>
+                  <div>
+                    <p className="font-bold text-[#1A1A1A] text-sm">{t.name}</p>
+                    <p className="text-[#8B7355] text-xs">תלמידת הקורס</p>
+                  </div>
+                  <div className="mr-auto flex gap-0.5">
+                    {[...Array(5)].map((_, j) => <span key={j} className="text-yellow-400 text-sm">★</span>)}
+                  </div>
+                </div>
+                <p className="text-[#5C4A3A] text-base leading-relaxed text-right">&ldquo;{t.quote}&rdquo;</p>
+              </motion.div>
+            ))}
+          </motion.div>
           <motion.div variants={fadeUp}>
-            <img src="/testimonials.png" alt="המלצות תלמידות על הקורס" className="w-full rounded-2xl shadow-lg" loading="lazy" />
+            <img src="/testimonials.png" alt="עוד המלצות מתלמידות" className="w-full rounded-2xl shadow-lg" loading="lazy" />
           </motion.div>
         </motion.div>
       </section>
@@ -780,19 +805,16 @@ export default function EyebrowCoursePage() {
             <p className="text-gray-500 text-sm mb-1 text-center">או 2 תשלומים נוחים של 99 שקל</p>
             <p className="text-[#C49A8A] text-xs font-bold mb-6 text-center">✅ אחריות של 14 יום, לא מרוצה? מקבלת את הכסף חזרה</p>
             <form onSubmit={e => handleSubmit(e, false)} className="space-y-3">
-              <input type="text" required placeholder="שם פרטי"
-                value={pricingForm.firstName} onChange={e => setPricingForm({ ...pricingForm, firstName: e.target.value })}
-                className="w-full border border-[#E8DDD4] rounded-xl px-4 py-3 text-right text-[#1A1A1A] focus:border-[#C49A8A] focus:outline-none text-base" />
-              <input type="text" required placeholder="שם משפחה"
-                value={pricingForm.lastName} onChange={e => setPricingForm({ ...pricingForm, lastName: e.target.value })}
+              <input type="text" required placeholder="שמך המלא"
+                value={pricingForm.name} onChange={e => setPricingForm({ ...pricingForm, name: e.target.value })}
                 className="w-full border border-[#E8DDD4] rounded-xl px-4 py-3 text-right text-[#1A1A1A] focus:border-[#C49A8A] focus:outline-none text-base" />
               <input type="email" required placeholder="כתובת מייל"
                 value={pricingForm.email} onChange={e => setPricingForm({ ...pricingForm, email: e.target.value })}
                 className="w-full border border-[#E8DDD4] rounded-xl px-4 py-3 text-[#1A1A1A] focus:border-[#C49A8A] focus:outline-none text-base" dir="ltr" />
               <motion.button type="submit" disabled={loading}
-                className="w-full bg-[#C49A8A] text-white py-4 rounded-2xl font-bold text-xl hover:bg-[#B5897A] transition-colors mt-2 disabled:opacity-60"
+                className="w-full bg-[#C49A8A] text-white py-4 rounded-2xl font-bold text-xl hover:bg-[#B5897A] transition-colors mt-2 disabled:opacity-60 shadow-lg"
                 whileHover={{ scale: loading ? 1 : 1.02 }} whileTap={{ scale: loading ? 1 : 0.97 }}>
-                {loading ? 'מעבירה לתשלום...' : 'אני רוצה להצטרף לקורס →'}
+                {loading ? 'מעבירה לתשלום...' : 'אני רוצה להתחיל להרוויח יותר עכשיו →'}
               </motion.button>
             </form>
             <div className="mt-5 bg-gray-50 border border-[#E8DDD4] rounded-xl px-4 py-3 text-center space-y-1">
@@ -866,28 +888,28 @@ export default function EyebrowCoursePage() {
       {/* ─── FINAL CTA FORM ─── */}
       <section id="cta-form" className="bg-gradient-to-b from-[#F5EDE5] to-[#EFE5DC] py-14 px-5">
         <motion.div className="max-w-md mx-auto" initial="hidden" whileInView="visible" viewport={{ once: true }} variants={stagger}>
-          <motion.h2 variants={fadeUp} className="text-[#1A1A1A] text-3xl sm:text-4xl font-extrabold text-center mb-2">אל תשארי מאחור בזמן שהלקוחות שלך עושות גבות אצל אחרות</motion.h2>
+          <motion.h2 variants={fadeUp} className="text-[#1A1A1A] text-3xl sm:text-4xl font-extrabold text-center mb-2 leading-snug">
+            הלקוחות שלך כבר שואלות &ldquo;את עושה גבות?&rdquo;<br />
+            <span className="text-[#C49A8A]">תגידי להן כן מהשבוע הבא.</span>
+          </motion.h2>
           <motion.p variants={fadeUp} className="text-[#5C4A3A] text-center mb-6 text-lg">
-            לחצי עכשיו, קבלי גישה מיידית לקורס ותתחילי להגדיל את ההכנסה מכל לקוחה כבר מהשבוע.
+            קורס מקוון. גישה מיידית. 197 ₪ שמחזירים את עצמם אחרי 2 טיפולים.
           </motion.p>
           <motion.form variants={fadeUp} onSubmit={e => handleSubmit(e, false)}
             className="bg-white rounded-3xl p-8 shadow-2xl space-y-4 border border-[#E8DDD4]">
-            <input type="text" required placeholder="שם פרטי"
-              value={pricingForm.firstName} onChange={e => setPricingForm({ ...pricingForm, firstName: e.target.value })}
-              className="w-full border border-[#E8DDD4] rounded-xl px-4 py-3 text-right text-[#1A1A1A] focus:border-[#C49A8A] focus:outline-none text-base" />
-            <input type="text" required placeholder="שם משפחה"
-              value={pricingForm.lastName} onChange={e => setPricingForm({ ...pricingForm, lastName: e.target.value })}
+            <input type="text" required placeholder="שמך המלא"
+              value={pricingForm.name} onChange={e => setPricingForm({ ...pricingForm, name: e.target.value })}
               className="w-full border border-[#E8DDD4] rounded-xl px-4 py-3 text-right text-[#1A1A1A] focus:border-[#C49A8A] focus:outline-none text-base" />
             <input type="email" required placeholder="כתובת מייל"
               value={pricingForm.email} onChange={e => setPricingForm({ ...pricingForm, email: e.target.value })}
               className="w-full border border-[#E8DDD4] rounded-xl px-4 py-3 text-[#1A1A1A] focus:border-[#C49A8A] focus:outline-none text-base" dir="ltr" />
             <motion.button type="submit" disabled={loading}
-              className="w-full bg-[#C49A8A] text-white py-4 rounded-2xl font-bold text-xl hover:bg-[#B5897A] border-2 border-[#C49A8A] transition-all duration-300 disabled:opacity-60"
+              className="w-full bg-[#C49A8A] text-white py-5 rounded-2xl font-black text-xl hover:bg-[#B5897A] border-2 border-[#C49A8A] transition-all duration-300 disabled:opacity-60 shadow-xl"
               whileHover={{ scale: loading ? 1 : 1.02 }} whileTap={{ scale: loading ? 1 : 0.97 }}>
-              {loading ? 'מעבירה לתשלום...' : 'אני רוצה גישה מיידית לקורס ולהגדיל את הרווחים →'}
+              {loading ? 'מעבירה לתשלום...' : 'אני רוצה להתחיל להרוויח יותר עכשיו →'}
             </motion.button>
-            <div className="bg-gray-50 border border-[#E8DDD4] rounded-xl px-4 py-3 text-center space-y-1">
-              <p className="text-gray-500 text-xs leading-relaxed">🔒 תשלום מאובטח | גישה מיידית | אחריות 14 יום</p>
+            <div className="bg-gray-50 border border-[#E8DDD4] rounded-xl px-4 py-3 text-center">
+              <p className="text-gray-500 text-xs leading-relaxed">🔒 תשלום מאובטח | גישה מיידית | אחריות 14 יום מלאה</p>
             </div>
           </motion.form>
           <motion.p variants={fadeUp} className="text-[#C49A8A] text-center mt-8 font-semibold text-xl">מאמינה בך, טליה</motion.p>
