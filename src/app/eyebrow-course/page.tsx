@@ -204,20 +204,42 @@ export default function EyebrowCoursePage() {
     track('Lead', { content_name: 'eyebrow_course', currency: 'ILS', value: 197 });
     track('InitiateCheckout', { content_name: 'eyebrow_course', currency: 'ILS', value: 197 });
     const params = new URLSearchParams(window.location.search);
+    const utmParams = {
+      utm_source: params.get('utm_source') || '',
+      utm_medium: params.get('utm_medium') || '',
+      utm_campaign: params.get('utm_campaign') || '',
+      utm_content: params.get('utm_content') || '',
+    };
+
+    // 1. הוסף לרשימת מתעניינות ברב מסר
     try {
       await fetch('/api/subscribe', {
         method: 'POST', headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name: fullName, email: data.email, utm_source: params.get('utm_source') || '', utm_campaign: params.get('utm_campaign') || '' }),
+        body: JSON.stringify({ name: fullName, email: data.email, ...utmParams }),
       });
     } catch {}
-    const url = new URL(BASE_PURCHASE_URL);
-    if (utmRef.current) {
-      utmRef.current.split('&').forEach(pair => {
-        const [k, v] = pair.split('=');
-        if (k && v) url.searchParams.set(k, decodeURIComponent(v));
+
+    // 2. צור דף קארדקום דינמי עם webhook — אחרי תשלום הלקוחה תיכנס לרוכשות
+    try {
+      const res = await fetch('/api/cardcom/create-page', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          product: 'eyebrow_course',
+          name: fullName,
+          email: data.email,
+          utmParams,
+          maxPayments: 2,
+        }),
       });
-    }
-    window.location.href = url.toString();
+      const json = await res.json();
+      if (json.url) {
+        window.location.href = json.url;
+        return;
+      }
+    } catch {}
+
+    // fallback לURL סטטי
+    window.location.href = BASE_PURCHASE_URL;
   };
 
   const pad = (n: number) => String(n).padStart(2, '0');
