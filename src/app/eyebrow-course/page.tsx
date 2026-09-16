@@ -81,7 +81,7 @@ function ExitPopup({ onClose }: { onClose: () => void }) {
     >
       <div className="absolute inset-0 bg-black/70" onClick={onClose} />
       <motion.div
-        className="relative bg-white rounded-3xl p-8 max-w-sm w-full text-right shadow-2xl z-10"
+        className="relative bg-white rounded-3xl p-8 max-w-sm w-full text-center shadow-2xl z-10"
         initial={{ scale: 0.8, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 0.8, opacity: 0 }}
       >
         <button onClick={onClose} className="absolute top-4 left-4 text-gray-400 hover:text-gray-600 text-2xl font-light">×</button>
@@ -232,7 +232,7 @@ export default function EyebrowCoursePage() {
   );
 
   return (
-    <main dir="rtl" className="font-[Assistant,sans-serif] bg-[#FDFAF7] text-[#1A1A1A] overflow-x-hidden pb-24">
+    <main dir="rtl" className="font-[Assistant,sans-serif] bg-[#FDFAF7] text-[#1A1A1A] overflow-x-hidden pb-24 text-center">
 
       <Script id="clarity" strategy="afterInteractive">{`
         (function(c,l,a,r,i,t,y){c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
@@ -365,7 +365,7 @@ export default function EyebrowCoursePage() {
           </motion.div>
 
           {/* מחשבה פנימית */}
-          <motion.div variants={fadeUp} className="bg-[#F5EDE5] border-r-4 border-[#C49A8A] rounded-2xl px-6 py-5 mb-8 text-right">
+          <motion.div variants={fadeUp} className="bg-[#F5EDE5] border-r-4 border-[#C49A8A] rounded-2xl px-6 py-5 mb-8 text-center">
             <p className="text-[#1A1A1A] text-lg font-semibold leading-relaxed italic">
               &ldquo;איך אני אמורה להכניס יותר כסף?<br />
               אני כבר לא יכולה לעבוד יותר שעות ממה שאני עובדת.&rdquo;
@@ -439,7 +439,7 @@ export default function EyebrowCoursePage() {
             ].map((item, i) => (
               <motion.div key={i} variants={fadeUp} className="bg-white rounded-2xl p-5 flex items-start gap-4 shadow-sm border border-[#E8DDD4]">
                 <span className="text-3xl flex-shrink-0">{item.icon}</span>
-                <div className="text-right flex-1">
+                <div className="text-center flex-1">
                   <h3 className="font-bold text-[#1A1A1A] text-lg mb-1">{item.title}</h3>
                   <p className="text-[#5C4A3A] text-base leading-relaxed">{item.desc}</p>
                 </div>
@@ -482,13 +482,19 @@ export default function EyebrowCoursePage() {
               </h2>
             </div>
           </motion.div>
-          <motion.div variants={fadeUp} className="text-center text-[#5C4A3A] text-lg leading-loose space-y-4 px-2 mb-10">
+          <motion.div variants={fadeUp} className="text-center text-[#5C4A3A] text-lg leading-loose space-y-4 px-2 mb-6">
             <p>הקורס הדיגיטלי שלוקח אותך מאפס ניסיון לגבות מקצועיות שלקוחות מבקשות — ומשלמות עליהן.</p>
-            <p>10 שיעורי וידאו מסודרים, שלב אחר שלב, עם גישה פתוחה לכל החיים. <strong className="text-[#1A1A1A]">בלי עומס, בלי ניחושים — רק שיטה שעובדת.</strong></p>
+            <p>15 שיעורי וידאו מסודרים, שלב אחר שלב, עם גישה פתוחה לכל החיים. <strong className="text-[#1A1A1A]">בלי עומס, בלי ניחושים — רק שיטה שעובדת.</strong></p>
+          </motion.div>
+
+          <motion.div variants={fadeUp} className="bg-[#F5EDE5] border-2 border-[#C49A8A]/40 rounded-3xl px-6 py-7 text-center mb-10 shadow-sm">
+            <p className="text-4xl mb-3">🎓</p>
+            <p className="text-[#1A1A1A] font-extrabold text-xl mb-3">ממש כמו להיות בקורס פרונטלי</p>
+            <p className="text-[#5C4A3A] text-base leading-relaxed">כל שיעור מוקלט בסגנון הדרכה אישית — רואים את כל שלב ביד, עם הסברים מפורטים לאורך כל הטיפול. לא סרטוני יוטיוב, לא מצגות משעממות.<br /><strong className="text-[#1A1A1A]">ההרגשה שטליה לידך ומסבירה לך בדיוק מה לעשות.</strong></p>
           </motion.div>
           <motion.div variants={stagger} className="grid grid-cols-2 gap-3 pt-8 border-t border-[#E8DDD4]">
             {[
-              { emoji: '🎬', n: '10', l: 'שיעורי וידאו' },
+              { emoji: '🎬', n: '15', l: 'שיעורי וידאו' },
               { emoji: '💰', n: '80-120₪', l: 'לכל טיפול' },
               { emoji: '⚡', n: "15 דק'", l: 'לגבה מושלמת' },
               { emoji: '♾️', n: '∞', l: 'גישה לצמיתות' },
@@ -538,7 +544,7 @@ export default function EyebrowCoursePage() {
           <motion.h2 variants={fadeUp} className="text-2xl sm:text-4xl font-bold text-center mb-12">3 שלבים ואת מרוויחה יותר</motion.h2>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-10">
             {[
-              { n: '①', title: 'רוכשת', desc: 'גישה מיידית לכל 10 השיעורים ו-3 הבונוסים. מהנייד, מהבית, בלי לצאת לשום מקום.' },
+              { n: '①', title: 'רוכשת', desc: 'גישה מיידית לכל 15 השיעורים ו-3 הבונוסים. מהנייד, מהבית, בלי לצאת לשום מקום.' },
               { n: '②', title: 'לומדת בקצב שלך', desc: 'שיעורי וידאו קצרים ומדויקים. תרגלי על עצמך או על חברה, ותרגישי בטוחה תוך ימים ספורים.' },
               { n: '③', title: 'מתחילה להרוויח', desc: 'מציעה גבות ללקוחות שכבר מגיעות אלייך. 80-120₪ לטיפול של 15 דקות.' },
             ].map((step, i) => (
@@ -630,7 +636,7 @@ export default function EyebrowCoursePage() {
               <p className="text-[#C49A8A] text-xs uppercase tracking-[4px] text-center mb-6 font-semibold">מה שמקבלת בקורס</p>
               <div className="grid grid-cols-3 gap-3 mb-7">
                 {[
-                  { n: '10', l: 'שיעורי וידאו', icon: '🎬' },
+                  { n: '15', l: 'שיעורי וידאו', icon: '🎬' },
                   { n: '3', l: 'בונוסים מתנה', icon: '🎁' },
                   { n: '∞', l: 'גישה לצמיתות', icon: '♾️' },
                 ].map((s, i) => (
@@ -665,7 +671,7 @@ export default function EyebrowCoursePage() {
                 { icon: '✅', text: 'לתמחר ולמכור את השירות ללקוחות שלך בלי להרגיש מוזר' },
               ].map((lesson, i) => (
                 <motion.div key={i} variants={fadeUp}
-                  className="bg-white rounded-2xl px-5 py-4 flex items-center gap-4 shadow-sm border border-[#E8DDD4] text-right">
+                  className="bg-white rounded-2xl px-5 py-4 flex items-center gap-4 shadow-sm border border-[#E8DDD4] text-center">
                   <div className="flex-shrink-0 w-10 h-10 rounded-2xl bg-[#F5EDE8] flex items-center justify-center text-xl">
                     {lesson.icon}
                   </div>
@@ -675,21 +681,24 @@ export default function EyebrowCoursePage() {
             </motion.div>
           </motion.div>
 
+          {/* ליווי לאחר הקורס */}
+          <motion.div variants={fadeUp} className="bg-white rounded-2xl px-5 py-5 mb-4 border-2 border-[#C49A8A]/30 text-center shadow-sm">
+            <p className="text-2xl mb-2">🤝</p>
+            <p className="text-[#1A1A1A] font-bold mb-1">ליווי אישי לאחר הקורס</p>
+            <p className="text-[#5C4A3A] text-sm leading-relaxed">לא נשארות לבד אחרי הקורס. יש ליווי שמוודא שיצאת מוכנה, בטוחה, ומוכנה לקבל לקוחות — ולגבות את המחיר שמגיע לך.</p>
+          </motion.div>
+
           {/* הטבה בלעדית */}
-          <motion.div variants={fadeUp} className="bg-gradient-to-l from-[#1A1A1A] to-[#2A1F1A] rounded-2xl p-5 mb-4 border border-[#C49A8A]/30">
-            <div className="flex items-start gap-3 text-right">
-              <span className="text-2xl flex-shrink-0">🎁</span>
-              <div>
-                <p className="text-[#C49A8A] font-bold text-sm mb-1">הטבה בלעדית לתלמידות הקורס</p>
-                <p className="text-white text-sm leading-relaxed">אפשרות לרכוש ערכת עבודה מקצועית במחיר מוזל - הציוד שתצטרכי להתחיל לעבוד מיד.</p>
-              </div>
-            </div>
+          <motion.div variants={fadeUp} className="bg-gradient-to-l from-[#1A1A1A] to-[#2A1F1A] rounded-2xl p-5 mb-4 border border-[#C49A8A]/30 text-center">
+            <p className="text-2xl mb-2">🎁</p>
+            <p className="text-[#C49A8A] font-bold text-sm mb-1">הטבה בלעדית לבוגרות הקורס</p>
+            <p className="text-white text-sm leading-relaxed">רק בוגרות הקורס הדיגיטלי יכולות לרכוש ערכת עבודה מקצועית במחיר מוזל — כל הציוד שתצטרכי כדי להתחיל לעבוד מיד אחרי הסיום.</p>
           </motion.div>
 
           <motion.div variants={fadeUp} className="bg-[#C49A8A] rounded-2xl p-5">
             <p className="text-white font-semibold mb-3 text-center text-sm">כלול בקורס</p>
             <div className="flex flex-wrap gap-2 justify-center">
-              {['10 שיעורי וידאו', 'גישה לצמיתות', '3 בונוסים', 'תעודת סיום', 'תמיכה', 'אחריות 14 יום'].map((t) => (
+              {['15 שיעורי וידאו', 'גישה לצמיתות', '3 בונוסים', 'תעודת סיום', 'ליווי לאחר הקורס', 'ערכת ציוד מוזלת', 'אחריות 14 יום'].map((t) => (
                 <span key={t} className="bg-white/20 text-white text-sm px-3 py-1 rounded-full border border-white/30">✅ {t}</span>
               ))}
             </div>
@@ -748,7 +757,7 @@ export default function EyebrowCoursePage() {
                     {[...Array(5)].map((_, j) => <span key={j} className="text-yellow-400 text-sm">★</span>)}
                   </div>
                 </div>
-                <p className="text-[#5C4A3A] text-base leading-relaxed text-right">&ldquo;{t.quote}&rdquo;</p>
+                <p className="text-[#5C4A3A] text-base leading-relaxed text-center">&ldquo;{t.quote}&rdquo;</p>
               </motion.div>
             ))}
           </motion.div>
@@ -777,6 +786,11 @@ export default function EyebrowCoursePage() {
           <motion.h2 variants={fadeUp} className="text-2xl font-extrabold mb-5">תעודת סיום קורס עיצוב גבות</motion.h2>
           <motion.div variants={fadeUp} className="rounded-2xl overflow-hidden shadow-xl border border-[#E8DDD4]">
             <img src="/cert-eyebrow.png" alt="תעודת סיום קורס עיצוב גבות" className="w-full h-auto" loading="lazy" />
+          </motion.div>
+          <motion.div variants={fadeUp} className="mt-5 bg-[#F5EDE5] rounded-2xl px-5 py-5 text-center">
+            <p className="text-xl mb-1">🏆</p>
+            <p className="text-[#1A1A1A] font-bold mb-2">אחרי הקורס — מוכנה לקבל לקוחות</p>
+            <p className="text-[#5C4A3A] text-sm leading-relaxed">תקבלי תעודת סיום מוכרת שתוכלי להציג ללקוחות ולתלות בקליניקה שלך. אות לאיכות שמגבה את המחיר שאת גובה.</p>
           </motion.div>
         </motion.div>
       </section>
